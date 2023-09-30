@@ -1,17 +1,18 @@
-import React from 'react'
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import React from 'react';
+import { Route, Routes } from "react-router-dom";
 import { Profile } from './pages/Profile/Profile';
 import { EditProfile } from "./pages/EditProfile/EditProfile";
 import Login from "./pages/Login/Login";
+import './index.css';
 
 export default function App() {
     return (
-        <Router>
+        <div>
             <Routes>
-                <Route path='login' element={<Login/>}/>
+                <Route path='/login' element={<Login/>}/>
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/editprofile" element={<EditProfile />} />
             </Routes>
-        </Router>
+        </div>
     );
 }
