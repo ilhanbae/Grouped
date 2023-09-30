@@ -25,8 +25,8 @@ const Login = () => {
                         </form>
                     </div>
                     <div className='p-8' style={{marginTop:'20px'}}>
-                        <span className='m-12'><Link className="text-blue-500 text-3xl font-bold" to="SignUp">Don't have an Account?</Link></span>
-                        <span className='m-12'><Link className="text-blue-500 text-3xl font-bold" to="SignUp">Forgot Password?</Link></span>
+                        <span className='m-12'><Link className="text-blue-500 text-3xl font-bold" to="/signup">Don't have an Account?</Link></span>
+                        <span className='m-12'><Link className="text-blue-500 text-3xl font-bold" to="ForgotPassword">Forgot Password?</Link></span>
                     </div>
                 </div>
             </div>

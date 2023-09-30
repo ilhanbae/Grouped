@@ -35,7 +35,7 @@ const SignUp = () => {
                         </form>
                     </div>
                     <div className='p-8' style={{marginTop:'20px'}}>
-                        <span className='m-12'><Link className="text-blue-500 text-3xl font-bold" to="Login">Have an Account?</Link></span>
+                        <span className='m-12'><Link className="text-blue-500 text-3xl font-bold" to="/login">Have an Account?</Link></span>
                     </div>
                 </div>
             </div>
