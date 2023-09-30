@@ -4,7 +4,7 @@ export const Profile = () => {
   const user = {
     firstname: "John",
     lastname: "Doe",
-    bio: "Hello, I am tester!",
+    bio: "Hello, I am John Doe!",
     email: "tester@buffalo.edu",
     school: "University at Buffalo",
   };
