@@ -1,11 +1,13 @@
 import React from 'react'
-import { BeakerIcon } from "@heroicons/react/24/solid";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Profile } from './pages/Profile/Profile';
 
 export default function App() {
   return (
-    <div>
-      <h1 className="text-3xl font-bold">This is our landing page</h1>
-      <BeakerIcon className="h-6 w-6 text-blue-500" />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
+    </Router>
   );
 }
