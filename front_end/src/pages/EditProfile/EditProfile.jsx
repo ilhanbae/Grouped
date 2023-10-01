@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export const EditProfile = () => {
+const EditProfile = () => {
   const [userInfo, setUserInfo] = useState({
     firstname: "John",
     lastname: "Doe",
@@ -96,3 +96,5 @@ export const EditProfile = () => {
     </div>
   );
 };
+
+export default EditProfile;

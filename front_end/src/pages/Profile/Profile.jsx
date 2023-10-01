@@ -1,6 +1,6 @@
 import React from "react";
 
-export const Profile = () => {
+const Profile = () => {
   const user = {
     firstname: "John",
     lastname: "Doe",
@@ -47,3 +47,5 @@ export const Profile = () => {
     </div>
   );
 };
+
+export default Profile
