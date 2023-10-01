@@ -14,14 +14,31 @@ const EditProfile = () => {
     setUserInfo({ ...userInfo, [id]: value });
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
+  const handleCancel = (e) => {
+    setUserInfo({
+      firstname: "John",
+      lastname: "Doe",
+      bio: "Hello, I am John Doe!",
+      email: "tester@buffalo.edu",
+      school: "University at Buffalo",
+    });
+  };
+
   return (
     <div className="min-h-screen flex items-center flex-col bg-slate-300">
       {/* Header */}
       <div className="min-w-full bg-slate-700 p-3">
         <h1 className="">Edit My Profile</h1>
       </div>
-      {/* User Fields */}
-      <form className="bg-slate-300 p-8 rounded-lg flex flex-col w-72">
+      {/* User Info Form */}
+      <form
+        className="bg-slate-300 p-8 rounded-lg flex flex-col w-72"
+        onSubmit={handleSubmit}
+      >
         {/* First Name */}
         <div className="mb-4">
           <label className="text-gray-600" htmlFor="firstname">
@@ -91,6 +108,22 @@ const EditProfile = () => {
             value={userInfo.school}
             onChange={handleChange}
           />
+        </div>
+        {/* Buttons */}
+        <div className="flex flex-col space-y-4 ">
+          <button
+            className="w-full py-1 rounded text-white bg-green-400 font-bold hover:bg-green-500"
+            type="submit"
+          >
+            Submit Changes
+          </button>
+          <button
+            className="w-full py-1 rounded text-white bg-red-400 font-bold hover:bg-red-500"
+            type="button"
+            onClick={handleCancel}
+          >
+            Cancel
+          </button>
         </div>
       </form>
     </div>
