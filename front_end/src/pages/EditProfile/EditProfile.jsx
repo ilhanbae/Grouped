@@ -29,11 +29,7 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center flex-col bg-slate-300">
-      {/* Header */}
-      <div className="min-w-full bg-slate-700 p-3">
-        <h1 className="">Edit My Profile</h1>
-      </div>
+    <div className="flex items-center flex-col bg-slate-300">
       {/* User Info Form */}
       <form
         className="bg-slate-300 p-8 rounded-lg flex flex-col w-72"
