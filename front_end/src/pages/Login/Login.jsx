@@ -5,7 +5,7 @@ import { AiOutlineUnlock } from 'react-icons/ai';
 const Login = () => {
     return (
         <div style={{ backgroundColor: 'lightgrey' }}>
-            <div className="text-white h-screen flex flex-col justify-center items-center bg-cover">
+            <div className="text-white flex flex-col justify-center items-center">
                 <h1 className="text-6xl text-black font-bold text-center p-8">Login to Your Account</h1>
                 <br />
                 <div className="flex flex-col items-center">

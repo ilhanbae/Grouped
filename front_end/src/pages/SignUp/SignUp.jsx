@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 const SignUp = () => {
     return (
         <div style={{ backgroundColor: 'lightgrey' }}>
-            <div className="text-white h-screen flex flex-col justify-center items-center bg-cover">
+            <div className="text-white flex flex-col justify-center items-center">
                 <h1 className="text-6xl text-black font-bold text-center p-8">Sign Up</h1>
                 <br />
                 <div className="flex flex-col items-center">
