@@ -32,6 +32,8 @@ const Login = () => {
         } catch (error) {
             console.error('Error:', error);
         }
+        //TODO: for now, to establish connections, this page will lead you to the calendar view page
+        window.location.href = "http://localhost:3000/individualCalendar";
     };
 
 

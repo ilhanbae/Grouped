@@ -37,6 +37,9 @@ const SignUp = () => {
         } catch (error) {
             console.error("Error:", error);
         }
+
+        //TODO: for now, to establish connections, this page will lead you to edit your profile
+        window.location.href = "http://localhost:3000/editprofile";
     };
 
     return (
