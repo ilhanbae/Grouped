@@ -7,6 +7,7 @@ import SignUp from "./pages/SignUp/SignUp";
 import ManageAccount from "./pages/ManageAccount/ManageAccount";
 import Header from "./components/Header/Header";
 import Land from "./pages/Land/Land";
+import IndividualCalendar from "./pages/IndividualCalendar/IndividualCalendar";
 import "./index.css";
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
                     <Route path="/profile" element={<Profile/>}/>
                     <Route path="/editprofile" element={<EditProfile/>}/>
                     <Route path="/manageaccount" element={<ManageAccount/>}/>
+                    <Route path="/individualCalendar" element={<IndividualCalendar/>}/>
                 </Routes>
             </div>
         </div>
