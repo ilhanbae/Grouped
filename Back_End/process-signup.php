@@ -20,7 +20,7 @@ if ( ! preg_match("/[a-z]/i", $_POST["password"])) {
     die("Password must contain at least one number");
 }*/
 
-if ($_POST["password"] !== $_POST["password_confirmation"]) {
+if ($_POST["password"] !== $_POST["confirmPassword"]) {
     die("Passwords must match");
 }
 
@@ -45,15 +45,16 @@ $stmt->bind_param("sss",
                   
 if ($stmt->execute()) {
 
-    header("Location: signup-success.html"); //change to homepage
+    //header("Location: signup-success.html"); 
+    header("HTTP/1.1 200 OK");
     exit;
     
 } else {
     
     if ($mysqli->errno === 1062) {
-        die("email already taken");
+        header("HTTP/1.1 400 BAD REQUEST");
     } else {
-        die($mysqli->error . " " . $mysqli->errno);
+        header("HTTP/1.1 400 BAD REQUEST");
     }
 }
 
