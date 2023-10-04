@@ -3,12 +3,7 @@ import { Link } from "react-router-dom";
 
 const ManageAccount = () => {
   return (
-    <div className="min-h-screen flex items-center flex-col bg-slate-300">
-      {/* Header */}
-      <div className="min-w-full bg-slate-700 p-3">
-        <h1 className="">Manage Account</h1>
-      </div>
-
+    <div className="flex items-center flex-col bg-slate-300">
       {/* Links */}
       <div className="min-h-full min-w-full flex flex-col items-center justify-center flex-grow ">
         {/* Edit Account Information */}
