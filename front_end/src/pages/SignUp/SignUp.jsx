@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {BiUser} from "react-icons/bi";
 import {AiOutlineUnlock} from "react-icons/ai";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const SignUp = () => {
     const [email, setEmail] = useState("");
@@ -31,15 +31,16 @@ const SignUp = () => {
 
             if (response.ok) {
                 console.log("Signup successful");
+
             } else {
                 console.error("Signup failed");
             }
         } catch (error) {
             console.error("Error:", error);
         }
-
-        //TODO: for now, to establish connections, this page will lead you to edit your profile
-        window.location.href = "http://localhost:3000/editprofile";
+        const queryParams = new URLSearchParams();
+        queryParams.append("email", email);
+        window.location.href = "/editprofile?" + queryParams.toString();
     };
 
     return (

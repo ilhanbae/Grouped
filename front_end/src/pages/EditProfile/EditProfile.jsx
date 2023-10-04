@@ -1,13 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
+import { useLocation } from "react-router-dom";
 
 const EditProfile = () => {
+  const location = useLocation();
   const [userInfo, setUserInfo] = useState({
-    firstname: "John",
-    lastname: "Doe",
-    bio: "Hello, I am John Doe!",
-    email: "tester@buffalo.edu",
-    school: "University at Buffalo",
+    firstname: "",
+    lastname: "",
+    bio: "",
+    email: location.state ? location.state.email : "",
+    school: "",
   });
+
+  useEffect(() => {
+          const queryParams = new URLSearchParams(location.search);
+          const emailFromParams = queryParams.get("email");
+
+          if (emailFromParams) {
+              setUserInfo((prevUserInfo) => ({
+                  ...prevUserInfo,
+                  email: emailFromParams,
+              }));
+          }
+      }, [location.search]);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -20,11 +34,11 @@ const EditProfile = () => {
 
   const handleCancel = (e) => {
     setUserInfo({
-      firstname: "John",
-      lastname: "Doe",
-      bio: "Hello, I am John Doe!",
-      email: "tester@buffalo.edu",
-      school: "University at Buffalo",
+      firstname: "",
+      lastname: "",
+      bio: "",
+      email: "",
+      school: "",
     });
   };
 
