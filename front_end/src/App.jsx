@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, Navigate } from "react-router-dom";
 import Profile from "./pages/Profile/Profile";
 import EditProfile from "./pages/EditProfile/EditProfile";
 import Login from "./pages/Login/Login";
@@ -28,6 +28,10 @@ export default function App() {
                     <Route path="/editprofile" element={<EditProfile/>}/>
                     <Route path="/manageaccount" element={<ManageAccount/>}/>
                     <Route path="/individualCalendar" element={<IndividualCalendar/>}/>
+
+                    {/* Add a catch-all route */}
+                    <Route path="/*" element={<Navigate to="/" replace />}/>
+
                 </Routes>
             </div>
         </div>
