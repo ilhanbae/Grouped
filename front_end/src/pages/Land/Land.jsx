@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.png';
 
 const Land = () => {
@@ -10,11 +11,11 @@ const Land = () => {
             </div>
             <div style={{ flex: 1, backgroundColor: "lightgray", display:'flex', flexDirection:'column', justifyContent: 'center', alignItems:'center'}}>
                 <div style={{width:'100%', paddingLeft: "25px", paddingRight: "25px"}}>
-                    <button className="w-full h-auto p-4 transition-colors duration-150 bg-yellow-500 focus:shadow-outline text-black font-bold text-4xl hover:bg-gray-400 rounded-l">Sign Up</button>
+                    <Link to="/signup"><button className="w-full h-auto p-4 transition-colors duration-150 bg-yellow-500 focus:shadow-outline text-black font-bold text-4xl hover:bg-gray-400 rounded-l">Sign Up</button></Link>
                 </div>
                 <br/>
                 <div style={{width:'100%', paddingLeft: "25px", paddingRight: "25px"}}>
-                    <button className="w-full h-auto p-4 transition-colors duration-150 bg-yellow-500 focus:shadow-outline text-black font-bold text-4xl hover:bg-gray-400 rounded-l">Login</button>
+                    <Link to="/login"><button className="w-full h-auto p-4 transition-colors duration-150 bg-yellow-500 focus:shadow-outline text-black font-bold text-4xl hover:bg-gray-400 rounded-l">Login</button></Link>
                 </div>
             </div>
         </div>
