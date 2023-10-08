@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BiUser } from 'react-icons/bi';
 import { AiOutlineUnlock } from 'react-icons/ai';
+import axios from "axios";
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -16,16 +18,15 @@ const Login = () => {
 
         try {
             // Send POST request to server endpoint
-            const response = await fetch('/your-auth-endpoint', {
-                method: 'POST',
+            const response = await axios.post('/your-auth-endpoint', data, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data),
             });
 
-            if (response.ok) {
+            if (response === 200) {
                 console.log('Login successful');
+                navigate('/individualCalendar');
             } else {
                 console.error('Login failed');
             }

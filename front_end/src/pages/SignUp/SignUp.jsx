@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import {BiUser} from "react-icons/bi";
 import {AiOutlineUnlock} from "react-icons/ai";
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import axios from "axios";
 
 const SignUp = () => {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -21,26 +23,22 @@ const SignUp = () => {
 
         try {
             // Send POST request to server endpoint
-            const response = await fetch("/your-signup-endpoint", {
-                method: "POST",
+            //TODO: ensure endpoint to api
+            const response = await axios.post("https://www-student.cse.buffalo.edu/CSE442-542/2023-Fall/cse-442am/auth/signup.php", data, {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(data),
             });
 
-            if (response.ok) {
+            if (response.status === 200) {
                 console.log("Signup successful");
-
+                navigate('/editprofile', {state:{email}});
             } else {
                 console.error("Signup failed");
             }
         } catch (error) {
             console.error("Error:", error);
         }
-        const queryParams = new URLSearchParams();
-        queryParams.append("email", email);
-        window.location.href = "/editprofile?" + queryParams.toString();
     };
 
     return (
