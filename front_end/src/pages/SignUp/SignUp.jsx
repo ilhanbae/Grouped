@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {BiUser} from "react-icons/bi";
 import {AiOutlineUnlock} from "react-icons/ai";
 import {Link} from "react-router-dom";
+import axios from "axios";
 
 const SignUp = () => {
     const [email, setEmail] = useState("");
@@ -21,15 +22,13 @@ const SignUp = () => {
 
         try {
             // Send POST request to server endpoint
-            const response = await fetch("/your-signup-endpoint", {
-                method: "POST",
+            const response = await axios.post("/your-signup-endpoint", data, {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(data),
             });
 
-            if (response.ok) {
+            if (response.status === 200) {
                 console.log("Signup successful");
             } else {
                 console.error("Signup failed");
