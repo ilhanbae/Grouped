@@ -2,11 +2,19 @@ import React, { useState } from "react";
 
 const EditProfile = () => {
   const [userInfo, setUserInfo] = useState({
-    firstname: "John",
-    lastname: "Doe",
-    bio: "Hello, I am John Doe!",
-    school: "University at Buffalo",
+    firstname: "",
+    lastname: "",
+    bio: "",
+    school: "",
   });
+
+  const universityOptionList = [
+    "Not Applicable",
+    "University at Buffalo",
+    "Stanford University",
+    "Carnegie Mellon University",
+    "Harvard University",
+  ];
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -17,14 +25,7 @@ const EditProfile = () => {
     e.preventDefault();
   };
 
-  const handleCancel = (e) => {
-    setUserInfo({
-      firstname: "John",
-      lastname: "Doe",
-      bio: "Hello, I am John Doe!",
-      school: "University at Buffalo",
-    });
-  };
+  const handleCancel = (e) => {};
 
   return (
     <div className="flex items-center flex-col bg-slate-300">
@@ -86,13 +87,27 @@ const EditProfile = () => {
           <label className="text-gray-600" htmlFor="school">
             School:
           </label>
-          <input
-            className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline"
+          <select
+            className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline resize-none"
             id="school"
-            placeholder={"Enter your school name"}
-            value={userInfo.school}
+            defaultValue={
+              universityOptionList.includes(userInfo.school)
+                ? userInfo.school
+                : "default"
+            }
             onChange={handleChange}
-          />
+          >
+            {!universityOptionList.includes(userInfo.school) && (
+              <option disabled value="default">
+                Choose your school
+              </option>
+            )}
+            {universityOptionList.map((university, index) => (
+              <option key={index} value={university}>
+                {university}
+              </option>
+            ))}
+          </select>
         </div>
         {/* Buttons */}
         <div className="flex flex-col space-y-4 ">
