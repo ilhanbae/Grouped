@@ -45,6 +45,7 @@ const EditProfile = () => {
             placeholder={"Enter your first name"}
             value={userInfo.firstname}
             onChange={handleChange}
+            maxLength={50}
           />
         </div>
         {/* Last Name */}
@@ -59,31 +60,35 @@ const EditProfile = () => {
             placeholder={"Enter your last name"}
             value={userInfo.lastname}
             onChange={handleChange}
+            maxLength={50}
           />
         </div>
         {/* Bio */}
-        <div className="mb-4">
+        <div className="flex flex-col">
           <label className="text-gray-600" htmlFor="bio">
             Bio:
           </label>
-          <input
-            className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline"
+          <textarea
+            className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline resize-none"
             id="bio"
-            type="text"
             placeholder={"Enter your bio"}
             value={userInfo.bio}
             onChange={handleChange}
+            rows={6}
+            maxLength={150}
           />
+          <span className="text-gray-600 text-right">
+            {userInfo.bio.length}/150
+          </span>
         </div>
         {/* School */}
-        <div className="mb-4">
+        <div className="mb-4 flex flex-col">
           <label className="text-gray-600" htmlFor="school">
             School:
           </label>
           <input
             className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline"
             id="school"
-            type="text"
             placeholder={"Enter your school name"}
             value={userInfo.school}
             onChange={handleChange}
