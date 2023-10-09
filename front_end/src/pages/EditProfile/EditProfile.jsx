@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const EditProfile = () => {
   const [userInfo, setUserInfo] = useState({
     firstname: "",
     lastname: "",
     bio: "",
-    school: "",
+    school: "Not Applicable",
   });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // loadUserInfo();
+  }, []);
+
+  const loadUserInfo = () => {
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/endpoint`)
+      .then((response) => setUserInfo(response))
+      .catch((error) => console.log(error));
+  };
 
   const universityOptionList = [
     "Not Applicable",
@@ -25,7 +39,10 @@ const EditProfile = () => {
     e.preventDefault();
   };
 
-  const handleCancel = (e) => {};
+  const handleCancel = () => {
+    // TODO: Should confirm if the user really want to return to previous page
+    navigate("/manageaccount");
+  };
 
   return (
     <div className="flex items-center flex-col bg-slate-300">
@@ -109,22 +126,33 @@ const EditProfile = () => {
             ))}
           </select>
         </div>
+
         {/* Buttons */}
-        <div className="flex flex-col space-y-4 ">
+        {/* Conditionally render buttons based on user's login state */}
+        {sessionStorage.getItem("user") ? (
+          <div className="flex flex-col space-y-4 ">
+            <button
+              className="w-full py-1 rounded text-white bg-green-400 font-bold hover:bg-green-500"
+              type="submit"
+            >
+              Submit Changes
+            </button>
+            <button
+              className="w-full py-1 rounded text-white bg-red-400 font-bold hover:bg-red-500"
+              type="button"
+              onClick={handleCancel}
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
           <button
             className="w-full py-1 rounded text-white bg-green-400 font-bold hover:bg-green-500"
             type="submit"
           >
-            Submit Changes
+            Create Account
           </button>
-          <button
-            className="w-full py-1 rounded text-white bg-red-400 font-bold hover:bg-red-500"
-            type="button"
-            onClick={handleCancel}
-          >
-            Cancel
-          </button>
-        </div>
+        )}
       </form>
     </div>
   );
