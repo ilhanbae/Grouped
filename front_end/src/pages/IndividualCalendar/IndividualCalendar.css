@@ -1,0 +1,36 @@
+/* Focus on the weekly view */
+.rbc-btn-group{
+    background-color: white;
+}
+
+.rbc-toolbar{
+    background-color: rgba(86, 46, 33, 0.35);
+    color: black;
+    font: bold x-large Germania One, "sans-serif", "fantasy";
+}
+
+.rbc-time-view{
+    background-color: #666B7D;
+}
+
+.rbc-time-header-cell{
+    background-color: #9ca3af;
+}
+
+.rbc-allday-cell{
+    background-color: lightgray;
+}
+
+[role=columnheader]{
+    font: bold large Germania One, "sans-serif";
+}
+
+.rbc-time-gutter{
+    background-color: rgba(133, 182, 228, 1);
+    font-weight: bold;
+}
+
+.rbc-day-slot#rbc-time-column{
+    background-color: rgba(133, 182, 228, 1);
+
+}
