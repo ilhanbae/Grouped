@@ -5,7 +5,6 @@ const EditProfile = () => {
     firstname: "John",
     lastname: "Doe",
     bio: "Hello, I am John Doe!",
-    email: "tester@buffalo.edu",
     school: "University at Buffalo",
   });
 
@@ -23,7 +22,6 @@ const EditProfile = () => {
       firstname: "John",
       lastname: "Doe",
       bio: "Hello, I am John Doe!",
-      email: "tester@buffalo.edu",
       school: "University at Buffalo",
     });
   };
@@ -74,20 +72,6 @@ const EditProfile = () => {
             type="text"
             placeholder={"Enter your bio"}
             value={userInfo.bio}
-            onChange={handleChange}
-          />
-        </div>
-        {/* Email */}
-        <div className="mb-4">
-          <label className="text-gray-600" htmlFor="email">
-            Email:
-          </label>
-          <input
-            className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline"
-            id="email"
-            type="text"
-            placeholder={"Enter your email address"}
-            value={userInfo.email}
             onChange={handleChange}
           />
         </div>
