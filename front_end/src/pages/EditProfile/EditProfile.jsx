@@ -7,7 +7,7 @@ const EditProfile = () => {
     firstname: "",
     lastname: "",
     bio: "",
-    school: "Not Applicable",
+    school: "",
   });
   const navigate = useNavigate();
 
