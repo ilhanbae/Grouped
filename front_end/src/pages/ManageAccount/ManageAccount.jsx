@@ -20,6 +20,12 @@ const ManageAccount = () => {
         >
           Edit Account Information
         </Link>
+        <Link
+          className="w-full p-3 rounded-md text-white bg-slate-400 hover:bg-slate-500"
+          to="/resetpassword"
+        >
+          Reset Password
+        </Link>
         {/* Edit Account Information */}
         <button
           className="w-full p-3 rounded-md text-white bg-slate-400 hover:bg-slate-500"
