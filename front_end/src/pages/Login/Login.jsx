@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BiUser } from 'react-icons/bi';
 import { AiOutlineUnlock } from 'react-icons/ai';
 import axios from "axios";
@@ -7,6 +7,7 @@ import axios from "axios";
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -25,6 +26,7 @@ const Login = () => {
 
             if (response === 200) {
                 console.log('Login successful');
+                navigate('/individualCalendar');
             } else {
                 console.error('Login failed');
             }
