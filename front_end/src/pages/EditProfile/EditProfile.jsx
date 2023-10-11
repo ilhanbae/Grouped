@@ -1,25 +1,38 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
 const EditProfile = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [userInfo, setUserInfo] = useState({
+    email: location.state.email,
     firstname: "",
     lastname: "",
     bio: "",
     school: "",
   });
-  const navigate = useNavigate();
 
   useEffect(() => {
     // loadUserInfo();
   }, []);
 
-  const loadUserInfo = () => {
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/endpoint`)
-      .then((response) => setUserInfo(response))
-      .catch((error) => console.log(error));
+  // Send POST request to update a user
+  const updateUserInfo = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/manageaccount.php`,
+        userInfo
+      );
+      if (response.status === 200) {
+        console.log("Edit Profile Successful");
+        navigate("/login");
+      } else {
+        console.log("Edit Profile Failed");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const universityOptionList = [
@@ -35,8 +48,9 @@ const EditProfile = () => {
     setUserInfo({ ...userInfo, [id]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    await updateUserInfo();
   };
 
   const handleCancel = () => {
