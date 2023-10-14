@@ -6,7 +6,7 @@ const EditProfile = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [userInfo, setUserInfo] = useState({
-    email: location.state.email,
+    email: location.state ? location.state.email : "",
     firstname: "",
     lastname: "",
     bio: "",
@@ -37,7 +37,6 @@ const EditProfile = () => {
     }
   };
 
-
   const universityOptionList = [
     "Not Applicable",
     "University at Buffalo",
@@ -67,6 +66,7 @@ const EditProfile = () => {
       <form
         className="bg-slate-300 p-8 rounded-lg flex flex-col w-72"
         onSubmit={handleSubmit}
+        autoComplete="off"
       >
         {/* First Name */}
         <div className="mb-4">
