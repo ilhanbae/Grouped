@@ -26,7 +26,9 @@ const EditProfile = () => {
       );
       if (response.status === 200) {
         console.log("Edit Profile Successful");
-        navigate("/login");
+        if (!sessionStorage.getItem("user")) {
+          navigate("/individualCalendar");
+        }
       } else {
         console.log("Edit Profile Failed");
       }
@@ -34,6 +36,7 @@ const EditProfile = () => {
       console.log(error);
     }
   };
+
 
   const universityOptionList = [
     "Not Applicable",
