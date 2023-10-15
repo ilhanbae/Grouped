@@ -29,18 +29,24 @@ const SignUp = () => {
     }
   };
 
-  // Send GET request to get a user by email
-  const checkUniqueEmail = async (email) => {
+  // Send GET request to get a user by email and username
+  const checkUniqueUser = async (user) => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/user.php?email=${email}`
+        `${process.env.REACT_APP_API_URL}/user.php`,
+        {
+          params: {
+            email: user?.email,
+            username: user?.username,
+          },
+        }
       );
       if (response.status === 200) {
         if (Object.keys(response.data).length > 0) {
-          console.log("Check Unique Email: duplicate");
+          console.log("Check Unique Email or Username: duplicate");
           return false;
         } else {
-          console.log("Check Unique Email: not duplicate");
+          console.log("Check Unique Email or Username: not duplicate");
           return true;
         }
       }
@@ -56,13 +62,16 @@ const SignUp = () => {
       .email("Email should be a valid email address")
       .required("Email is required.")
       .test("Unique Email", "Email address already in use.", async (value) =>
-        checkUniqueEmail(value)
+        checkUniqueUser({ email: value })
       ),
     username: yup
       .string()
       .matches(
         /^[A-Za-z0-9]{3,16}$/,
         "Username should be 3-16 alphanumeric characters."
+      )
+      .test("Unique Username", "Username already in use.", async (value) =>
+        checkUniqueUser({ username: value })
       )
       .required("Username is required."),
     password: yup
@@ -82,13 +91,12 @@ const SignUp = () => {
   const {
     register,
     handleSubmit,
-    trigger,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(signUpSchema),
     mode: "onSubmit",
-    // reValidateMode: "onSubmit",
-    reValidateMode: "onChange",
+    reValidateMode: "onSubmit",
+    // reValidateMode: "onChange",
   });
 
   const onSubmit = async (data) => {
