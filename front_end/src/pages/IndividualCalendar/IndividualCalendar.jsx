@@ -21,7 +21,7 @@ const IndividualCalendar = (props) => {
 //     };
 
     return (
-        <div classname="calendarApp" style={{backgroundColor:"lightgray"}}>
+        <div className="calendarApp" style={{backgroundColor:"lightgray"}}>
             <br/>
             <div>
                 <Calendar

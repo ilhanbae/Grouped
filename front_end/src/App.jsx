@@ -9,16 +9,19 @@ import Header from "./components/Header/Header";
 import Land from "./pages/Land/Land";
 import IndividualCalendar from "./pages/IndividualCalendar/IndividualCalendar";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
+import CalendarHeader from "./components/Header/CalendarHeader";
 import "./index.css";
 
 export default function App() {
   const loc = useLocation();
   const noHeaderPaths = ["/", "/login", "/signup"];
   const isHeaderVisible = !noHeaderPaths.includes(loc.pathname);
+  const isIndividualCalendar = loc.pathname === "/individualCalendar";
+  const flag = isHeaderVisible && isIndividualCalendar;
   return (
     <div className="flex flex-col h-screen">
-      {/* Conditionally render Header component */}
-      {isHeaderVisible && <Header />}
+      {/* Conditionally render a Header component */}
+      {isHeaderVisible && (isIndividualCalendar ? <CalendarHeader /> : <Header />)}
       {/* Main Content */}
       <div className="h-full [&>div]:min-h-full">
         <Routes>
