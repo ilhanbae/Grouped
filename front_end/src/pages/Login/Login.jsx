@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BiUser } from "react-icons/bi";
 import { AiOutlineUnlock } from "react-icons/ai";
@@ -29,11 +29,10 @@ const Login = () => {
     resolver: yupResolver(loginSchema),
     mode: "onSubmit",
     reValidateMode: "onSubmit",
-    // reValidateMode: "onChange",
   });
 
-  // Send POST request to login a user
-  const loginUser = async (data) => {
+  const onSubmit = async (data) => {
+    // Send POST request to login a user
     await axios
       .post(`${process.env.REACT_APP_API_URL}/login.php`, data)
       .then((response) => {
@@ -55,11 +54,6 @@ const Login = () => {
           message: "Incorrect email address or password.",
         });
       });
-  };
-
-  const onSubmit = async (data) => {
-    // console.log(data);
-    await loginUser(data);
   };
 
   return (
