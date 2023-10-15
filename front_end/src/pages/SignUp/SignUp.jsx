@@ -1,45 +1,99 @@
 import React, { useState } from "react";
-import {BiUser} from "react-icons/bi";
-import {AiOutlineUnlock} from "react-icons/ai";
-import {Link, useNavigate} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { BiUser } from "react-icons/bi";
+import { AiOutlineUnlock } from "react-icons/ai";
 
 const SignUp = () => {
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
-  // Convert any special character in string into literal character
-  const escapeRegExp = (string) => {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  // Send POST request to create a user
+  const createUser = async (data) => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/signup.php`,
+        data
+      );
+
+      if (response.status === 200) {
+        console.log("Signup successful");
+        navigate("/editprofile", { state: data.email });
+      } else {
+        console.error("Signup failed");
+      }
+    } catch (error) {
+      console.error("Create User API Error:", error);
+    }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // Send GET request to get a user by email
+  const checkUniqueEmail = async (email) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/user.php?email=${email}`
+      );
+      if (response.status === 200) {
+        if (Object.keys(response.data).length > 0) {
+          console.log("Check Unique Email: duplicate");
+          return false;
+        } else {
+          console.log("Check Unique Email: not duplicate");
+          return true;
+        }
+      }
+    } catch (error) {
+      console.error("Get User API Error:", error);
+    }
+  };
 
-    const data = {
-      email,
-      username,
-      password,
-    };
+  // Yup Schema
+  const signUpSchema = yup.object().shape({
+    email: yup
+      .string()
+      .email("Email should be a valid email address")
+      .required("Email is required.")
+      .test("Unique Email", "Email address already in use.", async (value) =>
+        checkUniqueEmail(value)
+      ),
+    username: yup
+      .string()
+      .matches(
+        /^[A-Za-z0-9]{3,16}$/,
+        "Username should be 3-16 alphanumeric characters."
+      )
+      .required("Username is required."),
+    password: yup
+      .string()
+      .matches(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+        "Password should be at least 8 characters, include at least 1 letter, 1 number, and 1 special character."
+      )
+      .required("Password is required."),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("password"), "null"], "Passwords must match.")
+      .required("Confirm Password is required."),
+  });
 
-    // try {
-    //   const response = await axios.post(
-    //     `${process.env.REACT_APP_API_URL}/signup.php`,
-    //     data
-    //   );
+  // useForm hook
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(signUpSchema),
+    mode: "onSubmit",
+    // reValidateMode: "onSubmit",
+    reValidateMode: "onChange",
+  });
 
-    //   if (response.status === 200) {
-    //     console.log("Signup successful");
-    //     navigate("/editprofile", { state: { email } });
-    //   } else {
-    //     console.error("Signup failed");
-    //   }
-    // } catch (error) {
-    //   console.error("Error:", error);
-    // }
+  const onSubmit = async (data) => {
+    console.log(data);
+    await createUser(data);
   };
 
   return (
@@ -56,20 +110,18 @@ const SignUp = () => {
           >
             <form
               className="group"
-              onSubmit={handleSubmit}
+              onSubmit={handleSubmit(onSubmit)}
               autoComplete="off"
               noValidate
             >
               {/* Email */}
-              <div className="relative my-1">
+              <div className="relative my-4">
                 <input
                   type="email"
                   className="block w-96 py-4 px-4 text-lg text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer"
-                  placeholder=""
                   id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
+                  placeholder=""
+                  {...register("email")}
                 />
                 <label
                   htmlFor="email"
@@ -78,21 +130,16 @@ const SignUp = () => {
                   Your Email
                 </label>
                 <BiUser className="absolute top-4 right-4" />
-                <span className="block w-96 invisible peer-invalid:visible">
-                  Email should be a valid email address.
-                </span>
+                <span className="block w-96">{errors.email?.message}</span>
               </div>
               {/* Username */}
-              <div className="relative my-1">
+              <div className="relative my-4">
                 <input
                   type="text"
                   className="block w-96 py-4 px-4 text-lg text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer"
-                  placeholder=""
                   id="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  pattern="^[A-Za-z0-9]{3,16}$"
-                  required
+                  placeholder=""
+                  {...register("username")}
                 />
                 <label
                   htmlFor="username"
@@ -101,21 +148,16 @@ const SignUp = () => {
                   Your Username
                 </label>
                 <BiUser className="absolute top-4 right-4" />
-                <span className="block w-96 invisible peer-invalid:visible">
-                  Username should be 3-16 characters.
-                </span>
+                <span className="block w-96">{errors.username?.message}</span>
               </div>
               {/* Password */}
-              <div className="relative my-1">
+              <div className="relative my-4">
                 <input
                   type="password"
                   className="block w-96 py-4 px-4 text-lg text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer"
-                  placeholder=""
                   id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
-                  required
+                  placeholder=""
+                  {...register("password")}
                 />
                 <label
                   htmlFor="password"
@@ -124,22 +166,16 @@ const SignUp = () => {
                   Your Password
                 </label>
                 <AiOutlineUnlock className="absolute top-4 right-4" />
-                <span className="block w-96 invisible peer-invalid:visible">
-                  Password should be at least 8 characters, include at least 1
-                  letter, 1 number and 1 special character.
-                </span>
+                <span className="block w-96">{errors.password?.message}</span>
               </div>
               {/* Confirm Password */}
-              <div className="relative my-1">
+              <div className="relative my-4">
                 <input
                   type="password"
                   className="block w-96 py-4 px-4 text-lg text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer"
-                  placeholder=""
                   id="confirm-password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  pattern={escapeRegExp(password)}
-                  required
+                  placeholder=""
+                  {...register("confirmPassword")}
                 />
                 <label
                   htmlFor="confirm-password"
@@ -148,8 +184,8 @@ const SignUp = () => {
                   Confirm Password
                 </label>
                 <AiOutlineUnlock className="absolute top-4 right-4" />
-                <span className="block w-96 invisible peer-invalid:visible">
-                  Confirm password should match your password.
+                <span className="block w-96">
+                  {errors.confirmPassword?.message}
                 </span>
               </div>
               {/* Button */}
