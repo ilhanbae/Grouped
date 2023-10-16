@@ -9,6 +9,7 @@ const AddEvent = () => {
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
+    setIsAddInterfaceOpen(false);
   };
 
   const openOptions = () => {
@@ -49,7 +50,7 @@ const AddEvent = () => {
         </div>
       )}
        {isAddInterfaceOpen && (
-        <div className="center-screen">
+        <div className="center-screen bg-black w-1/2">
         <AddInterface onClose={() => setIsAddInterfaceOpen(false)} onSave={(event) => console.log(event)} />
         </div>
        )}
