@@ -34,3 +34,15 @@
     background-color: rgba(133, 182, 228, 1);
 
 }
+
+.modal-overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    z-index: 1000; /* Adjust z-index as needed */
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+}
