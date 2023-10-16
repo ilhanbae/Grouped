@@ -6,6 +6,10 @@ const ManageAccount = () => {
   const navigate = useNavigate();
   const handleLogout = () => {
     // TODO: Should confirm if the user really want to logout
+    // Update session storage
+    sessionStorage.removeItem("id"); // user's id
+    sessionStorage.removeItem("username"); // user's username
+    sessionStorage.removeItem("email"); // user's email
     navigate("/");
   };
 
@@ -20,13 +24,14 @@ const ManageAccount = () => {
         >
           Edit Account Information
         </Link>
+        {/* Reset Password */}
         <Link
           className="w-full p-3 rounded-md text-white bg-slate-400 hover:bg-slate-500"
           to="/resetpassword"
         >
           Reset Password
         </Link>
-        {/* Edit Account Information */}
+        {/* Logout */}
         <button
           className="w-full p-3 rounded-md text-white bg-slate-400 hover:bg-slate-500"
           onClick={handleLogout}
