@@ -1,41 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const EditProfile = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [userInfo, setUserInfo] = useState({
-    email: location.state ? location.state.email : "",
-    firstname: "",
-    lastname: "",
-    bio: "",
-    school: "",
-  });
-
-  useEffect(() => {
-    // loadUserInfo();
-  }, []);
-
-  // Send POST request to update a user
-  const updateUserInfo = async () => {
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/manageaccount.php`,
-        userInfo
-      );
-      if (response.status === 200) {
-        console.log("Edit Profile Successful");
-        if (!sessionStorage.getItem("user")) {
-          navigate("/individualCalendar");
-        }
-      } else {
-        console.log("Edit Profile Failed");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const universityOptionList = [
     "Not Applicable",
@@ -45,14 +18,69 @@ const EditProfile = () => {
     "Harvard University",
   ];
 
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setUserInfo({ ...userInfo, [id]: value });
-  };
+  // Yup Schema
+  const editProfileSchema = yup.object().shape({
+    firstname: yup
+      .string()
+      .matches(/^[A-Za-z ]*$/, "Please enter valid first name.")
+      .max(32, "First Name too long."),
+    lastname: yup
+      .string()
+      .matches(/^[A-Za-z ]*$/, "Please enter valid last name.")
+      .max(32, "Last Name too long."),
+    // .required("Last Name is required."),
+    bio: yup.string().max(150, "Bio should not exceed 150 characters."),
+    school: yup
+      .string()
+      .oneOf(universityOptionList, "University must be valid."),
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await updateUserInfo();
+  // useForm hook
+  const {
+    register,
+    handleSubmit,
+    setError,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(editProfileSchema),
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
+  });
+
+  useEffect(() => {
+    loadUserInfo();
+  }, []);
+
+  // Send GET request to get user info
+  const loadUserInfo = async () => {
+    setIsLoaded(false);
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/user.php`, {
+        params: {
+          email: sessionStorage.getItem("email"),
+        },
+      })
+      .then((response) => {
+        // console.log(response.data);
+        setValue(
+          "email",
+          location.state ? location.state : sessionStorage.getItem("email")
+        );
+        setValue(
+          "firstname",
+          response.data.firstName ? response.data.firstName : ""
+        );
+        setValue(
+          "lastname",
+          response.data.lastName ? response.data.lastName : ""
+        );
+        setValue("bio", response.data.bio ? response.data.bio : "");
+        setValue("school", response.data.school ? response.data.school : "");
+      })
+      .catch((error) => console.error(error));
+    setIsLoaded(true);
   };
 
   const handleCancel = () => {
@@ -60,119 +88,140 @@ const EditProfile = () => {
     navigate("/manageaccount");
   };
 
-  return (
-    <div className="flex items-center flex-col bg-slate-300">
-      {/* User Info Form */}
-      <form
-        className="bg-slate-300 p-8 rounded-lg flex flex-col w-72"
-        onSubmit={handleSubmit}
-        autoComplete="off"
-      >
-        {/* First Name */}
-        <div className="mb-4">
-          <label className="text-gray-600" htmlFor="firstname">
-            First Name:
-          </label>
-          <input
-            className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline"
-            id="firstname"
-            type="text"
-            placeholder={"Enter your first name"}
-            value={userInfo.firstname}
-            onChange={handleChange}
-            maxLength={50}
-          />
-        </div>
-        {/* Last Name */}
-        <div className="mb-4">
-          <label className="text-gray-600" htmlFor="lastName">
-            Last Name:
-          </label>
-          <input
-            className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline"
-            id="lastname"
-            type="text"
-            placeholder={"Enter your last name"}
-            value={userInfo.lastname}
-            onChange={handleChange}
-            maxLength={50}
-          />
-        </div>
-        {/* Bio */}
-        <div className="flex flex-col">
-          <label className="text-gray-600" htmlFor="bio">
-            Bio:
-          </label>
-          <textarea
-            className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline resize-none"
-            id="bio"
-            placeholder={"Enter your bio"}
-            value={userInfo.bio}
-            onChange={handleChange}
-            rows={6}
-            maxLength={150}
-          />
-          <span className="text-gray-600 text-right">
-            {userInfo.bio.length}/150
-          </span>
-        </div>
-        {/* School */}
-        <div className="mb-4 flex flex-col">
-          <label className="text-gray-600" htmlFor="school">
-            School:
-          </label>
-          <select
-            className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline resize-none"
-            id="school"
-            defaultValue={
-              universityOptionList.includes(userInfo.school)
-                ? userInfo.school
-                : "default"
-            }
-            onChange={handleChange}
-          >
-            {!universityOptionList.includes(userInfo.school) && (
-              <option disabled value="default">
-                Choose your school
-              </option>
-            )}
-            {universityOptionList.map((university, index) => (
-              <option key={index} value={university}>
-                {university}
-              </option>
-            ))}
-          </select>
-        </div>
+  const onSubmit = async (data) => {
+    console.log(data);
+    // Send POST request to update a user
+    await axios
+      .post(`${process.env.REACT_APP_API_URL}/manageaccount.php`, data)
+      .then((response) => {
+        console.log(response);
+        if (sessionStorage.getItem("user")) {
+          // When user's not logged in
+          navigate("/individualCalendar");
+        } else {
+          //
+          navigate("/manageaccount");
+        }
+      })
+      .catch((error) => console.error(error));
+  };
 
-        {/* Buttons */}
-        {/* Conditionally render buttons based on user's login state */}
-        {sessionStorage.getItem("user") ? (
-          <div className="flex flex-col space-y-4 ">
+  if (!isLoaded) {
+    return <div className="flex items-center justify-center">Loading...</div>;
+  } else {
+    return (
+      <div className="flex items-center flex-col bg-slate-300">
+        {/* User Info Form */}
+        <form
+          className="bg-slate-300 p-8 rounded-lg flex flex-col w-72"
+          onSubmit={handleSubmit(onSubmit)}
+          autoComplete="off"
+          noValidate
+        >
+          {/* First Name */}
+          <div className="mb-4">
+            <label className="text-gray-600" htmlFor="firstname">
+              First Name:
+            </label>
+            <input
+              className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline"
+              id="firstname"
+              type="text"
+              placeholder={"Enter your first name"}
+              {...register("firstname")}
+            />
+            <span className="block">{errors.firstname?.message}</span>
+          </div>
+          {/* Last Name */}
+          <div className="mb-4">
+            <label className="text-gray-600" htmlFor="lastname">
+              Last Name:
+            </label>
+            <input
+              className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline"
+              id="lastname"
+              type="text"
+              placeholder={"Enter your last name"}
+              {...register("lastname")}
+            />
+            <span className="block">{errors.lastname?.message}</span>
+          </div>
+          {/* Bio */}
+          <div className="flex flex-col">
+            <label className="text-gray-600" htmlFor="bio">
+              Bio:
+            </label>
+            <textarea
+              className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline resize-none"
+              id="bio"
+              placeholder={"Enter your bio"}
+              {...register("bio")}
+            />
+            <span className="text-gray-600 text-right">
+              {yup.ref("bio").length}/150
+            </span>
+            <span className="block">{errors.bio?.message}</span>
+          </div>
+          {/* School */}
+          <div className="mb-4 flex flex-col">
+            <label className="text-gray-600" htmlFor="school">
+              School:
+            </label>
+            <select
+              className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline resize-none"
+              id="school"
+              placeholder="Choose your school"
+              defaultValue={
+                universityOptionList.includes(getValues("school"))
+                  ? getValues("school")
+                  : "default"
+              }
+              defaultValue={getValues("school")}
+              {...register("school")}
+            >
+              {!universityOptionList.includes(getValues("school")) && (
+                <option disabled value="default">
+                  Choose your school
+                </option>
+              )}
+              {universityOptionList.map((university, index) => (
+                <option key={index} value={university}>
+                  {university}
+                </option>
+              ))}
+            </select>
+            <span className="block">{errors.school?.message}</span>
+          </div>
+          {/* Buttons */}
+          {/* Conditionally render buttons based on user's login state */}
+          {sessionStorage.getItem("id") ? (
+            <div className="flex flex-col space-y-4 ">
+              <button
+                className="w-full py-1 rounded text-white bg-green-400 font-bold hover:bg-green-500"
+                type="submit"
+              >
+                Submit Changes
+              </button>
+              <button
+                className="w-full py-1 rounded text-white bg-red-400 font-bold hover:bg-red-500"
+                type="button"
+                onClick={handleCancel}
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
             <button
               className="w-full py-1 rounded text-white bg-green-400 font-bold hover:bg-green-500"
               type="submit"
             >
-              Submit Changes
+              Create Account
             </button>
-            <button
-              className="w-full py-1 rounded text-white bg-red-400 font-bold hover:bg-red-500"
-              type="button"
-              onClick={handleCancel}
-            >
-              Cancel
-            </button>
-          </div>
-        ) : (
-          <button
-            className="w-full py-1 rounded text-white bg-green-400 font-bold hover:bg-green-500"
-            type="submit"
-          >
-            Create Account
-          </button>
-        )}
-      </form>
-    </div>
-  );
+          )}
+        </form>
+      </div>
+    );
+  }
 };
 
 export default EditProfile;
