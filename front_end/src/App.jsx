@@ -17,7 +17,6 @@ export default function App() {
   const noHeaderPaths = ["/", "/login", "/signup"];
   const isHeaderVisible = !noHeaderPaths.includes(loc.pathname);
   const isIndividualCalendar = loc.pathname === "/individualCalendar";
-  const flag = isHeaderVisible && isIndividualCalendar;
   return (
     <div className="flex flex-col h-screen">
       {/* Conditionally render a Header component */}
