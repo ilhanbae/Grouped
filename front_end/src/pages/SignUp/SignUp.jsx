@@ -10,25 +10,6 @@ import { AiOutlineUnlock } from "react-icons/ai";
 const SignUp = () => {
   const navigate = useNavigate();
 
-  // Send POST request to create a user
-  const createUser = async (data) => {
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/signup.php`,
-        data
-      );
-
-      if (response.status === 200) {
-        console.log("Signup successful");
-        navigate("/editprofile", { state: data.email });
-      } else {
-        console.error("Signup failed");
-      }
-    } catch (error) {
-      console.error("Create User API Error:", error);
-    }
-  };
-
   // Send GET request to get a user by email and username
   const checkUniqueUser = async (user) => {
     try {
@@ -61,8 +42,10 @@ const SignUp = () => {
       .string()
       .email("Email should be a valid email address")
       .required("Email is required.")
-      .test("Unique Email", "Email address already in use.", async (value) =>
-        checkUniqueUser({ email: value })
+      .test(
+        "Unique Email",
+        "Email address already in use.",
+        async (value) => await checkUniqueUser({ email: value })
       ),
     username: yup
       .string()
@@ -70,8 +53,10 @@ const SignUp = () => {
         /^[A-Za-z0-9]{3,16}$/,
         "Username should be 3-16 alphanumeric characters."
       )
-      .test("Unique Username", "Username already in use.", async (value) =>
-        checkUniqueUser({ username: value })
+      .test(
+        "Unique Username",
+        "Username already in use.",
+        async (value) => await checkUniqueUser({ username: value })
       )
       .required("Username is required."),
     password: yup
@@ -96,12 +81,36 @@ const SignUp = () => {
     resolver: yupResolver(signUpSchema),
     mode: "onSubmit",
     reValidateMode: "onSubmit",
-    // reValidateMode: "onChange",
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
-    await createUser(data);
+    // Send POST request to register a user
+    await axios
+      .post(`${process.env.REACT_APP_API_URL}/signup.php`, data)
+      .then((response) => {
+        console.log("Signup successful!");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    // Send POST request to login a user
+    await axios
+      .post(`${process.env.REACT_APP_API_URL}/login.php`, {
+        email: data.email,
+        password: data.password,
+      })
+      .then((response) => {
+        console.log("Login successful!");
+        // Update session storage
+        sessionStorage.setItem("id", response.data.id); // user's id
+        sessionStorage.setItem("username", response.data.username); // user's username
+        sessionStorage.setItem("email", response.data.email); // user's email
+        navigate("/editprofile", { state: response.data.email });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
