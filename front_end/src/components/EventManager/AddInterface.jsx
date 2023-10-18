@@ -115,27 +115,29 @@ const AddInterface = ({ onClose, onDelete, onSave, selectedEvent, fromCalendar }
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         ></textarea>
-        <div className="flex justify-end">
-          <button
-            onClick={handleSave}
-            className="h-12 m-2 px-6 bg-gray-600 text-white"
-          >
-            Confirm
-          </button>
-          <button
-            className="h-12 m-2 px-6 bg-gray-600 text-white"
-            onClick={onClose}
-          >
-            Cancel
-          </button>
-          {selectedEvent && (
+        <div className="flex justify-end mt-4">
+            <div className="flex flex-wrap">
               <button
-                className="h-12 m-2 px-6 bg-red-500 text-black rounded-lg"
-                onClick={onDelete}
+                onClick={handleSave}
+                className="h-12 m-2 px-6 bg-gray-600 text-white"
               >
-                Delete
+                Confirm
               </button>
-              )}
+              <button
+                className="h-12 m-2 px-6 bg-gray-600 text-white"
+                onClick={onClose}
+              >
+                Cancel
+              </button>
+              {selectedEvent && (
+                  <button
+                    className="h-12 m-2 px-6 bg-red-500 text-black"
+                    onClick={onDelete}
+                  >
+                    Delete
+                  </button>
+                  )}
+            </div>
         </div>
       </div>
     </div>
