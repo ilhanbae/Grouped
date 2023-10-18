@@ -2,18 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import ProfileIcon from "./ProfileIcon";
 import DropdownLinks from "./DropdownLinks";
 
-const ProfileDropdownMenu = () => {
+const ProfileDropdownMenu = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dropDownMenu = useRef(null);
-
-  const user = {
-    firstname: "John",
-    lastname: "Doe",
-    bio: "Hello, I am John Doe!",
-    email: "tester@buffalo.edu",
-    school: "University at Buffalo",
-  };
-  const userInitial = user.firstname[0] + user.lastname[0];
+  const userInitial = props?.username ? props?.username[0].toUpperCase() : "";
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
