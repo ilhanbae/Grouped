@@ -12,6 +12,7 @@ const localizer = momentLocalizer(moment);
 const IndividualCalendar = (props) => {
   const [events, setEvents] = useState([
     {
+      id: 1,
       start: moment().toDate(),
       end: moment().add(1, 'hours').toDate(),
       title: 'Some title',
@@ -19,6 +20,7 @@ const IndividualCalendar = (props) => {
       location: 'Some location',
     },
     {
+      id: 2,
       start: moment().toDate(),
       end: moment().add(2, 'hours').toDate(),
       title: 'Another title',
@@ -41,9 +43,9 @@ const IndividualCalendar = (props) => {
 
   const handleDelete = () => {
     if (selectedEvent) {
-      setEvents((prevEvents) =>
-        prevEvents.filter((event) => event !== selectedEvent)
-      );
+      const updatedEvents = events.filter((event) => event.id !== selectedEvent.id);
+      setEvents(updatedEvents);
+      console.log(selectedEvent.title + " is deleted!")
     }
     setSelectedEvent(null);
   };
