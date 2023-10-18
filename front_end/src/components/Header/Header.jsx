@@ -1,42 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ProfileDropdownMenu from "./ProfileDropdownMenu";
-import axios from "axios";
 import Logo from "./Logo";
 
 const Header = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [username, setUsername] = useState("");
-
-  useEffect(() => {
-    loadUserInfo();
-  }, []);
-
-  const loadUserInfo = async () => {
-    setIsLoaded(false);
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/user.php`, {
-        params: {
-          email: sessionStorage.getItem("email"),
-        },
-      })
-      .then((response) => {
-        setUsername(response.data.username ? response.data.username : "");
-      })
-      .catch((error) => console.error(error));
-    setIsLoaded(true);
-  };
-
-  if (!isLoaded) {
-    return (
-      <nav className="flex min-w-full items-center justify-between p-3 bg-slate-700"></nav>
-    );
-  } else
-    return (
-      <nav className="flex min-w-full items-center justify-between p-3 bg-slate-700">
-        <Logo />
-        <ProfileDropdownMenu username={username} />
-      </nav>
-    );
+  return (
+    <nav className="flex min-w-full items-center justify-between p-3 bg-slate-700">
+      <Logo />
+      <ProfileDropdownMenu />
+    </nav>
+  );
 };
 
 export default Header;

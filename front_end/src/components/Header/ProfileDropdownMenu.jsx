@@ -2,10 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import ProfileIcon from "./ProfileIcon";
 import DropdownLinks from "./DropdownLinks";
 
-const ProfileDropdownMenu = (props) => {
+const ProfileDropdownMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dropDownMenu = useRef(null);
-  const userInitial = props?.username ? props?.username[0].toUpperCase() : "";
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -28,8 +27,8 @@ const ProfileDropdownMenu = (props) => {
   });
 
   return (
-    <div ref={dropDownMenu}>
-      <ProfileIcon userInitial={userInitial} toggleMenu={toggleMenu} />
+    <div ref={dropDownMenu} className="flex flex-col space-y-12">
+      <ProfileIcon toggleMenu={toggleMenu} isMenuOpen={isMenuOpen} />
       {isMenuOpen && <DropdownLinks toggleMenu={toggleMenu} />}
     </div>
   );
