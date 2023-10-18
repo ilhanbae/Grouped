@@ -88,7 +88,9 @@ const Login = () => {
                   Your Email
                 </label>
                 <BiUser className="absolute top-4 right-4" />
-                <span className="block w-96">{errors.email?.message}</span>
+                <span className="block w-96 text-red-700">
+                  {errors.email?.message}
+                </span>
               </div>
               {/* Password */}
               <div className="relative my-4">
@@ -105,7 +107,9 @@ const Login = () => {
                   Your Password
                 </label>
                 <AiOutlineUnlock className="absolute top-4 right-4" />
-                <span className="block w-96">{errors.password?.message}</span>
+                <span className="block w-96 text-red-700">
+                  {errors.password?.message}
+                </span>
               </div>
               <button
                 className="w-full mb-4 text-[25px] mt-6 rounded-full bg-yellow-500 text-black font-bold hover:bg-yellow-600 hover:text-white py-2 transition-colors duration-300"

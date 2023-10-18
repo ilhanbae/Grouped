@@ -59,10 +59,10 @@ const ResetPassword = () => {
             type="text"
             className="rounded-md w-full px-1 bg-slate-100 focus:outline focus:shadow-outline"
             id="current-password"
-            placeholder={"Enter your email address"}
+            placeholder={"Enter your current password"}
             {...register("currentPassword")}
           />
-          <span className="block text-red-100">
+          <span className="block text-red-700">
             {errors.currentPassword?.message}
           </span>
         </div>
@@ -75,10 +75,10 @@ const ResetPassword = () => {
             type="text"
             className="rounded-md w-full px-1 bg-slate-100 focus:outline focus:shadow-outline"
             id="new-password"
-            placeholder={"Enter your email address"}
+            placeholder={"Enter your new password"}
             {...register("newPassword")}
           />
-          <span className="block text-red-100">
+          <span className="block text-red-700">
             {errors.newPassword?.message}
           </span>
         </div>
@@ -91,10 +91,10 @@ const ResetPassword = () => {
             type="text"
             className="rounded-md w-full px-1 bg-slate-100 focus:outline focus:shadow-outline"
             id="confirm-new-password"
-            placeholder={"Enter your email address"}
+            placeholder={"Enter your new password"}
             {...register("confirmNewPassword")}
           />
-          <span className="block text-red-100">
+          <span className="block text-red-700">
             {errors.confirmNewPassword?.message}
           </span>
         </div>

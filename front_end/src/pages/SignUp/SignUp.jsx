@@ -147,7 +147,9 @@ const SignUp = () => {
                   Your Email
                 </label>
                 <BiUser className="absolute top-4 right-4" />
-                <span className="block w-96">{errors.email?.message}</span>
+                <span className="block w-96 text-red-700">
+                  {errors.email?.message}
+                </span>
               </div>
               {/* Username */}
               <div className="relative my-4">
@@ -165,7 +167,9 @@ const SignUp = () => {
                   Your Username
                 </label>
                 <BiUser className="absolute top-4 right-4" />
-                <span className="block w-96">{errors.username?.message}</span>
+                <span className="block w-96 text-red-700">
+                  {errors.username?.message}
+                </span>
               </div>
               {/* Password */}
               <div className="relative my-4">
@@ -183,7 +187,9 @@ const SignUp = () => {
                   Your Password
                 </label>
                 <AiOutlineUnlock className="absolute top-4 right-4" />
-                <span className="block w-96">{errors.password?.message}</span>
+                <span className="block w-96 text-red-700">
+                  {errors.password?.message}
+                </span>
               </div>
               {/* Confirm Password */}
               <div className="relative my-4">
@@ -201,7 +207,7 @@ const SignUp = () => {
                   Confirm Password
                 </label>
                 <AiOutlineUnlock className="absolute top-4 right-4" />
-                <span className="block w-96">
+                <span className="block w-96 text-red-700">
                   {errors.confirmPassword?.message}
                 </span>
               </div>

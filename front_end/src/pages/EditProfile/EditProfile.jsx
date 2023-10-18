@@ -141,7 +141,9 @@ const EditProfile = () => {
               placeholder={"Enter your first name"}
               {...register("firstname")}
             />
-            <span className="block">{errors.firstname?.message}</span>
+            <span className="block text-red-700">
+              {errors.firstname?.message}
+            </span>
           </div>
           {/* Last Name */}
           <div className="mb-4">
@@ -155,7 +157,9 @@ const EditProfile = () => {
               placeholder={"Enter your last name"}
               {...register("lastname")}
             />
-            <span className="block">{errors.lastname?.message}</span>
+            <span className="block text-red-700">
+              {errors.lastname?.message}
+            </span>
           </div>
           {/* Bio */}
           <div className="flex flex-col">
@@ -170,7 +174,7 @@ const EditProfile = () => {
               maxLength={150}
             />
             <span className="text-right">{watch("bio").length}/150</span>
-            <span className="block">{errors.bio?.message}</span>
+            <span className="block text-red-700">{errors.bio?.message}</span>
           </div>
           {/* School */}
           <div className="mb-4 flex flex-col">
@@ -187,7 +191,7 @@ const EditProfile = () => {
                 </option>
               ))}
             </select>
-            <span className="block">{errors.school?.message}</span>
+            <span className="block text-red-700">{errors.school?.message}</span>
           </div>
           {/* Buttons */}
           <div className="flex flex-col space-y-4 ">
