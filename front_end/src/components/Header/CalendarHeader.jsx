@@ -11,7 +11,7 @@ const CalendarHeader = () => {
       </div>
       <div className="flex items-center">
         <AddEvent />
-        <div style={{ marginLeft: '10px' }}/>
+        <div style={{ marginLeft: "10px" }} />
         <ProfileDropdownMenu />
       </div>
     </nav>

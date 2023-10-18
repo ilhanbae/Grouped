@@ -4,6 +4,7 @@ import axios from "axios";
 const Profile = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [userInfo, setUserInfo] = useState({
+    username: "",
     firstname: "",
     lastname: "",
     bio: "",
@@ -26,6 +27,7 @@ const Profile = () => {
       .then((response) => {
         console.log(response.data);
         setUserInfo({
+          username: response.data.username ? response.data.username : "",
           firstname: response.data.firstName ? response.data.firstName : "",
           lastname: response.data.lastName ? response.data.lastName : "",
           bio: response.data.bio ? response.data.bio : "",
@@ -48,6 +50,20 @@ const Profile = () => {
         <h1 className="text-4xl font-extrabold mb-5">Profile</h1>
         {/* User Fields */}
         <div className="bg-slate-400/30 p-8 rounded-lg flex flex-col w-72">
+          {/* Username */}
+          <div className="mb-4 flex flex-col">
+            <label className="" htmlFor="firstname">
+              Username:
+            </label>
+            <input
+              className="rounded-md w-full px-1 bg-slate-100"
+              id="username"
+              type="text"
+              value={userInfo.username}
+              placeholder="--"
+              readOnly
+            />
+          </div>
           {/* First Name */}
           <div className="mb-4 flex flex-col">
             <label className="" htmlFor="firstname">
