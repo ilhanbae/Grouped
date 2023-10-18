@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
+import { MapPinIcon } from '@heroicons/react/24/outline';
 
 const AddInterface = ({ onClose, onDelete, onSave, selectedEvent, fromCalendar }) => {
   const [title, setTitle] = useState('');
@@ -20,6 +21,7 @@ const AddInterface = ({ onClose, onDelete, onSave, selectedEvent, fromCalendar }
 
       setStart(formattedStart);
       setEnd(formattedEnd);
+      setLocation(selectedEvent.location);
 
       if (fromCalendar === 'individual') {
         setIsSelfSelected(true);
@@ -55,7 +57,7 @@ const AddInterface = ({ onClose, onDelete, onSave, selectedEvent, fromCalendar }
     <div className="add-interface bg-[#e5e7eb] p-4 relative">
       <div className="overlay-content bg-[#e5e7eb] flex flex-col">
         <input
-          className="h-12 m-2 text-2xl bg-[#e5e7eb]"
+          className="h-12 m-2 text-2xl bg-white"
           type="text"
           placeholder="Event Title"
           value={title}
@@ -85,7 +87,7 @@ const AddInterface = ({ onClose, onDelete, onSave, selectedEvent, fromCalendar }
         <br />
         <span className="text-lg">Start Time:</span>
         <input
-          className="text-lg bg-[#e5e7eb]"
+          className="text-lg bg-[#e5e7eb] bg-white"
           type="datetime-local"
           value={start}
           onChange={(e) => setStart(e.target.value)}
@@ -93,19 +95,22 @@ const AddInterface = ({ onClose, onDelete, onSave, selectedEvent, fromCalendar }
         <br />
         <span className="text-lg">End Time:</span>
         <input
-          className="text-lg bg-[#e5e7eb]"
+          className="text-lg bg-[#e5e7eb] bg-white"
           type="datetime-local"
           value={end}
           onChange={(e) => setEnd(e.target.value)}
         />
         <br />
+        <div className="location-container flex items-center">
         <input
-          className="text-lg bg-[#e5e7eb]"
+          className="text-lg bg-[#e5e7eb] bg-white"
           type="text"
           placeholder="Location"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
         />
+        <MapPinIcon className="location-icon h-6 w-6"/>
+        </div>
         <br />
         <textarea
           id="description"
