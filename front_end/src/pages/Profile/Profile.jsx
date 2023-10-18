@@ -30,7 +30,10 @@ const Profile = () => {
           lastname: response.data.lastName ? response.data.lastName : "",
           bio: response.data.bio ? response.data.bio : "",
           email: response.data.email ? response.data.email : "",
-          school: response.data.school ? response.data.school : "",
+          school:
+            response.data?.school !== "Not Applicable"
+              ? response.data.school
+              : "",
         });
       })
       .catch((error) => console.error(error));
@@ -55,6 +58,7 @@ const Profile = () => {
               id="firstname"
               type="text"
               value={userInfo.firstname}
+              placeholder="--"
               readOnly
             />
           </div>
@@ -67,7 +71,8 @@ const Profile = () => {
               className="rounded-md w-full px-1 bg-slate-100"
               id="lastname"
               type="text"
-              defaultValue={userInfo.lastname}
+              value={userInfo.lastname}
+              placeholder="--"
               readOnly
             />
           </div>
@@ -79,7 +84,8 @@ const Profile = () => {
             <textarea
               className="rounded-md px-1 bg-slate-100"
               id="bio"
-              defaultValue={userInfo.bio}
+              value={userInfo.bio}
+              placeholder="--"
               readOnly
             />
           </div>
@@ -92,7 +98,8 @@ const Profile = () => {
               className="rounded-md w-full px-1 bg-slate-100"
               id="email"
               type="text"
-              defaultValue={userInfo.email}
+              value={userInfo.email}
+              placeholder="--"
               readOnly
             />
           </div>
@@ -104,6 +111,7 @@ const Profile = () => {
               id="school"
               type="text"
               defaultValue={userInfo.school}
+              placeholder="--"
               readOnly
             />
           </div>
