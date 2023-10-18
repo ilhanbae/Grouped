@@ -210,7 +210,7 @@ const SignUp = () => {
                 className="w-full mb-4 text-[25px] mt-6 rounded-full bg-yellow-500 text-black font-bold hover:bg-yellow-600 hover:text-white py-2 transition-colors duration-300"
                 type="submit"
               >
-                Sign In
+                Create Account
               </button>
             </form>
           </div>

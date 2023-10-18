@@ -40,6 +40,7 @@ const EditProfile = () => {
     register,
     handleSubmit,
     setError,
+    watch,
     setValue,
     getValues,
     formState: { errors },
@@ -77,7 +78,10 @@ const EditProfile = () => {
           response.data.lastName ? response.data.lastName : ""
         );
         setValue("bio", response.data.bio ? response.data.bio : "");
-        setValue("school", response.data.school ? response.data.school : "");
+        setValue(
+          "school",
+          response.data.school ? response.data.school : "Not Applicable"
+        );
       })
       .catch((error) => console.error(error));
     setIsLoaded(true);
@@ -85,7 +89,13 @@ const EditProfile = () => {
 
   const handleCancel = () => {
     // TODO: Should confirm if the user really want to return to previous page
-    navigate("/manageaccount");
+    if (location.state) {
+      // When user came from sign up page
+      navigate("/individualCalendar");
+    } else {
+      // When user came from manage account page
+      navigate("/manageaccount");
+    }
   };
 
   const onSubmit = async (data) => {
@@ -95,11 +105,11 @@ const EditProfile = () => {
       .post(`${process.env.REACT_APP_API_URL}/manageaccount.php`, data)
       .then((response) => {
         console.log(response);
-        if (sessionStorage.getItem("user")) {
-          // When user's not logged in
+        if (location.state) {
+          // When user came from sign up page
           navigate("/individualCalendar");
         } else {
-          //
+          // When user came from manage account page
           navigate("/manageaccount");
         }
       })
@@ -110,21 +120,22 @@ const EditProfile = () => {
     return <div className="flex items-center justify-center">Loading...</div>;
   } else {
     return (
-      <div className="flex items-center flex-col bg-slate-300">
+      <div className="flex items-center justify-center flex-col bg-slate-300">
+        <h1 className="text-4xl font-extrabold mb-5">Edit Profile</h1>
         {/* User Info Form */}
         <form
-          className="bg-slate-300 p-8 rounded-lg flex flex-col w-72"
+          className="bg-slate-400/30 p-8 rounded-lg flex flex-col w-72"
           onSubmit={handleSubmit(onSubmit)}
           autoComplete="off"
           noValidate
         >
           {/* First Name */}
           <div className="mb-4">
-            <label className="text-gray-600" htmlFor="firstname">
+            <label className="" htmlFor="firstname">
               First Name:
             </label>
             <input
-              className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline"
+              className="rounded-md w-full px-1 bg-slate-100 focus:outline focus:shadow-outline"
               id="firstname"
               type="text"
               placeholder={"Enter your first name"}
@@ -134,11 +145,11 @@ const EditProfile = () => {
           </div>
           {/* Last Name */}
           <div className="mb-4">
-            <label className="text-gray-600" htmlFor="lastname">
+            <label className="" htmlFor="lastname">
               Last Name:
             </label>
             <input
-              className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline"
+              className="rounded-md w-full px-1 bg-slate-100 focus:outline focus:shadow-outline"
               id="lastname"
               type="text"
               placeholder={"Enter your last name"}
@@ -148,42 +159,28 @@ const EditProfile = () => {
           </div>
           {/* Bio */}
           <div className="flex flex-col">
-            <label className="text-gray-600" htmlFor="bio">
+            <label className="" htmlFor="bio">
               Bio:
             </label>
             <textarea
-              className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline resize-none"
+              className="rounded-md w-full px-1 bg-slate-100 focus:outline focus:shadow-outline"
               id="bio"
               placeholder={"Enter your bio"}
               {...register("bio")}
+              maxLength={150}
             />
-            <span className="text-gray-600 text-right">
-              {yup.ref("bio").length}/150
-            </span>
+            <span className="text-right">{watch("bio").length}/150</span>
             <span className="block">{errors.bio?.message}</span>
           </div>
           {/* School */}
           <div className="mb-4 flex flex-col">
-            <label className="text-gray-600" htmlFor="school">
+            <label className="" htmlFor="school">
               School:
             </label>
             <select
-              className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline resize-none"
-              id="school"
-              placeholder="Choose your school"
-              defaultValue={
-                universityOptionList.includes(getValues("school"))
-                  ? getValues("school")
-                  : "default"
-              }
-              defaultValue={getValues("school")}
+              className="rounded-md w-full px-1 bg-slate-100 focus:outline focus:shadow-outline"
               {...register("school")}
             >
-              {!universityOptionList.includes(getValues("school")) && (
-                <option disabled value="default">
-                  Choose your school
-                </option>
-              )}
               {universityOptionList.map((university, index) => (
                 <option key={index} value={university}>
                   {university}
@@ -193,31 +190,21 @@ const EditProfile = () => {
             <span className="block">{errors.school?.message}</span>
           </div>
           {/* Buttons */}
-          {/* Conditionally render buttons based on user's login state */}
-          {sessionStorage.getItem("id") ? (
-            <div className="flex flex-col space-y-4 ">
-              <button
-                className="w-full py-1 rounded text-white bg-green-400 font-bold hover:bg-green-500"
-                type="submit"
-              >
-                Submit Changes
-              </button>
-              <button
-                className="w-full py-1 rounded text-white bg-red-400 font-bold hover:bg-red-500"
-                type="button"
-                onClick={handleCancel}
-              >
-                Cancel
-              </button>
-            </div>
-          ) : (
+          <div className="flex flex-col space-y-4 ">
             <button
               className="w-full py-1 rounded text-white bg-green-400 font-bold hover:bg-green-500"
               type="submit"
             >
-              Create Account
+              Submit Changes
             </button>
-          )}
+            <button
+              className="w-full py-1 rounded text-white bg-red-400 font-bold hover:bg-red-500"
+              type="button"
+              onClick={handleCancel}
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       </div>
     );

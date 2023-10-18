@@ -41,16 +41,17 @@ const Profile = () => {
     return <div className="flex items-center justify-center">Loading...</div>;
   } else {
     return (
-      <div className="flex items-center flex-col bg-slate-300">
+      <div className="flex items-center justify-center flex-col bg-slate-300">
+        <h1 className="text-4xl font-extrabold mb-5">Profile</h1>
         {/* User Fields */}
-        <div className="bg-slate-300 p-8 rounded-lg flex flex-col w-72">
+        <div className="bg-slate-400/30 p-8 rounded-lg flex flex-col w-72">
           {/* First Name */}
           <div className="mb-4 flex flex-col">
-            <label className="text-gray-600" htmlFor="firstname">
+            <label className="" htmlFor="firstname">
               First Name:
             </label>
             <input
-              className="rounded-md w-full px-1 bg-slate-100 text-gray-800"
+              className="rounded-md w-full px-1 bg-slate-100"
               id="firstname"
               type="text"
               value={userInfo.firstname}
@@ -59,11 +60,11 @@ const Profile = () => {
           </div>
           {/* Last Name */}
           <div className="mb-4 flex flex-col">
-            <label className="text-gray-600" htmlFor="lastname">
+            <label className="" htmlFor="lastname">
               Last Name:
             </label>
             <input
-              className="rounded-md w-full px-1 bg-slate-100 text-gray-800"
+              className="rounded-md w-full px-1 bg-slate-100"
               id="lastname"
               type="text"
               defaultValue={userInfo.lastname}
@@ -72,24 +73,23 @@ const Profile = () => {
           </div>
           {/* Bio */}
           <div className="mb-4 flex flex-col">
-            <label className="text-gray-600" htmlFor="bio">
+            <label className="" htmlFor="bio">
               Bio:
             </label>
             <textarea
-              className="rounded-md px-1 bg-slate-100 text-gray-800 resize-none"
+              className="rounded-md px-1 bg-slate-100"
               id="bio"
               defaultValue={userInfo.bio}
-              rows={6}
               readOnly
             />
           </div>
           {/* Email */}
           <div className="mb-4 flex flex-col">
-            <label className="text-gray-600" htmlFor="email">
+            <label className="" htmlFor="email">
               Email:
             </label>
             <input
-              className="rounded-md w-full px-1 bg-slate-100 text-gray-800"
+              className="rounded-md w-full px-1 bg-slate-100"
               id="email"
               type="text"
               defaultValue={userInfo.email}
@@ -98,9 +98,9 @@ const Profile = () => {
           </div>
           {/* School */}
           <div className="mb-4 flex flex-col" htmlFor="school">
-            <label className="text-gray-600">School:</label>
+            <label className="">School:</label>
             <input
-              className="rounded-md w-full px-1 bg-slate-100 text-gray-800"
+              className="rounded-md w-full px-1 bg-slate-100"
               id="school"
               type="text"
               defaultValue={userInfo.school}
