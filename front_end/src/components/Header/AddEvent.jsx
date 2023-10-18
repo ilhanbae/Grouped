@@ -1,11 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './AddEvent.css';
 import AddInterface from '../EventManager/AddInterface';
+import {useLocation} from 'react-router-dom';
 
 const AddEvent = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAddInterfaceOpen, setIsAddInterfaceOpen] = useState(false);
   const dropDownMenu = useRef(null);
+  const location = useLocation();
+
+  let calendar = "";
+  if (location.pathname === "/individualCalendar"){
+    calendar = "individual";
+  }
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -51,7 +58,11 @@ const AddEvent = () => {
       )}
        {isAddInterfaceOpen && (
         <div className="center-screen bg-black w-1/2">
-        <AddInterface onClose={() => setIsAddInterfaceOpen(false)} onSave={(event) => console.log(event)} />
+        <AddInterface
+            onClose={() => setIsAddInterfaceOpen(false)}
+            onSave={(event) => console.log(event)}
+            fromCalendar = {calendar}
+            />
         </div>
        )}
     </div>
