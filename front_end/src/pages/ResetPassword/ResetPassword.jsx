@@ -39,6 +39,19 @@ const ResetPassword = () => {
   const onSubmit = async (data) => {
     console.log(data);
     // send POST request to reset password
+    await axios
+      .post(`${process.env.REACT_APP_API_URL}/passwordreset.php`, data)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(error);
+        if (error.response.data === "No Such User")
+          setError("currentPassword", {
+            type: "Invalid Current Password",
+            message: "Invalid current passord.",
+          });
+      });
   };
 
   return (
