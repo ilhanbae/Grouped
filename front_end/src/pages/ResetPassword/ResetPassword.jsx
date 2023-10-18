@@ -42,10 +42,10 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="flex items-center flex-col bg-slate-300">
-      <h1>Reset Password</h1>
+    <div className="flex items-center justify-center flex-col bg-slate-300">
+      <h1 className="text-4xl font-extrabold mb-5">Reset Password</h1>
       <form
-        className="bg-slate-400 p-8 rounded-lg flex flex-col w-72"
+        className="bg-slate-400/30 p-8 rounded-lg flex flex-col w-72"
         autoComplete="off"
         onSubmit={handleSubmit(onSubmit)}
         noValidate
@@ -57,7 +57,7 @@ const ResetPassword = () => {
           </label>
           <input
             type="text"
-            className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline"
+            className="rounded-md w-full px-1 bg-slate-100 focus:outline focus:shadow-outline"
             id="current-password"
             placeholder={"Enter your email address"}
             {...register("currentPassword")}
@@ -73,7 +73,7 @@ const ResetPassword = () => {
           </label>
           <input
             type="text"
-            className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline"
+            className="rounded-md w-full px-1 bg-slate-100 focus:outline focus:shadow-outline"
             id="new-password"
             placeholder={"Enter your email address"}
             {...register("newPassword")}
@@ -89,7 +89,7 @@ const ResetPassword = () => {
           </label>
           <input
             type="text"
-            className="rounded-md w-full px-1 bg-slate-100 text-gray-800 focus:outline focus:shadow-outline"
+            className="rounded-md w-full px-1 bg-slate-100 focus:outline focus:shadow-outline"
             id="confirm-new-password"
             placeholder={"Enter your email address"}
             {...register("confirmNewPassword")}
