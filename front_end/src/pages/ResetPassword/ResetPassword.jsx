@@ -37,20 +37,32 @@ const ResetPassword = () => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
+    const resetPasswordData = {
+      id: parseInt(sessionStorage.getItem("id")),
+      password: data.currentPassword,
+      newPassword: data.newPassword,
+      confirmnewPassword: data.confirmNewPassword,
+    };
+    console.log(resetPasswordData);
     // send POST request to reset password
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/passwordreset.php`, data)
+      .post(
+        `${process.env.REACT_APP_API_URL}/passwordreset.php`,
+        resetPasswordData
+      )
       .then((response) => {
         console.log(response);
+        navigate("/manageaccount");
       })
       .catch((error) => {
-        console.error(error);
-        if (error.response.data === "No Such User")
+        // console.error(error);
+        console.error(error.response.data);
+        if (error.response.data === "Incorrect Password") {
           setError("currentPassword", {
-            type: "Invalid Current Password",
-            message: "Invalid current passord.",
+            type: "Wrong Password",
+            message: "Wrong Password.",
           });
+        }
       });
   };
 
@@ -69,7 +81,7 @@ const ResetPassword = () => {
             Current Password:
           </label>
           <input
-            type="text"
+            type="password"
             className="rounded-md w-full px-1 bg-slate-100 focus:outline focus:shadow-outline"
             id="current-password"
             placeholder={"Enter your current password"}
@@ -85,7 +97,7 @@ const ResetPassword = () => {
             New Password:
           </label>
           <input
-            type="text"
+            type="password"
             className="rounded-md w-full px-1 bg-slate-100 focus:outline focus:shadow-outline"
             id="new-password"
             placeholder={"Enter your new password"}
@@ -101,7 +113,7 @@ const ResetPassword = () => {
             Confirm New Password:
           </label>
           <input
-            type="text"
+            type="password"
             className="rounded-md w-full px-1 bg-slate-100 focus:outline focus:shadow-outline"
             id="confirm-new-password"
             placeholder={"Enter your new password"}
