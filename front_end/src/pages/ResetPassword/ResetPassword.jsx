@@ -66,6 +66,11 @@ const ResetPassword = () => {
       });
   };
 
+  const handleCancel = () => {
+    // TODO: Should confirm if the user really want to return to previous page
+    navigate("/manageaccount");
+  };
+
   return (
     <div className="flex items-center justify-center flex-col bg-slate-300">
       <h1 className="text-4xl font-extrabold mb-5">Reset Password</h1>
@@ -123,12 +128,22 @@ const ResetPassword = () => {
             {errors.confirmNewPassword?.message}
           </span>
         </div>
-        <button
-          className="w-full py-1 rounded text-white bg-green-400 font-bold hover:bg-green-500"
-          type="submit"
-        >
-          Change Password
-        </button>
+        {/* Buttons */}
+        <div className="flex flex-col space-y-4">
+          <button
+            className="w-full py-1 rounded text-white bg-green-400 font-bold hover:bg-green-500"
+            type="submit"
+          >
+            Change Password
+          </button>
+          <button
+            className="w-full py-1 rounded text-white bg-red-400 font-bold hover:bg-red-500"
+            type="button"
+            onClick={handleCancel}
+          >
+            Cancel
+          </button>
+        </div>
       </form>
     </div>
   );
