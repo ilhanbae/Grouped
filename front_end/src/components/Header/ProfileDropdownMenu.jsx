@@ -6,15 +6,6 @@ const ProfileDropdownMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dropDownMenu = useRef(null);
 
-  const user = {
-    firstname: "John",
-    lastname: "Doe",
-    bio: "Hello, I am John Doe!",
-    email: "tester@buffalo.edu",
-    school: "University at Buffalo",
-  };
-  const userInitial = user.firstname[0] + user.lastname[0];
-
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -36,8 +27,8 @@ const ProfileDropdownMenu = () => {
   });
 
   return (
-    <div ref={dropDownMenu}>
-      <ProfileIcon userInitial={userInitial} toggleMenu={toggleMenu} />
+    <div ref={dropDownMenu} className="flex flex-col space-y-12">
+      <ProfileIcon toggleMenu={toggleMenu} isMenuOpen={isMenuOpen} />
       {isMenuOpen && <DropdownLinks toggleMenu={toggleMenu} />}
     </div>
   );
