@@ -1,0 +1,39 @@
+.dropdown-button {
+    background-color: #fff;
+    color: #3498db;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-button:hover {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.icon {
+    font-size: 18px;
+    transition: transform 0.3s ease;
+}
+
+.icon.open {
+    transform: rotate(45deg);
+}
+
+.center-screen {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    z-index: 1000; /* Adjust z-index as needed */
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+}
