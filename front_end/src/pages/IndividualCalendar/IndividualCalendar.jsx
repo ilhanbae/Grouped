@@ -32,10 +32,6 @@ const IndividualCalendar = (props) => {
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   const handleEventSelect = (event) => {
-//     event.start = moment(event.start);
-//     event.end = moment(event.end);
-    console.log("SelectedEvent: ", event)
-    console.log("Events:", events)
     setSelectedEvent(event);
   };
 
