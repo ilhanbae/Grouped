@@ -32,13 +32,26 @@ const IndividualCalendar = (props) => {
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   const handleEventSelect = (event) => {
-    event.start = moment(event.start);
-    event.end = moment(event.end);
+//     event.start = moment(event.start);
+//     event.end = moment(event.end);
+    console.log("SelectedEvent: ", event)
+    console.log("Events:", events)
     setSelectedEvent(event);
   };
 
   const handleSave = (event) => {
-    console.log('Event saved:', event);
+     if (selectedEvent) {
+        event.id = selectedEvent.id;
+        selectedEvent.title = event.title;
+        selectedEvent.start = moment(event.start).toDate();
+        selectedEvent.end = moment(event.end).toDate();
+        selectedEvent.location = event.location;
+        selectedEvent.description = event.description;
+        events[selectedEvent.id-1] = selectedEvent;
+     }
+     setEvents(events);
+     setSelectedEvent(null);
+     console.log('Event saved:', event.id, event);
   };
 
   const handleDelete = () => {
