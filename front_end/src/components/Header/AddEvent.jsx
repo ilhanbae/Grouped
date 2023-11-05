@@ -3,7 +3,7 @@ import './AddEvent.css';
 import AddInterface from '../EventManager/AddInterface';
 import {useLocation} from 'react-router-dom';
 
-const AddEvent = () => {
+const AddEvent = ({onCreateEvent}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAddInterfaceOpen, setIsAddInterfaceOpen] = useState(false);
   const dropDownMenu = useRef(null);
@@ -44,7 +44,6 @@ const AddEvent = () => {
       };
     });
 
-
   return (
     <div className="dropdown" ref={dropDownMenu}>
       <button className="dropdown-button" onClick={toggleDropdown}>
@@ -60,7 +59,11 @@ const AddEvent = () => {
         <div className="center-screen bg-black w-1/2">
         <AddInterface
             onClose={() => setIsAddInterfaceOpen(false)}
-            onSave={(event) => console.log(event)}
+            onSave={(event) => {
+                onCreateEvent(event);
+                setIsAddInterfaceOpen(false);
+                console.log("AddEvent message", event);
+            }}
             fromCalendar = {calendar}
             />
         </div>

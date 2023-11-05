@@ -54,6 +54,17 @@ const IndividualCalendar = (props) => {
     setSelectedEvent(null);
   };
 
+  const addEvent = (newEvent) => {
+    const newEvents = [
+    ...events,
+    {
+        ...newEvent,
+        id:events.length + 1,
+    },
+    ];
+    setEvents(newEvents);
+  };
+
   return (
     <div className="calendarApp" style={{ backgroundColor: 'lightgray' }}>
       <br />
@@ -73,7 +84,7 @@ const IndividualCalendar = (props) => {
         <div className="modal-overlay bg-black w-1/2">
           <AddInterface
             selectedEvent={selectedEvent}
-            onSave={handleSave}
+            onSave={addEvent}
             onClose={handleClose}
             onDelete={handleDelete}
             fromCalendar="individual"
