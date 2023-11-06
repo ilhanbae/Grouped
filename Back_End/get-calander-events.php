@@ -11,14 +11,13 @@ $mysqli = require __DIR__ . "/database.php";
 $method = $_SERVER['REQUEST_METHOD'];
 switch ($method) {
     case "GET":
-        // Get user_id or group_id from the query
-        $user = json_decode(file_get_contents('php://input'));
-        $user_id = $user->user_id;
-        $group_id = $user->group_id;
-        if($user_id){
+        // Get user_id or group_id
+        if($_GET['user_id'] != null){
+            $user_id = $_GET['user_id'];
             $stmt = $mysqli->prepare("SELECT title, start_time, end_time, descrip FROM user_calander WHERE user_id = ?");
             $stmt->bind_param("s", $user_id);
-        }else if($group_id){
+        }else if($_GET['group_id'] != null){
+            $group_id = $_GET['group_id'];
             $stmt = $mysqli->prepare("SELECT title, start_time, end_time, descrip FROM user_calander WHERE group_id = ?");
             $stmt->bind_param("s", $group_id);
         }else{
