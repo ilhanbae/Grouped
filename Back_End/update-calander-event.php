@@ -20,67 +20,37 @@ switch ($method) {
         $matchedevent = $result->fetch_assoc();
 
         if($matchedevent){
-            if($user->title == null){
-                echo("No Update to Event Title Provided");
-            }else{
-                $title = $title = $user->title;
-                $stmt = $mysqli->prepare("UPDATE `user_calander` SET title = ? WHERE id = $user->id");
-                $stmt->bind_param("s", $title);
-                if ($stmt->execute()) {
-                    echo "Title Successfully Updated";
-                } else {
-                    echo "Failed to Update Title";
-                    header("HTTP/1.1 400 BAD REQUEST");
-                    break;
-                }
+            
+            $title = $title = $user->title;
+            if (empty($title)){
+                header("HTTP/1.1 400 BAD REQUEST");
+                die("No Event Title Provided");
             }
             if($user->start_time == null){
-                echo("No Update to Event Start TIme Provided");
+                header("HTTP/1.1 400 BAD REQUEST");
+                die("No Event Start Time Provided");
             }else{
                 $start_time = date('Y-m-d H:i:s', strtotime($user->start_time));
-                $stmt = $mysqli->prepare("UPDATE `user_calander` SET start_time = ? WHERE id = $user->id");
-                $stmt->bind_param("s", $start_time);
-                if ($stmt->execute()) {
-                    echo "Start Time Successfully Updated";
-                } else {
-                    echo "Failed to Update Start Time";
-                    header("HTTP/1.1 400 BAD REQUEST");
-                    break;
-                }
-
             }
             if($user->end_time == null){
-                echo("No Update to Event End TIme Provided");
+                header("HTTP/1.1 400 BAD REQUEST");
+                die("No Event End Time Provided");
             }else{
                 $end_time = date('Y-m-d H:i:s', strtotime($user->end_time));
-                $stmt = $mysqli->prepare("UPDATE `user_calander` SET end_time = ? WHERE id = $user->id");
-                $stmt->bind_param("s", $end_time);
-                if ($stmt->execute()) {
-                    echo "End Time Successfully Updated";
-                } else {
-                    echo "Failed to Update End Time";
-                    header("HTTP/1.1 400 BAD REQUEST");
-                    break;
-                }
-
             }
-            if($user->descrip == null){
-                echo("No Update to Event Description Provided");
-            }else{
-                $descrip = $user->descrip;
-                $stmt = $mysqli->prepare("UPDATE `user_calander` SET descrip = ? WHERE id = $user->id");
-                $stmt->bind_param("s", $descrip);
-                if ($stmt->execute()) {
-                    echo "Description Successfully Updated";
-                } else {
-                    echo "Failed to Update Description";
-                    header("HTTP/1.1 400 BAD REQUEST");
-                    break;
-                }
+           
+            $descrip = $user->descrip;
 
+            $stmt = $mysqli->prepare("UPDATE `user_calander` SET title = ?, start_time = ?, end_time = ?, descrip = ? WHERE id = $user->id");
+            $stmt->bind_param("ssss", $title,$start_time,$end_time,$descrip);
+            if ($stmt->execute()) {
+                echo "All Fields Updated";
+                header("HTTP/1.1 200 OK");
+            } else {
+                echo "Failed to Update Event";
+                header("HTTP/1.1 400 BAD REQUEST");
+                break;
             }
-            echo "All Fields Updated";
-            header("HTTP/1.1 200 OK");
 
         }else{
             header("HTTP/1.1 400 BAD REQUEST");
