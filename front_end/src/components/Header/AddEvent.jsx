@@ -4,6 +4,7 @@ import AddInterface from '../EventManager/AddInterface';
 import {useLocation} from 'react-router-dom';
 
 const AddEvent = ({onCreateEvent}) => {
+  console.log("yea");
   const [isOpen, setIsOpen] = useState(false);
   const [isAddInterfaceOpen, setIsAddInterfaceOpen] = useState(false);
   const dropDownMenu = useRef(null);
