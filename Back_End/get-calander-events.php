@@ -30,7 +30,8 @@ switch ($method) {
         // Execute
         $result = $stmt->execute();
         if ($result) {
-            $calanderEvents = $stmt->get_result()->fetch_assoc();
+            //$calanderEvents = $stmt->get_result()->fetch_assoc();
+            $calanderEvents = mysqli_fetch_all ($stmt->get_result(), MYSQLI_ASSOC);
             header("HTTP/1.1 200 OK");
             echo json_encode($calanderEvents);
             
