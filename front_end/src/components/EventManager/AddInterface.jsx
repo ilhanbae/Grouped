@@ -136,7 +136,7 @@ const AddInterface = ({ onClose, onDelete, onSave, selectedEvent, fromCalendar }
               </button>
               {selectedEvent && (
                   <button
-                    className="h-12 m-2 px-6 bg-red-500 text-black"
+                    className="h-12 m-2 px-6 bg-red-400 text-white rounded-md hover:bg-red-500"
                     onClick={onDelete}
                   >
                     Delete
