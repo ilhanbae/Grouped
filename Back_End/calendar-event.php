@@ -35,13 +35,13 @@ switch ($method) {
             header("HTTP/1.1 400 BAD REQUEST");
             die("No Event Title Provided");
         }
-        $start_time = $user->start_time;
+        $start_time = date('Y-m-d H:i:s', strtotime($user->start_time));
         if (empty($start_time)){
             header("HTTP/1.1 400 BAD REQUEST");
             die("No Event Start Time Provided");
         }
 
-        $end_time = $user->end_time;
+        $end_time = date('Y-m-d H:i:s', strtotime($user->end_time));
         if (empty($end_time)){
             header("HTTP/1.1 400 BAD REQUEST");
             die("No Event End Time Provided");
