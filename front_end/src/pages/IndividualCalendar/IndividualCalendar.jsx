@@ -11,24 +11,7 @@ moment.tz.setDefault("America/New_York");
 const localizer = momentLocalizer(moment);
 
 const IndividualCalendar = (props) => {
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      start: moment().toDate(),
-      end: moment().add(1, "hours").toDate(),
-      title: "Some title",
-      description: "Some description",
-      location: "Some location",
-    },
-    {
-      id: 2,
-      start: moment().toDate(),
-      end: moment().add(2, "hours").toDate(),
-      title: "Another title",
-      description: "Another description",
-      location: "Another location",
-    },
-  ]);
+  const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -39,14 +22,19 @@ const IndividualCalendar = (props) => {
   const loadCalendarEvents = async () => {
     setIsLoaded(false);
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/calendar-event.php`, {
+      .get(`${process.env.REACT_APP_API_URL}/get-calander-events.php`, {
         params: {
           user_id: sessionStorage.getItem("id"),
         },
       })
       .then((response) => {
         console.log(response);
-        setEvents(response.data);
+        const formattedEvents = response.data.map((event) => ({
+          ...event,
+          start: moment(event.start_time).toDate(),
+          end: moment(event.end_time).toDate(),
+        }));
+        setEvents(formattedEvents);
       })
       .catch((error) => {
         console.error(error);
