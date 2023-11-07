@@ -14,13 +14,9 @@ const AddInterface = ({ onClose, onDelete, onSave, selectedEvent, fromCalendar }
   useEffect(() => {
     if (selectedEvent) {
       setTitle(selectedEvent.title);
-      setDescription(selectedEvent.description);
-
-      const formattedStart = moment(selectedEvent.start).format('YYYY-MM-DDTHH:mm');
-      const formattedEnd = moment(selectedEvent.end).format('YYYY-MM-DDTHH:mm');
-
-      setStart(formattedStart);
-      setEnd(formattedEnd);
+      setStart(moment(selectedEvent.start).format("YYYY-MM-DDTHH:mm"));
+      setEnd(moment(selectedEvent.end).format("YYYY-MM-DDTHH:mm"));
+      setDescription(selectedEvent.descrip);
       setLocation(selectedEvent.location);
 
       if (fromCalendar === 'individual') {

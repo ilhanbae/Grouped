@@ -46,19 +46,29 @@ const IndividualCalendar = (props) => {
     setSelectedEvent(event);
   };
 
-  const handleSave = (event) => {
-    if (selectedEvent) {
-      event.id = selectedEvent.id;
-      selectedEvent.title = event.title;
-      selectedEvent.start = moment(event.start).toDate();
-      selectedEvent.end = moment(event.end).toDate();
-      selectedEvent.location = event.location;
-      selectedEvent.description = event.description;
-      events[selectedEvent.id - 1] = selectedEvent;
-    }
-    setEvents(events);
+  const handleSave = async (event) => {
+    const data = {
+      id: selectedEvent.id,
+      user_id: sessionStorage.getItem("id"),
+      title: event.title,
+      start_time: event.start,
+      end_time: event.end,
+      location: event.location,
+      descrip: event.description,
+    };
+    console.log(data);
+
+    await axios
+      .post(`${process.env.REACT_APP_API_URL}/update-calander-event.php`, data)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
     setSelectedEvent(null);
-    console.log("Event saved:", event.id, event);
+    loadCalendarEvents();
   };
 
   const handleDelete = () => {
