@@ -4,7 +4,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './IndividualCalendar.css';
 import 'moment-timezone';
 import AddInterface from '../../components/EventManager/AddInterface';
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback, } from 'react';
 
 moment.tz.setDefault('America/New_York');
 const localizer = momentLocalizer(moment);
@@ -38,7 +38,22 @@ const IndividualCalendar = (props) => {
   };
 
   const handleSave = (event) => {
-    console.log('Event saved:', event);
+    if (selectedEvent) {
+        let identification = selectedEvent.id;
+        if (identification == null){
+            identification = events.length + 1;
+        }
+        event.id = identification;
+        selectedEvent.title = event.title;
+        selectedEvent.start = moment(event.start).toDate();
+        selectedEvent.end = moment(event.end).toDate();
+        selectedEvent.location = event.location;
+        selectedEvent.description = event.description;
+        events[identification-1] = selectedEvent;
+    }
+    setEvents(events);
+    setSelectedEvent(null);
+    console.log('Event saved:', event.id, event);
   };
 
   const handleDelete = () => {
@@ -54,16 +69,13 @@ const IndividualCalendar = (props) => {
     setSelectedEvent(null);
   };
 
-  const addEvent = (newEvent) => {
-    const newEvents = [
-    ...events,
-    {
-        ...newEvent,
-        id:events.length + 1,
-    },
-    ];
-    setEvents(newEvents);
-  };
+  const clickRef = useRef(null);
+  const onSelectSlot = useCallback((slotInfo) => {
+    window.clearTimeout(clickRef.current);
+    clickRef.current = window.setTimeout(() => {
+        setSelectedEvent({start:moment(slotInfo.start).toDate(), end:moment(slotInfo.end).toDate()});
+    }, 250);
+  }, []);
 
   return (
     <div className="calendarApp" style={{ backgroundColor: 'lightgray' }}>
@@ -78,13 +90,15 @@ const IndividualCalendar = (props) => {
           endAccessor="end"
           style={{ height: '70vh', padding: '10px 10px 10px 10px' }}
           onSelectEvent={handleEventSelect}
+          onSelectSlot={onSelectSlot}
+          selectable
         />
       </div>
       {selectedEvent && (
         <div className="modal-overlay bg-black w-1/2">
           <AddInterface
             selectedEvent={selectedEvent}
-            onSave={addEvent}
+            onSave={handleSave}
             onClose={handleClose}
             onDelete={handleDelete}
             fromCalendar="individual"
