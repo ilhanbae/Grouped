@@ -6,7 +6,7 @@
 .rbc-toolbar{
     background-color: rgba(86, 46, 33, 0.35);
     color: black;
-    font: bold x-large Germania One, "sans-serif", "fantasy";
+    font: bold large Germania One, "sans-serif", "fantasy";
 }
 
 .rbc-time-view{
@@ -22,7 +22,7 @@
 }
 
 [role=columnheader]{
-    font: bold large Germania One, "sans-serif";
+    font: bold small Germania One, "sans-serif";
 }
 
 .rbc-time-gutter{

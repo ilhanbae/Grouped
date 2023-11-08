@@ -11,6 +11,8 @@ const AddInterface = ({ onClose, onDelete, onSave, selectedEvent, fromCalendar }
   const [isSelfSelected, setIsSelfSelected] = useState(fromCalendar === 'individual');
   const [isGroupSelected, setIsGroupSelected] = useState(!isSelfSelected);
 
+  const haveDelete = selectedEvent.title == null? false : true;
+
   useEffect(() => {
     if (selectedEvent) {
       setTitle(selectedEvent.title);
@@ -50,17 +52,16 @@ const AddInterface = ({ onClose, onDelete, onSave, selectedEvent, fromCalendar }
   };
 
   return (
-    <div className="add-interface bg-[#e5e7eb] p-4 relative">
+    <div className="add-interface bg-[#e5e7eb] p-1">
       <div className="overlay-content bg-[#e5e7eb] flex flex-col">
         <input
-          className="h-12 m-2 text-2xl bg-white"
+          className="h-10 m-2 text-2xl bg-white"
           type="text"
           placeholder="Event Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-        <br />
-        <div className="flex flex-wrap">
+        <div className="flex">
           <button
             id="Self"
             className={`h-12 px-6 m-2 text-lg rounded-lg focus:shadow-outline ${
@@ -80,24 +81,23 @@ const AddInterface = ({ onClose, onDelete, onSave, selectedEvent, fromCalendar }
             Group
           </button>
         </div>
-        <br />
-        <span className="text-lg">Start Time:</span>
-        <input
-          className="text-lg bg-[#e5e7eb] bg-white"
-          type="datetime-local"
-          value={start}
-          onChange={(e) => setStart(e.target.value)}
-        />
-        <br />
-        <span className="text-lg">End Time:</span>
-        <input
-          className="text-lg bg-[#e5e7eb] bg-white"
-          type="datetime-local"
-          value={end}
-          onChange={(e) => setEnd(e.target.value)}
-        />
-        <br />
-        <div className="location-container flex items-center">
+        <span className="text-lg py-2"><span>Start Time: </span>
+            <input
+              className="text-lg bg-[#e5e7eb] bg-white"
+              type="datetime-local"
+              value={start}
+              onChange={(e) => setStart(e.target.value)}
+            />
+        </span>
+        <span className="text-lg py-2"><span>End Time: </span>
+            <input
+              className="text-lg bg-[#e5e7eb] bg-white"
+              type="datetime-local"
+              value={end}
+              onChange={(e) => setEnd(e.target.value)}
+            />
+        </span>
+        <div className="location-container flex items-center py-2">
         <input
           className="text-lg bg-[#e5e7eb] bg-white"
           type="text"
@@ -107,11 +107,10 @@ const AddInterface = ({ onClose, onDelete, onSave, selectedEvent, fromCalendar }
         />
         <MapPinIcon className="location-icon h-6 w-6"/>
         </div>
-        <br />
         <textarea
           id="description"
           rows="4"
-          className="block p-2.5 w-full text-sm text-[#020617] bg-[#0ea5e9] rounded-lg border focus:ring-blue-500 focus:border-blue-500"
+          className="block py-2 w-full text-sm text-[#020617] bg-[#0ea5e9] rounded-lg border focus:ring-blue-500 focus:border-blue-500"
           placeholder="Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -130,7 +129,7 @@ const AddInterface = ({ onClose, onDelete, onSave, selectedEvent, fromCalendar }
               >
                 Cancel
               </button>
-              {selectedEvent && (
+              {haveDelete && (
                   <button
                     className="h-12 m-2 px-6 bg-red-400 text-white rounded-md hover:bg-red-500"
                     onClick={onDelete}
