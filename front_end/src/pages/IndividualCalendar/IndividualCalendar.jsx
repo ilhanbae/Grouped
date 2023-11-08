@@ -71,15 +71,22 @@ const IndividualCalendar = (props) => {
     loadCalendarEvents();
   };
 
-  const handleDelete = () => {
-    if (selectedEvent) {
-      const updatedEvents = events.filter(
-        (event) => event.id !== selectedEvent.id
-      );
-      setEvents(updatedEvents);
-      console.log(selectedEvent.title + " is deleted!");
-    }
+  const handleDelete = async () => {
+    await axios
+      .delete(`${process.env.REACT_APP_API_URL}/delete-calander-event.php`, {
+        params: {
+          id: selectedEvent.id,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
     setSelectedEvent(null);
+    loadCalendarEvents();
   };
 
   const handleClose = () => {
