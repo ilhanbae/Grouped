@@ -174,7 +174,7 @@ const IndividualCalendar = (props) => {
           />
         </div>
         {selectedEvent && (
-          <div className="modal-overlay bg-black w-1/2">
+          <div className="modal-overlay bg-black w-auto h-auto">
             <AddInterface
               selectedEvent={selectedEvent}
               onSave={handleSave}
