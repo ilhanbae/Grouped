@@ -38,29 +38,52 @@ const IndividualCalendar = (props) => {
   };
 
   const handleSave = (event) => {
-    if (selectedEvent) {
-        let identification = selectedEvent.id;
-        if (identification == null){
-            identification = events.length + 1;
-        }
-        event.id = identification;
-        selectedEvent.title = event.title;
-        selectedEvent.start = moment(event.start).toDate();
-        selectedEvent.end = moment(event.end).toDate();
-        selectedEvent.location = event.location;
-        selectedEvent.description = event.description;
-        events[identification-1] = selectedEvent;
-    }
-    setEvents(events);
-    setSelectedEvent(null);
-    console.log('Event saved:', event.id, event);
+      // Convert the times to moment objects and to Dates
+      const startMoment = moment(event.start).toDate();
+      const endMoment = moment(event.end).toDate();
+
+      // Check if the selectedEvent is an existing event or a new one
+      if (selectedEvent && selectedEvent.id != null) {
+        // existing event
+        setEvents((prevEvents) =>
+          prevEvents.map((e) =>
+            e.id === selectedEvent.id
+              ? {
+                  ...e,
+                  title: event.title,
+                  start: startMoment,
+                  end: endMoment,
+                  location: event.location,
+                  description: event.description,
+                }
+              : e
+          )
+        );
+        console.log('Event updated:', selectedEvent.id, event);
+      } else {
+        // new event
+        const newEvent = {
+          id: events.length + 1,
+          title: event.title,
+          start: startMoment,
+          end: endMoment,
+          location: event.location,
+          description: event.description,
+        };
+
+        setEvents((prevEvents) => [...prevEvents, newEvent]);
+        console.log('New event added:', newEvent.id, event);
+      }
+
+      setSelectedEvent(null);
   };
+
 
   const handleDelete = () => {
     if (selectedEvent) {
       const updatedEvents = events.filter((event) => event.id !== selectedEvent.id);
       setEvents(updatedEvents);
-      console.log(selectedEvent.title + " is deleted!")
+      console.log(selectedEvent.id + ": " + selectedEvent.title + " is deleted!")
     }
     setSelectedEvent(null);
   };
