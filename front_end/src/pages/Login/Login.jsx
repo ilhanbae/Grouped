@@ -57,15 +57,15 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-slate-300">
-      <div className="text-white flex flex-col justify-center items-center">
-        <h1 className="text-6xl text-black font-bold text-center p-8">
+    <div className="bg-slate-300 flex flex-col">
+      <div className="flex flex-col justify-center items-center">
+        <h1 className="text-5xl text-black font-bold text-center p-8">
           Login to Your Account
         </h1>
         <br />
         <div className="flex flex-col items-center">
           <div
-            className="bg-slate-800 border border-slate-800 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-sm bg-opacity-30 relative"
+            className="bg-slate-800 border border-slate-800 rounded-md p-8 shadow-lg"
             style={{ backgroundColor: "lightskyblue" }}
           >
             <form
@@ -77,7 +77,7 @@ const Login = () => {
               <div className="relative my-4">
                 <input
                   type="email"
-                  className="block w-96 py-4 px-4 text-lg text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer"
+                  className="block w-80 py-4 px-4 text-lg text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer"
                   placeholder=""
                   {...register("email")}
                 />
@@ -88,7 +88,7 @@ const Login = () => {
                   Your Email
                 </label>
                 <BiUser className="absolute top-4 right-4" />
-                <span className="block w-96 text-red-700">
+                <span className="block w-80 text-red-700">
                   {errors.email?.message}
                 </span>
               </div>
@@ -96,7 +96,7 @@ const Login = () => {
               <div className="relative my-4">
                 <input
                   type="password"
-                  className="block w-96 py-4 px-4 text-lg text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer"
+                  className="block w-80 py-4 px-4 text-lg text-black bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:text-black focus:border-blue-600 peer"
                   placeholder=""
                   {...register("password")}
                 />
@@ -107,7 +107,7 @@ const Login = () => {
                   Your Password
                 </label>
                 <AiOutlineUnlock className="absolute top-4 right-4" />
-                <span className="block w-96 text-red-700">
+                <span className="block w-80 text-red-700">
                   {errors.password?.message}
                 </span>
               </div>
@@ -120,14 +120,14 @@ const Login = () => {
             </form>
           </div>
           <div className="p-8" style={{ marginTop: "20px" }}>
-            <span className="m-12">
-              <Link className="text-blue-500 text-3xl font-bold" to="/signup">
+            <span>
+              <Link className="text-blue-500 text-2xl font-bold flex" to="/signup">
                 Don't have an Account?
               </Link>
             </span>
             <span className="m-12">
               <Link
-                className="text-blue-500 text-3xl font-bold"
+                className="text-blue-500 text-2xl font-bold flex"
                 to="ForgotPassword"
               >
                 Forgot Password?

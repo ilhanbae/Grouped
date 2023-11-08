@@ -1,9 +1,9 @@
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-import './IndividualCalendar.css';
-import 'moment-timezone';
-import AddInterface from '../../components/EventManager/AddInterface';
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import moment from "moment";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import "./IndividualCalendar.css";
+import "moment-timezone";
+import AddInterface from "../../components/EventManager/AddInterface";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 
@@ -47,39 +47,22 @@ const IndividualCalendar = (props) => {
   };
 
   const handleSave = async (event) => {
-    const startMoment = moment(event.start).toDate();
-    const endMoment = moment(event.end).toDate();
-
     if (selectedEvent && selectedEvent.id != null) {
-      // If it's an existing event, update it in the events array
-      setEvents((prevEvents) =>
-        prevEvents.map((e) =>
-          e.id === selectedEvent.id
-            ? {
-                ...e,
-                title: event.title,
-                start: startMoment,
-                end: endMoment,
-                location: event.location,
-                description: event.description,
-              }
-            : e
-        )
-      );
-
-      // Update the event on the server
+      // If it's an existing event, send update calendar event request
       const data = {
         id: selectedEvent.id,
         user_id: sessionStorage.getItem("id"),
         title: event.title,
-        start_time: startMoment,
-        end_time: endMoment,
+        start_time: event.start,
+        end_time: event.end,
         location: event.location,
         descrip: event.description,
       };
-
       await axios
-        .post(`${process.env.REACT_APP_API_URL}/update-calander-event.php`, data)
+        .post(
+          `${process.env.REACT_APP_API_URL}/update-calander-event.php`,
+          data
+        )
         .then((response) => {
           console.log(response);
         })
@@ -87,58 +70,51 @@ const IndividualCalendar = (props) => {
           console.error(error);
         });
 
-      console.log('Event updated:', selectedEvent.id, event);
-      loadCalendarEvents();
+      console.log("Event updated:", selectedEvent.id, event);
     } else {
-      // If it's a new event, create it with a unique ID and the converted times
-      const newEvent = {
-        id: events.length + 1,
+      // If it's a new event, send create calendar event request
+      const data = {
+        user_id: sessionStorage.getItem("id"),
         title: event.title,
-        start: startMoment,
-        end: endMoment,
+        start_time: event.start,
+        end_time: event.end,
         location: event.location,
-        description: event.description,
+        descrip: event.description,
       };
 
-      // Add the new event to the events array
-      setEvents((prevEvents) => [...prevEvents, newEvent]);
+      await axios
+        .post(`${process.env.REACT_APP_API_URL}/calendar-event.php`, data)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
 
-//       // Create and send the new event data to the server
-//       const newData = {
-//         id: events.length + 1,
-//         user_id: sessionStorage.getItem("id"),
-//         title: event.title,
-//         start_time: startMoment,
-//         end_time: endMoment,
-//         location: event.location,
-//         descrip: event.description,
-//       };
-//
-//       await axios
-//         .post(`${process.env.REACT_APP_API_URL}/add-calander-event.php`, newData)
-//         .then((response) => {
-//           console.log(response);
-//         })
-//         .catch((error) => {
-//           console.error(error);
-//         });
-
-      console.log('New event added:', newEvent.id, event);
+      console.log("New event added:", event);
     }
 
+    // reset selected event & load calander events
     setSelectedEvent(null);
-//     loadCalendarEvents();
+    loadCalendarEvents();
   };
 
-  const handleDelete = () => {
-    if (selectedEvent) {
-      const updatedEvents = events.filter(
-        (event) => event.id !== selectedEvent.id
-      );
-      setEvents(updatedEvents);
-      console.log(selectedEvent.id + ": " + selectedEvent.title + " is deleted!")
-    }
+  const handleDelete = async () => {
+    await axios
+      .delete(`${process.env.REACT_APP_API_URL}/delete-calander-event.php`, {
+        params: {
+          id: selectedEvent.id,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
     setSelectedEvent(null);
+    loadCalendarEvents();
   };
 
   const handleClose = () => {
@@ -146,12 +122,15 @@ const IndividualCalendar = (props) => {
   };
 
   const clickRef = useRef(null);
-    const onSelectSlot = useCallback((slotInfo) => {
-      window.clearTimeout(clickRef.current);
-      clickRef.current = window.setTimeout(() => {
-          setSelectedEvent({start:moment(slotInfo.start).toDate(), end:moment(slotInfo.end).toDate()});
-      }, 250);
-    }, []);
+  const onSelectSlot = useCallback((slotInfo) => {
+    window.clearTimeout(clickRef.current);
+    clickRef.current = window.setTimeout(() => {
+      setSelectedEvent({
+        start: moment(slotInfo.start).toDate(),
+        end: moment(slotInfo.end).toDate(),
+      });
+    }, 250);
+  }, []);
 
   if (!isLoaded) {
     return <div className="flex items-center justify-center">Loading...</div>;
@@ -174,7 +153,7 @@ const IndividualCalendar = (props) => {
           />
         </div>
         {selectedEvent && (
-          <div className="modal-overlay bg-black w-1/2">
+          <div className="modal-overlay bg-black w-auto h-auto">
             <AddInterface
               selectedEvent={selectedEvent}
               onSave={handleSave}
