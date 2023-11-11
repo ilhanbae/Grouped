@@ -3,11 +3,11 @@ import logo from '../../assets/logo.png';
 
 const Land = () => {
     return (
-        <div style={{ display: "flex", height: "100vh", margin: 0}}>
+        <div style={{ display: "flex"}}>
             <div style={{ flex: 1, backgroundColor: "lightskyblue", display:'flex', flexDirection:'column', justifyContent: 'center', alignItems:'center'}}>
-                <div><img src={logo} alt='logo' className="rounded-xl" style={{width:'30vw'}}/></div>
+                <div><img src={logo} alt='logo' className="rounded-xl scale-75"/></div>
                 <br/>
-                <h1 className="text-3xl text-black font-bold bg-violet-400 h-auto p-4 rounded-xl" style={{ textAlign: 'center' }}>
+                <h1 className="text-xl text-black font-bold bg-violet-400 h-auto p-4 rounded-xl" style={{ textAlign: 'center' }}>
                 A Collaborative Planner for Your Everyday Life Making Scheduling and Communication Seamless</h1>
             </div>
             <div style={{ flex: 1, backgroundColor: "lightgray", display:'flex', flexDirection:'column', justifyContent: 'center', alignItems:'center'}}>
