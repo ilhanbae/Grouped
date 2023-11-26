@@ -22,13 +22,14 @@ const IndividualCalendar = (props) => {
   const loadCalendarEvents = async () => {
     setIsLoaded(false);
     await axios
-      .get(`${process.env.REACT_APP_API_URL}/get-calander-events.php`, {
+      .get("http://localhost/cse442/calendar-events/get-calandar-event.php", {
+        // .get(`${process.env.REACT_APP_API_URL}/get-calander-events.php`, {
         params: {
           user_id: sessionStorage.getItem("id"),
         },
       })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         const formattedEvents = response.data.map((event) => ({
           ...event,
           start: moment(event.start_time).toDate(),
@@ -121,6 +122,63 @@ const IndividualCalendar = (props) => {
     setSelectedEvent(null);
   };
 
+  const eventPropGetter = (event, start, end, isSelected) => {
+    // Tailwind colors: https://tailwindcss.com/docs/customizing-colors
+    const colors = {
+      0: "#60a5fa", // blue-400 <-- reserved for self event
+      1: "#f87171", // red-400
+      2: "#fb923c", // orange-400
+      3: "#facc15", // yellow-400
+      4: "#4ade80", // green-400
+      5: "#a78bfa", // violet-400
+    };
+
+    // Alpha-hex value table: https://borderleft.com/toolbox/rrggbbaa/
+    const opacity = {
+      0: "80", // 70%
+      1: "ff", // 100$
+    };
+
+    // Self event background color is colors[0].
+    // Opacity and visibility is determined by display setting option.
+    const getSelfEventStyle = (isOpaque, isDisplayed) => {
+      const style = {};
+      style.backgroundColor = colors[0] + opacity[Number(isOpaque)];
+      style.color = "#ffffff" + opacity[Number(isOpaque)];
+      style.visibility = isDisplayed ? "visible" : "hidden";
+      return style;
+    };
+
+    // Group event background color ranges colors[1] to colors[5].
+    // Opacity and visibility is determined by display setting option.
+    const getGroupEventStyle = (groupId, isOpaque, isDisplayed) => {
+      const style = {};
+      const totalColors = Object.keys(colors).length - 1;
+      const colorIndex = groupId % totalColors || totalColors;
+      style.backgroundColor = colors[colorIndex] + opacity[Number(isOpaque)];
+      style.color = "#ffffff" + opacity[Number(isOpaque)];
+      style.visibility = isDisplayed ? "visible" : "hidden";
+      return style;
+    };
+
+    console.log(event);
+
+    let eventProp = { style: {} };
+    if (event.user_id) {
+      // Individual events
+      const isOpaque = true;
+      const isDisplayed = true;
+      eventProp.style = { ...getSelfEventStyle(isOpaque, isDisplayed) };
+    }
+    if (event.group_id) {
+      // Group events
+      const isOpaque = true;
+      const isDisplayed = true;
+      eventProp.style = { ...getGroupEventStyle(1, isOpaque, isDisplayed) };
+    }
+    return eventProp;
+  };
+
   const clickRef = useRef(null);
   const onSelectSlot = useCallback((slotInfo) => {
     window.clearTimeout(clickRef.current);
@@ -136,22 +194,20 @@ const IndividualCalendar = (props) => {
     return <div className="flex items-center justify-center">Loading...</div>;
   } else {
     return (
-      <div className="calendarApp" style={{ backgroundColor: "lightgray" }}>
-        <br />
-        <div>
-          <Calendar
-            localizer={localizer}
-            defaultDate={new Date()}
-            defaultView="week"
-            events={events}
-            startAccessor="start"
-            endAccessor="end"
-            style={{ height: "70vh", padding: "10px 10px 10px 10px" }}
-            onSelectEvent={handleEventSelect}
-            onSelectSlot={onSelectSlot}
-            selectable
-          />
-        </div>
+      <div className="calendarApp h-full max-h-0 bg-slate-300">
+        <Calendar
+          localizer={localizer}
+          defaultDate={new Date()}
+          defaultView="week"
+          events={events}
+          startAccessor="start"
+          endAccessor="end"
+          style={{ height: "100%", padding: "10px 10px" }}
+          onSelectEvent={handleEventSelect}
+          onSelectSlot={onSelectSlot}
+          eventPropGetter={eventPropGetter}
+          selectable
+        />
         {selectedEvent && (
           <div className="modal-overlay bg-black w-auto h-auto">
             <AddInterface
