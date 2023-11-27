@@ -6,6 +6,7 @@ import "moment-timezone";
 import AddInterface from "../../components/EventManager/AddInterface";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
+import { getSelfEventProp, getGroupEventProp } from "../../utils/getEventProp";
 
 moment.tz.setDefault("America/New_York");
 const localizer = momentLocalizer(moment);
@@ -123,58 +124,22 @@ const IndividualCalendar = (props) => {
   };
 
   const eventPropGetter = (event, start, end, isSelected) => {
-    // Tailwind colors: https://tailwindcss.com/docs/customizing-colors
-    const colors = {
-      0: "#60a5fa", // blue-400 <-- reserved for self event
-      1: "#f87171", // red-400
-      2: "#fb923c", // orange-400
-      3: "#facc15", // yellow-400
-      4: "#4ade80", // green-400
-      5: "#a78bfa", // violet-400
-    };
+    // console.log(event);
 
-    // Alpha-hex value table: https://borderleft.com/toolbox/rrggbbaa/
-    const opacity = {
-      0: "80", // 70%
-      1: "ff", // 100$
-    };
-
-    // Self event background color is colors[0].
-    // Opacity and visibility is determined by display setting option.
-    const getSelfEventStyle = (isOpaque, isDisplayed) => {
-      const style = {};
-      style.backgroundColor = colors[0] + opacity[Number(isOpaque)];
-      style.color = "#ffffff" + opacity[Number(isOpaque)];
-      style.visibility = isDisplayed ? "visible" : "hidden";
-      return style;
-    };
-
-    // Group event background color ranges colors[1] to colors[5].
-    // Opacity and visibility is determined by display setting option.
-    const getGroupEventStyle = (groupId, isOpaque, isDisplayed) => {
-      const style = {};
-      const totalColors = Object.keys(colors).length - 1;
-      const colorIndex = groupId % totalColors || totalColors;
-      style.backgroundColor = colors[colorIndex] + opacity[Number(isOpaque)];
-      style.color = "#ffffff" + opacity[Number(isOpaque)];
-      style.visibility = isDisplayed ? "visible" : "hidden";
-      return style;
-    };
-
-    console.log(event);
-
-    let eventProp = { style: {} };
+    let eventProp = { style: {}, className: {} };
     if (event.user_id) {
       // Individual events
       const isOpaque = true;
       const isDisplayed = true;
-      eventProp.style = { ...getSelfEventStyle(isOpaque, isDisplayed) };
+      eventProp = { ...getSelfEventProp(isOpaque, isDisplayed) };
     }
     if (event.group_id) {
       // Group events
       const isOpaque = true;
       const isDisplayed = true;
-      eventProp.style = { ...getGroupEventStyle(1, isOpaque, isDisplayed) };
+      eventProp = {
+        ...getGroupEventProp(event.group_id, isOpaque, isDisplayed),
+      };
     }
     return eventProp;
   };
