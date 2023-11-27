@@ -11,6 +11,8 @@ const COLORS = {
   2: "#fb923c", // orange-400
   3: "#4ade80", // green-400
   4: "#a78bfa", // violet-400
+  5: "#f472b6", // pink-400
+  6: "#22d3ee", // cyan-400
 };
 
 // Alpha-hex value table: https://borderleft.com/toolbox/rrggbbaa/
