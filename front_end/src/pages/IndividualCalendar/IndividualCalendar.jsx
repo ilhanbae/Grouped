@@ -7,6 +7,7 @@ import AddInterface from "../../components/EventManager/AddInterface";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 import { getSelfEventProp, getGroupEventProp } from "../../utils/getEventProp";
+import SettingInterface from "../../components/DisplaySetting/SettingInterface";
 
 moment.tz.setDefault("America/New_York");
 const localizer = momentLocalizer(moment);
@@ -15,6 +16,7 @@ const IndividualCalendar = (props) => {
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [showSetting, setShowSetting] = useState(true);
 
   useEffect(() => {
     loadCalendarEvents();
@@ -47,6 +49,7 @@ const IndividualCalendar = (props) => {
     setSelectedEvent(event);
   };
 
+  // Event Manager
   const handleSave = async (event) => {
     if (selectedEvent && selectedEvent.id != null) {
       // If it's an existing event, send update calendar event request
@@ -143,6 +146,11 @@ const IndividualCalendar = (props) => {
     return eventProp;
   };
 
+  // Display Setting
+  const toggleSetting = () => {
+    setShowSetting(!showSetting);
+  };
+
   const clickRef = useRef(null);
   const onSelectSlot = useCallback((slotInfo) => {
     window.clearTimeout(clickRef.current);
@@ -173,7 +181,7 @@ const IndividualCalendar = (props) => {
           selectable
         />
         {selectedEvent && (
-          <div className="modal-overlay bg-black w-auto h-auto">
+          <div className="modal-overlay w-full h-full">
             <AddInterface
               selectedEvent={selectedEvent}
               onSave={handleSave}
@@ -181,6 +189,11 @@ const IndividualCalendar = (props) => {
               onDelete={handleDelete}
               fromCalendar="individual"
             />
+          </div>
+        )}
+        {showSetting && (
+          <div className="modal-overlay w-full h-full">
+            <SettingInterface toggleSetting={toggleSetting} />
           </div>
         )}
       </div>

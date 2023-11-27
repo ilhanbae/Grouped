@@ -89,9 +89,9 @@ const AddInterface = ({
   };
 
   return (
-    <div className="add-interface bg-[#e5e7eb] p-1">
+    <div className="modal-content w-fit h-fit bg-[#e5e7eb]">
       <form
-        className="overlay-content bg-[#e5e7eb] flex flex-col"
+        className="bg-[#e5e7eb] flex flex-col"
         autoComplete="off"
         noValidate
         onSubmit={handleSubmit(onSubmit)}
