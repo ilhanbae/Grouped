@@ -23,8 +23,7 @@ const IndividualCalendar = (props) => {
   const loadCalendarEvents = async () => {
     setIsLoaded(false);
     await axios
-      .get("http://localhost/cse442/calendar-events/get-calandar-event.php", {
-        // .get(`${process.env.REACT_APP_API_URL}/get-calander-events.php`, {
+      .get(`${process.env.REACT_APP_API_URL}/get-calander-events.php`, {
         params: {
           user_id: sessionStorage.getItem("id"),
         },
