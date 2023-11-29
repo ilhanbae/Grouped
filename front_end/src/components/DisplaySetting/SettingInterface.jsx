@@ -31,6 +31,7 @@ const SettingInterface = ({ toggleSetting }) => {
       <button
         className="w-full p-1 rounded text-white font-bold bg-slate-400 hover:bg-slate-500"
         type="button"
+        onClick={() => toggleSetting()}
       >
         Join Group
       </button>
