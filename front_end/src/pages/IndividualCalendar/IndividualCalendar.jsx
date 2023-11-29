@@ -8,6 +8,7 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import axios from "axios";
 import { getSelfEventProp, getGroupEventProp } from "../../utils/getEventProp";
 import SettingInterface from "../../components/DisplaySetting/SettingInterface";
+import GroupSearchInterface from "../../components/GroupSearch/GroupSearchInterface";
 
 moment.tz.setDefault("America/New_York");
 const localizer = momentLocalizer(moment);
@@ -61,6 +62,7 @@ const IndividualCalendar = (props) => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showSetting, setShowSetting] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
 
   useEffect(() => {
     loadCalendarEvents();
@@ -232,9 +234,10 @@ const IndividualCalendar = (props) => {
     return eventProp;
   };
 
-  // Display Setting
+  // Display Components
   const toggleSetting = () => {
     setShowSetting(!showSetting);
+    setShowSearch(!showSearch);
   };
 
   const clickRef = useRef(null);
@@ -283,6 +286,11 @@ const IndividualCalendar = (props) => {
            <div className="modal-overlay w-full h-full">
              <SettingInterface toggleSetting={toggleSetting} />
            </div>
+         )}
+         {showSearch && (
+            <div className="modal-overlay w-full h-full">
+              <GroupSearchInterface toggleSetting={toggleSetting} />
+            </div>
          )}
         <button onClick={() => setShowSetting(true)} className='displayButton ml-4 p-2'>Display Setting</button>
       </div>
