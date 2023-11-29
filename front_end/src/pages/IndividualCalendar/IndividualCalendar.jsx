@@ -92,29 +92,31 @@ const IndividualCalendar = (props) => {
       const data = {
         id: selectedEvent.id,
         user_id: sessionStorage.getItem("id"),
+        group_id: event?.group_id,
         title: event.title,
         start_time: event.start,
         end_time: event.end,
         location: event.location,
         descrip: event.description,
       };
+
       await axios
         .post(
           `${process.env.REACT_APP_API_URL}/update-calander-event.php`,
           data
         )
         .then((response) => {
-          console.log(response);
+          // console.log(response);
+          console.log("Updated event:", data);
         })
         .catch((error) => {
           console.error(error);
         });
-
-      console.log("Event updated:", selectedEvent.id, event);
     } else {
       // If it's a new event, send create calendar event request
       const data = {
         user_id: sessionStorage.getItem("id"),
+        group_id: event?.group_id,
         title: event.title,
         start_time: event.start,
         end_time: event.end,
@@ -125,13 +127,12 @@ const IndividualCalendar = (props) => {
       await axios
         .post(`${process.env.REACT_APP_API_URL}/calendar-event.php`, data)
         .then((response) => {
-          console.log(response);
+          // console.log(response);
+          console.log("Added new event:", data);
         })
         .catch((error) => {
           console.error(error);
         });
-
-      console.log("New event added:", event);
     }
 
     // reset selected event & load calander events
@@ -147,7 +148,8 @@ const IndividualCalendar = (props) => {
         },
       })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
+        console.log("Deleted event:", selectedEvent);
       })
       .catch((error) => {
         console.error(error);
