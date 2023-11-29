@@ -4,6 +4,7 @@ import { MapPinIcon } from '@heroicons/react/24/outline';
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { getColorById } from "../../utils/getEventProp";
 
 const AddInterface = ({
   onClose,
@@ -93,8 +94,13 @@ const AddInterface = ({
   const isSelfSelected = watch("type") === "self";
   const isGroupSelected = watch("type") === "group";
   const isEditEvent = selectedEvent.id != null;
-  const isEditSelfEvent = selectedEvent.user_id != null;
+  const isEditSelfEvent = selectedEvent.group_id == null;
   const isEditGroupEvent = selectedEvent.group_id != null;
+
+  // Some long style variables
+  const groupColorGradients =
+    // "bg-[linear-gradient(120deg,_#f87171,_#fb923c,_#4ade80,_#a78bfa,_#f472b6,_#22d3ee)]";
+    "bg-[linear-gradient(120deg,_#60a5fa,_#f87171)]";
 
   const toggleEventType = (type) => {
     setValue("type", type);
@@ -137,44 +143,81 @@ const AddInterface = ({
         <div className="flex-col">
           <div className="flex space-x-1 justify-start">
             {/* Self Button */}
-            <button
-              id="Self"
-              className={`h-12 px-6 text-lg rounded-md focus:shadow-outline ${
-                isSelfSelected ? "bg-cyan-200 text-black" : " text-black"
-              } ${isEditGroupEvent ? "invisible" : "visible"}`}
-              type="button"
-              onClick={() => toggleEventType("self")}
-            >
-              Self
-            </button>
+            {!isEditEvent && (
+              <button
+                id="Self"
+                className={`h-12 px-6 text-lg rounded-md focus:shadow-outline ${
+                  isSelfSelected ? "bg-blue-400 text-black" : " text-black"
+                } ${isEditEvent ? "cursor-default" : "cursor-pointer"}`}
+                type="button"
+                onClick={() => toggleEventType("self")}
+              >
+                Self
+              </button>
+            )}
+            {/* Self Label */}
+            {isEditEvent && isEditSelfEvent && (
+              <span
+                className="p-1 text-lg font-mono font-bold text-slate-800 text-right rounded-md"
+                style={{ backgroundColor: getColorById(0) }}
+              >
+                Self
+              </span>
+            )}
             {/* Group Button */}
-            <button
-              id="Group"
-              className={`h-12 px-6 text-lg rounded-md focus:shadow-outline ${
-                isGroupSelected ? "bg-cyan-200 text-black" : "text-black"
-              }`}
-              type="button"
-              onClick={() => toggleEventType("group")}
-            >
-              Group
-            </button>
-            {/* Group Downdown */}
-            <select
-              id="group"
-              className={`text-lg rounded-md cursor-pointer ${
-                isGroupSelected ? "visible" : "invisible"
-              }`}
-              {...register("groupId")}
-            >
-              <option key="placeholder" hidden value={0}>
-                Select Group
-              </option>
-              {groups.map((group) => (
-                <option key={group.id} value={group.id} className="rounded">
-                  {group.title}
+            {!isEditEvent && (
+              <button
+                id="Group"
+                className={`h-12 px-6 text-lg rounded-md focus:shadow-outline ${
+                  isGroupSelected
+                    ? `${groupColorGradients} text-black`
+                    : "text-black"
+                } ${isEditEvent ? "cursor-default" : "cursor-pointer"}`}
+                type="button"
+                onClick={() => toggleEventType("group")}
+              >
+                Group
+              </button>
+            )}
+            {/* Group Dropdown */}
+            {!isEditEvent && (
+              <select
+                id="group"
+                className={`text-lg rounded-md bg-none w-44 ${
+                  isGroupSelected ? "visible" : "invisible"
+                } ${
+                  isEditEvent
+                    ? "cursor-default appearance-none pl-1"
+                    : "cursor-pointer"
+                }`}
+                disabled={isEditEvent}
+                {...register("groupId")}
+              >
+                <option key="placeholder" hidden value={0}>
+                  Select Group
                 </option>
-              ))}
-            </select>
+                {groups.map((group) => (
+                  <option key={group.id} value={group.id} className="rounded">
+                    <span>{group.title}</span>
+                  </option>
+                ))}
+              </select>
+            )}
+            {/* Group Label */}
+            {isEditEvent && isEditGroupEvent && (
+              <span
+                className="p-1 text-lg font-mono font-bold bg-blue-400 text-slate-800 text-right rounded-md"
+                style={{
+                  backgroundColor: getColorById(selectedEvent.group_id),
+                }}
+              >
+                {
+                  groups.filter(
+                    (group) => group.id === selectedEvent.group_id
+                  )[0].title
+                }
+              </span>
+            )}
           </div>
           <span className="block text-red-700">{errors.type?.message}</span>
           <span className="block text-red-700">{errors.groupId?.message}</span>
@@ -222,7 +265,7 @@ const AddInterface = ({
           <textarea
             id="description"
             rows="4"
-            className="p-1 w-full text-lg text-[#020617] bg-[#0ea5e9] rounded border placeholder-slate-300 focus:ring-blue-500 focus:border-blue-500 resize-none"
+            className="p-1 w-full text-lg bg-blue-400 rounded border placeholder-slate-300 resize-none"
             placeholder="Description"
             {...register("description")}
           />
