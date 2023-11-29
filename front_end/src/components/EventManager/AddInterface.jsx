@@ -20,6 +20,7 @@ const AddInterface = ({
       .max(32, "Title too long.")
       .required("Title is required."),
     type: yup.string().required("Type is required."),
+    group: yup.string().oneOf(groups, "The specified group does not exists."),
     start: yup.date().required("Start Time is required."),
     end: yup
       .date()
@@ -45,15 +46,13 @@ const AddInterface = ({
       end: moment(selectedEvent.end).format("YYYY-MM-DDTHH:mm"),
       description: selectedEvent.descrip,
       location: selectedEvent.location,
-      type: fromCalendar === "individual" ? "self" : "group",
+      type: "self",
     },
     mode: "onSubmit",
     reValidateMode: "onSubmit",
   });
 
-  // This hook allows user to select other time slots without closing the modal.
-  // This might not be something that we wanted, should we prevent interactions
-  // with other components when the modal is open?
+  // Register selected event props to states
   useEffect(() => {
     // console.log(groups);
     console.log(selectedEvent);
@@ -109,17 +108,19 @@ const AddInterface = ({
           <span className="block text-red-700">{errors.title?.message}</span>
         </div>
         {/* Type */}
-        <div className="flex">
+        <div className="flex space-x-1 justify-start">
+          {/* Self Button */}
           <button
             id="Self"
             className={`h-12 px-6 text-lg rounded-md focus:shadow-outline ${
-              isSelfSelected ? "bg-cyan-200 text-black" : "text-black"
+              isSelfSelected ? "bg-cyan-200 text-black" : " text-black"
             }`}
             type="button"
             onClick={() => toggleEventType("self")}
           >
             Self
           </button>
+          {/* Group Button */}
           <button
             id="Group"
             className={`h-12 px-6 text-lg rounded-md focus:shadow-outline ${
@@ -130,6 +131,23 @@ const AddInterface = ({
           >
             Group
           </button>
+          {/* Group Downdown */}
+          <select
+            id="group"
+            className={`text-lg rounded-md cursor-pointer ${
+              isGroupSelected ? "visible" : "invisible"
+            }`}
+            {...register("group")}
+          >
+            <option key="placeholder" hidden value>
+              Select Group
+            </option>
+            {groups.map((group) => (
+              <option key={group.id} value={group.title} className="rounded">
+                {group.title}
+              </option>
+            ))}
+          </select>
           <span className="block text-red-700">{errors.type?.message}</span>
         </div>
         <div className="flex flex-col space-y-1">
@@ -140,7 +158,7 @@ const AddInterface = ({
             </label>
             <input
               id="start-time"
-              className="text-lg bg-white rounded"
+              className="text-lg bg-white rounded px-1"
               type="datetime-local"
               {...register("start")}
             />
@@ -152,7 +170,7 @@ const AddInterface = ({
             </label>
             <input
               id="end-time"
-              className="text-lg bg-white rounded"
+              className="text-lg bg-white rounded px-1"
               type="datetime-local"
               {...register("end")}
             />
