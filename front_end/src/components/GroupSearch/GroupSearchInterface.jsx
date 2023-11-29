@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import SettingInterface from "../DisplaySetting/SettingInterface";
 
 const GroupSearchInterface = ({ toggleSetting }) => {
   // need to fetch groups
@@ -34,14 +35,23 @@ const GroupSearchInterface = ({ toggleSetting }) => {
       members: ["Endone", 'Endtwo', 'Endthree']
     },
   ]);
+  const [showSetting, setShowSetting] = useState(false);
 
   return (
     <div className="modal-content w-72 h-72 flex flex-col justify-evenly space-y-3 bg-slate-200">
       <div>
+          {/* Display Setting Interface */}
+          {showSetting && (
+             <div className="modal-overlay w-full h-full">
+               <SettingInterface toggleSetting={toggleSetting} />
+             </div>
+          )}
+
           {/* Back Button */}
           <button
             className="float-left p-1 rounded text-white font-bold bg-slate-400 hover:bg-slate-500 display:inline"
             type="button"
+            onClick={() => setShowSetting(true)}
           >
             Back
           </button>
