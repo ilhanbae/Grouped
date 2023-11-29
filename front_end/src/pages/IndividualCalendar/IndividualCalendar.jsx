@@ -1,4 +1,4 @@
-import { Calendar, momentLocalizer } from "react-big-calendar";
+import { Calendar, momentLocalizer, ToolbarProps, Navigate, Toolbar } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./IndividualCalendar.css";
@@ -11,6 +11,49 @@ import SettingInterface from "../../components/DisplaySetting/SettingInterface";
 
 moment.tz.setDefault("America/New_York");
 const localizer = momentLocalizer(moment);
+
+// const CustomToolbar = (props: ToolbarProps) => {
+//     const [viewState, setViewState] = useState('month');
+//
+//     const goToDayView = () => {
+//         props.onView('day');
+//         setViewState('day');
+//     };
+//     const goToWeekView = () => {
+//         props.onView('week');
+//         setViewState('week');
+//     };
+//     const goToMonthView = () => {
+//         props.onView('month');
+//         setViewState('month');
+//     };
+//
+//     const goToBack = () => {
+//         props.onNavigate(Navigate.PREVIOUS);
+//     };
+//
+//     const goToNext = () => {
+//         props.onNavigate(Navigate.NEXT);
+//     };
+//
+//     const goToToday = () => {
+//         props.onNavigate(Navigate.TODAY);
+//     };
+//
+//     return (
+//         <div className='rbc-toolbar'>
+//             <span className="rbc-btn-group">
+//               <button onClick={goToBack}>&#8249;</button>
+//               <label>{moment(props.date).format('DD/MM/YYYY')}</label>
+//               <button onClick={goToNext}>&#8250;</button>
+//               <button onClick={goToToday}>today</button>
+//               <button onClick={goToMonthView}>month</button>
+//               <button onClick={goToWeekView}>week</button>
+//               <button onClick={goToDayView}>day</button>
+//             </span>
+//         </div>
+//     );
+// };
 
 const IndividualCalendar = (props) => {
   const [events, setEvents] = useState([]);
@@ -214,10 +257,11 @@ const IndividualCalendar = (props) => {
           localizer={localizer}
           defaultDate={new Date()}
           defaultView="week"
+//           components={{toolbar: CustomToolbar}}
           events={events}
           startAccessor="start"
           endAccessor="end"
-          style={{ height: "100%", padding: "10px 10px" }}
+          style={{ height: "85%", padding: "10px 10px" }}
           onSelectEvent={handleEventSelect}
           onSelectSlot={onSelectSlot}
           eventPropGetter={eventPropGetter}
@@ -235,11 +279,12 @@ const IndividualCalendar = (props) => {
             />
           </div>
         )}
-        {showSetting && (
-          <div className="modal-overlay w-full h-full">
-            <SettingInterface toggleSetting={toggleSetting} />
-          </div>
-        )}
+         {showSetting && (
+           <div className="modal-overlay w-full h-full">
+             <SettingInterface toggleSetting={toggleSetting} />
+           </div>
+         )}
+        <button onClick={() => setShowSetting(true)} className='displayButton ml-4 p-2'>Display Setting</button>
       </div>
     );
   }
