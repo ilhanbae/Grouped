@@ -35,10 +35,20 @@ export const getSelfEventProp = (isOpaque, isDisplayed) => {
 // Opacity and visibility is determined by display setting option.
 export const getGroupEventProp = (groupId, isOpaque, isDisplayed) => {
   let prop = { style: {}, className: "" };
-  const totalColors = Object.keys(COLORS).length - 1;
-  const colorIndex = groupId % totalColors || totalColors;
-  prop.style.backgroundColor = COLORS[colorIndex] + OPACITY[Number(isOpaque)];
+  prop.style.backgroundColor =
+    getColorById(groupId) + OPACITY[Number(isOpaque)];
   prop.style.color = "#ffffff" + OPACITY[Number(isOpaque)];
   prop.style.visibility = isDisplayed ? "visible" : "hidden";
   return prop;
+};
+
+// Color index will cycle between [1, n] using modulo
+// Colors will range colors[1] to colors[n]
+export const getColorById = (id) => {
+  if (id === 0) {
+    return COLORS[id];
+  }
+  const totalColors = Object.keys(COLORS).length - 1;
+  const colorIndex = id % totalColors || totalColors;
+  return COLORS[colorIndex];
 };
