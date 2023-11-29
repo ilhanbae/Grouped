@@ -17,7 +17,7 @@ const IndividualCalendar = (props) => {
   const [groups, setGroups] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [showSetting, setShowSetting] = useState(true);
+  const [showSetting, setShowSetting] = useState(false);
 
   useEffect(() => {
     loadCalendarEvents();
@@ -35,9 +35,14 @@ const IndividualCalendar = (props) => {
       .then((response) => {
         // console.log(response);
         const formattedEvents = response.data.map((event) => ({
-          ...event,
+          id: event.id,
+          user_id: event.user_id,
+          group_id: event.group_id,
+          title: event.title,
           start: moment(event.start_time).toDate(),
           end: moment(event.end_time).toDate(),
+          location: event?.location,
+          descrip: event?.descrip,
         }));
         setEvents(formattedEvents);
       })

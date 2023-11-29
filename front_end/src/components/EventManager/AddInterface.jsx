@@ -69,6 +69,7 @@ const AddInterface = ({
       description: selectedEvent.descrip,
       location: selectedEvent.location,
       type: "self",
+      groupId: 0,
     },
     mode: "onSubmit",
     reValidateMode: "onSubmit",
@@ -76,9 +77,11 @@ const AddInterface = ({
 
   // Register selected event props to states
   useEffect(() => {
-    // console.log(groups);
+    console.log(selectedEvent);
     if (selectedEvent) {
       setValue("title", selectedEvent.title);
+      setValue("type", selectedEvent.group_id ? "group" : "self");
+      setValue("groupId", selectedEvent.group_id ? selectedEvent.group_id : 0);
       setValue("start", moment(selectedEvent.start).format("YYYY-MM-DDTHH:mm"));
       setValue("end", moment(selectedEvent.end).format("YYYY-MM-DDTHH:mm"));
       setValue("description", selectedEvent.descrip);
@@ -87,9 +90,11 @@ const AddInterface = ({
   }, [selectedEvent]);
 
   // Conditional render variables
-  const haveDelete = selectedEvent.id != null;
   const isSelfSelected = watch("type") === "self";
   const isGroupSelected = watch("type") === "group";
+  const isEditEvent = selectedEvent.id != null;
+  const isEditSelfEvent = selectedEvent.user_id != null;
+  const isEditGroupEvent = selectedEvent.group_id != null;
 
   const toggleEventType = (type) => {
     setValue("type", type);
@@ -136,7 +141,7 @@ const AddInterface = ({
               id="Self"
               className={`h-12 px-6 text-lg rounded-md focus:shadow-outline ${
                 isSelfSelected ? "bg-cyan-200 text-black" : " text-black"
-              }`}
+              } ${isEditGroupEvent ? "invisible" : "visible"}`}
               type="button"
               onClick={() => toggleEventType("self")}
             >
@@ -161,7 +166,7 @@ const AddInterface = ({
               }`}
               {...register("groupId")}
             >
-              <option key="placeholder" hidden value>
+              <option key="placeholder" hidden value={0}>
                 Select Group
               </option>
               {groups.map((group) => (
@@ -178,7 +183,7 @@ const AddInterface = ({
           {/* Start Time */}
           <div className="text-lg w-full flex items-center space-x-2">
             <label htmlFor="start-time" className="flex-1">
-              Start Time:{" "}
+              Start Time:
             </label>
             <input
               id="start-time"
@@ -190,7 +195,7 @@ const AddInterface = ({
           {/* End Time */}
           <div className="text-lg w-full flex items-center space-x-2">
             <label htmlFor="end-time" className="flex-1">
-              End Time:{" "}
+              End Time:
             </label>
             <input
               id="end-time"
@@ -229,7 +234,7 @@ const AddInterface = ({
         <div className="flex justify-between">
           <div>
             {/* Delete Button */}
-            {haveDelete && (
+            {isEditEvent && (
               <button
                 className="h-12 px-6 bg-red-400 text-white rounded-md self-start hover:bg-red-500"
                 type="button"
