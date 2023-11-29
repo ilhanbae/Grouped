@@ -11,6 +11,7 @@ const AddInterface = ({
   onSave,
   selectedEvent,
   fromCalendar,
+  groups,
 }) => {
   // Yup Schema
   const addInterfaceSchema = yup.object().shape({
@@ -54,6 +55,8 @@ const AddInterface = ({
   // This might not be something that we wanted, should we prevent interactions
   // with other components when the modal is open?
   useEffect(() => {
+    // console.log(groups);
+    console.log(selectedEvent);
     if (selectedEvent) {
       setValue("title", selectedEvent.title);
       setValue("start", moment(selectedEvent.start).format("YYYY-MM-DDTHH:mm"));
@@ -64,8 +67,7 @@ const AddInterface = ({
   }, [selectedEvent]);
 
   // Conditional render variables
-  const haveDelete =
-    getValues("title") != null ? getValues("title") !== "" : false;
+  const haveDelete = selectedEvent.id != null;
   const isSelfSelected = watch("type") === "self";
   const isGroupSelected = watch("type") === "group";
 
@@ -89,9 +91,9 @@ const AddInterface = ({
   };
 
   return (
-    <div className="modal-content w-fit h-fit bg-[#e5e7eb]">
+    <div className="modal-content p-3 w-fit h-fit bg-[#e5e7eb]">
       <form
-        className="bg-[#e5e7eb] flex flex-col"
+        className="flex flex-col space-y-2"
         autoComplete="off"
         noValidate
         onSubmit={handleSubmit(onSubmit)}
@@ -99,7 +101,7 @@ const AddInterface = ({
         {/* Title */}
         <div>
           <input
-            className="px-1 h-10 m-2 text-2xl bg-white"
+            className="px-1 h-10 text-2xl w-full bg-white rounded"
             type="text"
             placeholder="Event Title"
             {...register("title")}
@@ -110,7 +112,7 @@ const AddInterface = ({
         <div className="flex">
           <button
             id="Self"
-            className={`h-12 px-6 m-2 text-lg rounded-lg focus:shadow-outline ${
+            className={`h-12 px-6 text-lg rounded-md focus:shadow-outline ${
               isSelfSelected ? "bg-cyan-200 text-black" : "text-black"
             }`}
             type="button"
@@ -120,7 +122,7 @@ const AddInterface = ({
           </button>
           <button
             id="Group"
-            className={`h-12 px-6 m-2 text-lg rounded-lg focus:shadow-outline ${
+            className={`h-12 px-6 text-lg rounded-md focus:shadow-outline ${
               isGroupSelected ? "bg-cyan-200 text-black" : "text-black"
             }`}
             type="button"
@@ -130,36 +132,42 @@ const AddInterface = ({
           </button>
           <span className="block text-red-700">{errors.type?.message}</span>
         </div>
-        {/* Start Time */}
-        <div className="flex flex-col space-y-2">
-          <span className="text-lg">
-            <span>Start Time: </span>
+        <div className="flex flex-col space-y-1">
+          {/* Start Time */}
+          <div className="text-lg w-full flex items-center space-x-2">
+            <label htmlFor="start-time" className="flex-1">
+              Start Time:{" "}
+            </label>
             <input
-              className="text-lg bg-[#e5e7eb] bg-white"
+              id="start-time"
+              className="text-lg bg-white rounded"
               type="datetime-local"
               {...register("start")}
             />
-          </span>
+          </div>
           {/* End Time */}
-          <span className="text-lg">
-            <span>End Time: </span>
+          <div className="text-lg w-full flex items-center space-x-2">
+            <label htmlFor="end-time" className="flex-1">
+              End Time:{" "}
+            </label>
             <input
-              className="text-lg bg-[#e5e7eb] bg-white"
+              id="end-time"
+              className="text-lg bg-white rounded"
               type="datetime-local"
               {...register("end")}
             />
-          </span>
+          </div>
           <span className="block text-red-700">{errors.end?.message}</span>
         </div>
         {/* Location */}
-        <div className="location-container flex items-center py-2">
+        <div className="flex items-center relative w-full">
           <input
-            className="px-1 text-lg bg-[#e5e7eb] bg-white"
+            className="p-1 text-lg bg-white w-full rounded pr-6"
             type="text"
             placeholder="Location"
             {...register("location")}
           />
-          <MapPinIcon className="location-icon h-6 w-6" />
+          <MapPinIcon className="h-6 w-6 absolute right-0" />
           <span className="block text-red-700">{errors.location?.message}</span>
         </div>
         {/* Description */}
@@ -167,7 +175,7 @@ const AddInterface = ({
           <textarea
             id="description"
             rows="4"
-            className="px-1 block py-2 w-full text-sm text-[#020617] bg-[#0ea5e9] rounded-lg border focus:ring-blue-500 focus:border-blue-500 resize-none"
+            className="p-1 w-full text-lg text-[#020617] bg-[#0ea5e9] rounded border placeholder-slate-300 focus:ring-blue-500 focus:border-blue-500 resize-none"
             placeholder="Description"
             {...register("description")}
           />
@@ -176,33 +184,35 @@ const AddInterface = ({
           </span>
         </div>
         {/* Buttons */}
-        <div className="flex justify-end mt-4">
-          <div className="flex flex-wrap">
-            {/* Confirm Button */}
-            <button
-              className="h-12 m-2 px-6 bg-gray-600 text-white"
-              type="submit"
-            >
-              Confirm
-            </button>
-            {/* Cancel Button */}
-            <button
-              className="h-12 m-2 px-6 bg-gray-600 text-white"
-              type="button"
-              onClick={onClose}
-            >
-              Cancel
-            </button>
+        <div className="flex justify-between">
+          <div>
             {/* Delete Button */}
             {haveDelete && (
               <button
-                className="h-12 m-2 px-6 bg-red-400 text-white rounded-md hover:bg-red-500"
+                className="h-12 px-6 bg-red-400 text-white rounded-md self-start hover:bg-red-500"
                 type="button"
                 onClick={onDelete}
               >
                 Delete
               </button>
             )}
+          </div>
+          <div className="space-x-1">
+            {/* Cancel Button */}
+            <button
+              className="h-12 px-6 bg-gray-600 text-white rounded-md self-end hover:bg-gray-700"
+              type="button"
+              onClick={onClose}
+            >
+              Cancel
+            </button>
+            {/* Confirm Button */}
+            <button
+              className="h-12 px-6 bg-gray-600 text-white rounded-md self-end hover:bg-gray-700"
+              type="submit"
+            >
+              Confirm
+            </button>
           </div>
         </div>
       </form>

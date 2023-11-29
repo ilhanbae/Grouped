@@ -14,12 +14,14 @@ const localizer = momentLocalizer(moment);
 
 const IndividualCalendar = (props) => {
   const [events, setEvents] = useState([]);
+  const [groups, setGroups] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showSetting, setShowSetting] = useState(true);
 
   useEffect(() => {
     loadCalendarEvents();
+    loadUserGroups();
   }, []);
 
   const loadCalendarEvents = async () => {
@@ -42,6 +44,40 @@ const IndividualCalendar = (props) => {
       .catch((error) => {
         console.error(error);
       });
+    setIsLoaded(true);
+  };
+
+  const loadUserGroups = async () => {
+    setIsLoaded(false);
+    // await axios
+    //   .get(`${process.env.REACT_APP_API_URL}/groups.php`, {
+    //     params: {
+    //       user_id: sessionStorage.getItem("id"),
+    //     },
+    //   })
+    //   .then((response) => {
+    //     setGroups(response);
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
+    setGroups([
+      {
+        id: 1,
+        title: "Test",
+        descrip: "",
+      },
+      {
+        id: 2,
+        title: "CSE",
+        descrip: "",
+      },
+      {
+        id: 3,
+        title: "UB",
+        descrip: "",
+      },
+    ]);
     setIsLoaded(true);
   };
 
@@ -184,6 +220,7 @@ const IndividualCalendar = (props) => {
           <div className="modal-overlay w-full h-full">
             <AddInterface
               selectedEvent={selectedEvent}
+              groups={groups}
               onSave={handleSave}
               onClose={handleClose}
               onDelete={handleDelete}
