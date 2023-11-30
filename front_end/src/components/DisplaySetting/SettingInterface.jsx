@@ -3,27 +3,37 @@ import React, { useState, useEffect } from "react";
 const SettingInterface = ({ toggleSetting, closeSetting }) => {
   // need to fetch groups
   const [groups, setGroups] = useState([
-    {
-      id: 1,
-      title: "Test",
-    },
-    {
-      id: 2,
-      title: "Library",
-    },
-    {
-      id: 3,
-      title: "CSE442",
-    },
-    {
-      id: 4,
-      title: "UB",
-    },
-    {
-      id: 5,
-      title: "End",
-    },
-  ]);
+      {
+        id: 1,
+        title: "Bad Test",
+        description: "There should never be 0 members",
+        members: []
+      },
+      {
+        id: 2,
+        title: "Library",
+        description: "Library description",
+        members: ["Libraryone", 'Librarytwo']
+      },
+      {
+        id: 3,
+        title: "CSE442",
+        description: "CSE442 description",
+        members: ["CSE442one"]
+      },
+      {
+        id: 4,
+        title: "UB",
+        description: "UB description",
+        members: ["UBone", 'UBtwo', 'UBthree']
+      },
+      {
+        id: 5,
+        title: "End",
+        description: null,
+        members: ["Endone", 'Endtwo', 'Endthree']
+      }
+    ]);
 
   return (
     <div className="modal-content w-72 h-72 flex flex-col items-center justify-evenly space-y-3 bg-slate-200">

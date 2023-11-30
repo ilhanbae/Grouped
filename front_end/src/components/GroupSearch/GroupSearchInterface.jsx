@@ -31,16 +31,39 @@ const GroupSearchInterface = ({ toggleSetting }) => {
     {
       id: 5,
       title: "End",
-      description: "End description",
+      description: null,
       members: ["Endone", 'Endtwo', 'Endthree']
     }
   ]);
   const [showCreate, setCreate] = useState(false);
+  const [joinedGroups, setJoinedGroups] = useState([]);
 
-  function handleCreateGroup(newGroup) {
-    setGroups((prevGroups) => [...prevGroups, newGroup]);
+  function updateGroups(newGroup) {
+    const newId = groups.length + 1;
+    newGroup['id'] = newId;
+    const updates = [...groups, newGroup];
+    setGroups(updates);
+    handleJoin(newId);
     setCreate(false);
   }
+
+  function handleJoin(groupId) {
+    // Check if the group is already joined
+    if (!joinedGroups.includes(groupId)) {
+      // If not joined, update the state
+      setJoinedGroups((prevJoinedGroups) => [...prevJoinedGroups, groupId]);
+
+      // Update the groups array with the new member
+      setGroups((prevGroups) =>
+        prevGroups.map((group) =>
+          group.id === groupId
+            ? { ...group, members: [...group.members, ""] }
+            : group
+        )
+      );
+    }
+  }
+
 
   return (
     <div className="modal-content w-auto h-96 flex flex-col justify-evenly space-y-3 bg-slate-200">
@@ -62,7 +85,10 @@ const GroupSearchInterface = ({ toggleSetting }) => {
           </button>
           {showCreate && (
               <div className="modal-overlay w-full h-full">
-                <CreateGroup onClose={() => setCreate(false)} onSave={handleCreateGroup}/>
+                <CreateGroup
+                    onClose={() => setCreate(false)}
+                    onSave={updateGroups}
+                    updateGroups={updateGroups}/>
               </div>
           )}
       </div>
@@ -81,8 +107,12 @@ const GroupSearchInterface = ({ toggleSetting }) => {
               <div className= 'bg-white p-1'>
                   <div className="font-bold text-lg">
                     {group.title}
-                    <button className="float-right w-1/2 rounded text-white font-normal bg-slate-400 hover:bg-slate-500">
-                        Join
+                    <button
+                        className="float-right w-1/2 rounded text-white font-normal bg-slate-400 hover:bg-slate-500"
+                        onClick={() => handleJoin(group.id)}
+                        disabled={joinedGroups.includes(group.id)}
+                        >
+                        {joinedGroups.includes(group.id) ? "Joined" : "Join"}
                     </button>
                   </div>
                   <div className="bg-white">

@@ -4,9 +4,14 @@ const CreateGroup = ({ onClose, onSave }) => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
-    function handleSave() {
-        onSave({title, description, members: []});
-        onClose();
+    async function handleSave() {
+        try {
+              // Call the onSave function and update the groups
+              await onSave({ title, description, members: [""] });
+              onClose();
+            } catch (error) {
+              console.error("Error saving group:", error);
+            }
     }
 
   return (
