@@ -41,6 +41,11 @@ const GroupSearchInterface = ({ toggleSetting }) => {
   const [showCreate, setCreate] = useState(false);
   const [joinedGroups, setJoinedGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
+  const [searchInput, setSearchInput] = useState("");
+
+  const filteredGroups = groups.filter((group) =>
+    group.title.toLowerCase().includes(searchInput.toLowerCase())
+  );
 
   function updateGroups(newGroup) {
     const newId = groups.length + 1;
@@ -74,7 +79,6 @@ const GroupSearchInterface = ({ toggleSetting }) => {
     setSelectedGroup(selected);
   }
 
-
   return (
     <div className="modal-content w-auto h-96 flex flex-col justify-evenly space-y-3 bg-slate-200">
       <div>
@@ -107,11 +111,13 @@ const GroupSearchInterface = ({ toggleSetting }) => {
           id="search"
           className="p-1 w-full text-lg text-[#660033] text-center bg-white rounded border placeholder-slate-300 focus:[#ffcccc] focus:[#ebbcbc] resize-none"
           placeholder="Search"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
         />
 
       {/* Groups Info */}
       <div className="bg-slate-100 rounded-md w-full h-3/5 p-2 space-y-1 overflow-y-scroll">
-        {groups.map((group) => (
+        {filteredGroups.map((group) => (
           <div className="flex p-1 rounded-sm" key={group.id}>
             <span htmlFor={group.id} className="w-full rounded-sm px-1">
               <div className= 'bg-white p-1'>
