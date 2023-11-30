@@ -1,25 +1,26 @@
 import React, { useState, useEffect } from "react";
+import CreateGroup from "../CreateGroup/CreateGroup";
 
 const GroupSearchInterface = ({ toggleSetting }) => {
   // need to fetch groups
   const [groups, setGroups] = useState([
     {
       id: 1,
-      title: "Test",
-      description: "Testing description",
-      members: ["Testone", 'Testtwo', 'Testthree']
+      title: "Bad Test",
+      description: "There should never be 0 members",
+      members: []
     },
     {
       id: 2,
       title: "Library",
       description: "Library description",
-      members: ["Libraryone", 'Librarytwo', 'Librarythree']
+      members: ["Libraryone", 'Librarytwo']
     },
     {
       id: 3,
       title: "CSE442",
       description: "CSE442 description",
-      members: ["CSE442one", 'CSE442two', 'CSE442three']
+      members: ["CSE442one"]
     },
     {
       id: 4,
@@ -34,7 +35,12 @@ const GroupSearchInterface = ({ toggleSetting }) => {
       members: ["Endone", 'Endtwo', 'Endthree']
     }
   ]);
-  const [showSetting, setShowSetting] = useState(false);
+  const [showCreate, setCreate] = useState(false);
+
+  function handleCreateGroup(newGroup) {
+    setGroups((prevGroups) => [...prevGroups, newGroup]);
+    setCreate(false);
+  }
 
   return (
     <div className="modal-content w-auto h-96 flex flex-col justify-evenly space-y-3 bg-slate-200">
@@ -48,9 +54,17 @@ const GroupSearchInterface = ({ toggleSetting }) => {
             Back
           </button>
           {/* Create Group */}
-          <button className="float-right p-1 rounded text-white font-bold bg-slate-400 hover:bg-slate-500 display:inline">
+          <button
+            className="float-right p-1 rounded text-white font-bold bg-slate-400 hover:bg-slate-500 display:inline"
+            onClick={() => setCreate(true)}
+          >
             Create Group
           </button>
+          {showCreate && (
+              <div className="modal-overlay w-full h-full">
+                <CreateGroup onClose={() => setCreate(false)} onSave={handleCreateGroup}/>
+              </div>
+          )}
       </div>
       {/* Search Field */}
       <input
@@ -59,7 +73,7 @@ const GroupSearchInterface = ({ toggleSetting }) => {
           placeholder="Search"
         />
 
-      {/* Search Field */}
+      {/* Groups Info */}
       <div className="bg-slate-100 rounded-md w-full h-3/5 p-2 space-y-1 overflow-y-scroll">
         {groups.map((group) => (
           <div className="flex p-1 rounded-sm" key={group.id}>

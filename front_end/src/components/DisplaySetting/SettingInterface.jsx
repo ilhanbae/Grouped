@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const SettingInterface = ({ toggleSetting }) => {
+const SettingInterface = ({ toggleSetting, closeSetting }) => {
   // need to fetch groups
   const [groups, setGroups] = useState([
     {
@@ -55,7 +55,7 @@ const SettingInterface = ({ toggleSetting }) => {
       <button
         className="p-1 rounded text-white font-bold bg-slate-400 hover:bg-slate-500"
         type="button"
-        onClick={toggleSetting}
+        onClick={closeSetting}
       >
         Close
       </button>

@@ -240,6 +240,11 @@ const IndividualCalendar = (props) => {
     setShowSearch(!showSearch);
   };
 
+  const closeSetting = () => {
+    setShowSetting(false);
+    setShowSearch(false);
+  };
+
   const clickRef = useRef(null);
   const onSelectSlot = useCallback((slotInfo) => {
     window.clearTimeout(clickRef.current);
@@ -284,12 +289,12 @@ const IndividualCalendar = (props) => {
         )}
          {showSetting && (
            <div className="modal-overlay w-full h-full">
-             <SettingInterface toggleSetting={toggleSetting} />
+             <SettingInterface toggleSetting={toggleSetting} closeSetting={closeSetting}/>
            </div>
          )}
          {showSearch && (
             <div className="modal-overlay w-full h-full">
-              <GroupSearchInterface toggleSetting={toggleSetting} />
+              <GroupSearchInterface toggleSetting={toggleSetting} closeSetting={closeSetting}/>
             </div>
          )}
         <button onClick={() => setShowSetting(true)} className='displayButton ml-4 p-2'>Display Setting</button>
