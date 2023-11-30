@@ -78,7 +78,7 @@ const AddInterface = ({
 
   // Register selected event props to states
   useEffect(() => {
-    console.log(selectedEvent);
+    // console.log(selectedEvent);
     if (selectedEvent) {
       setValue("title", selectedEvent.title);
       setValue("type", selectedEvent.group_id ? "group" : "self");

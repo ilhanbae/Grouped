@@ -58,17 +58,21 @@ const localizer = momentLocalizer(moment);
 
 const IndividualCalendar = (props) => {
   const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
   const [groups, setGroups] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showSetting, setShowSetting] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [displayOptions, setDisplayOptions] = useState({});
+  const [isOptionsLoaded, setIsOptionsLoaded] = useState(false);
 
   useEffect(() => {
     loadCalendarEvents();
     loadUserGroups();
   }, []);
 
+  // Loaders
   const loadCalendarEvents = async () => {
     setIsLoaded(false);
     await axios
@@ -90,6 +94,7 @@ const IndividualCalendar = (props) => {
           descrip: event?.descrip,
         }));
         setEvents(formattedEvents);
+        setFilteredEvents(formattedEvents);
       })
       .catch((error) => {
         console.error(error);
@@ -114,25 +119,36 @@ const IndividualCalendar = (props) => {
     setGroups([
       {
         id: 1,
-        title: "Test",
-        descrip: "",
+        title: "Bad Test",
+        description: "There should never be 0 members",
+        members: [],
       },
       {
         id: 2,
-        title: "CSE",
-        descrip: "",
+        title: "Library",
+        description: "Library description",
+        members: ["Libraryone", "Librarytwo"],
       },
       {
         id: 3,
+        title: "CSE442",
+        description: "CSE442 description",
+        members: ["CSE442one"],
+      },
+      {
+        id: 4,
         title: "UB",
-        descrip: "",
+        description: "UB description",
+        members: ["UBone", "UBtwo", "UBthree"],
+      },
+      {
+        id: 5,
+        title: "End",
+        description: null,
+        members: ["Endone", "Endtwo", "Endthree"],
       },
     ]);
     setIsLoaded(true);
-  };
-
-  const handleEventSelect = (event) => {
-    setSelectedEvent(event);
   };
 
   // Event Manager
@@ -213,6 +229,69 @@ const IndividualCalendar = (props) => {
     setSelectedEvent(null);
   };
 
+  // Display Components
+  const toggleSetting = () => {
+    setShowSetting(!showSetting);
+    setShowSearch(!showSearch);
+  };
+
+  const closeSetting = () => {
+    setShowSetting(false);
+    setShowSearch(false);
+  };
+
+  // Display Option Filter Methods
+  // Update display option on option select
+  useEffect(() => {
+    if (isOptionsLoaded) {
+      filterEvents(displayOptions);
+    }
+  }, [displayOptions]);
+
+  // Update default display options when events are loaded
+  useEffect(() => {
+    setDefaultDisplayOptions(true);
+  }, [events]);
+
+  const filterEvents = (options) => {
+    const filteredEvents = events.filter(
+      (event) => options[`${event.group_id ? event.group_id : 0}`]
+    );
+    // console.log(filteredEvents);
+    setFilteredEvents(filteredEvents);
+  };
+
+  const setDefaultDisplayOptions = (state) => {
+    setIsOptionsLoaded(false);
+    let options = {};
+    options[0] = state; // self option
+    groups.forEach((group) => (options[group.id] = state)); // group options
+    setDisplayOptions(options);
+    setIsOptionsLoaded(true);
+  };
+
+  const updateDisplayOptions = (option) => {
+    // console.log(option);
+    setDisplayOptions({ ...displayOptions, [option]: !displayOptions[option] });
+  };
+
+  // Event Select
+  const handleEventSelect = (event) => {
+    setSelectedEvent(event);
+  };
+
+  const clickRef = useRef(null);
+  const onSelectSlot = useCallback((slotInfo) => {
+    window.clearTimeout(clickRef.current);
+    clickRef.current = window.setTimeout(() => {
+      setSelectedEvent({
+        start: moment(slotInfo.start).toDate(),
+        end: moment(slotInfo.end).toDate(),
+      });
+    }, 250);
+  }, []);
+
+  // Customize event props
   const eventPropGetter = (event, start, end, isSelected) => {
     // console.log(event);
 
@@ -234,28 +313,6 @@ const IndividualCalendar = (props) => {
     return eventProp;
   };
 
-  // Display Components
-  const toggleSetting = () => {
-    setShowSetting(!showSetting);
-    setShowSearch(!showSearch);
-  };
-
-  const closeSetting = () => {
-    setShowSetting(false);
-    setShowSearch(false);
-  };
-
-  const clickRef = useRef(null);
-  const onSelectSlot = useCallback((slotInfo) => {
-    window.clearTimeout(clickRef.current);
-    clickRef.current = window.setTimeout(() => {
-      setSelectedEvent({
-        start: moment(slotInfo.start).toDate(),
-        end: moment(slotInfo.end).toDate(),
-      });
-    }, 250);
-  }, []);
-
   if (!isLoaded) {
     return <div className="flex items-center justify-center">Loading...</div>;
   } else {
@@ -265,8 +322,8 @@ const IndividualCalendar = (props) => {
           localizer={localizer}
           defaultDate={new Date()}
           defaultView="week"
-//           components={{toolbar: CustomToolbar}}
-          events={events}
+          //           components={{toolbar: CustomToolbar}}
+          events={filteredEvents}
           startAccessor="start"
           endAccessor="end"
           style={{ height: "85%", padding: "10px 10px" }}
@@ -287,17 +344,31 @@ const IndividualCalendar = (props) => {
             />
           </div>
         )}
-         {showSetting && (
-           <div className="modal-overlay w-full h-full">
-             <SettingInterface toggleSetting={toggleSetting} closeSetting={closeSetting}/>
-           </div>
-         )}
-         {showSearch && (
-            <div className="modal-overlay w-full h-full">
-              <GroupSearchInterface toggleSetting={toggleSetting} closeSetting={closeSetting}/>
-            </div>
-         )}
-        <button onClick={() => setShowSetting(true)} className='displayButton ml-4 p-2'>Display Setting</button>
+        {showSetting && (
+          <div className="modal-overlay w-full h-full">
+            <SettingInterface
+              groups={groups}
+              toggleSetting={toggleSetting}
+              closeSetting={closeSetting}
+              updateDisplayOptions={updateDisplayOptions}
+              displayOptions={displayOptions}
+            />
+          </div>
+        )}
+        {showSearch && (
+          <div className="modal-overlay w-full h-full">
+            <GroupSearchInterface
+              toggleSetting={toggleSetting}
+              closeSetting={closeSetting}
+            />
+          </div>
+        )}
+        <button
+          onClick={() => setShowSetting(true)}
+          className="displayButton ml-4 p-2"
+        >
+          Display Setting
+        </button>
       </div>
     );
   }
