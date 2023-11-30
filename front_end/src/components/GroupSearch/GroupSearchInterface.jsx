@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import CreateGroup from "../CreateGroup/CreateGroup";
+import MemberList from "../MemberList/MemberList";
 
 const GroupSearchInterface = ({ toggleSetting }) => {
   // need to fetch groups
@@ -26,7 +27,9 @@ const GroupSearchInterface = ({ toggleSetting }) => {
       id: 4,
       title: "UB",
       description: "UB description",
-      members: ["UBone", 'UBtwo', 'UBthree']
+      members: ["UBone", 'UBtwo', 'UBthree', "UBfour", 'UBfive', 'UBsix', "UBseven", 'UBeight', 'UBnine', 'UBten',
+      "UBone", 'UBtwo', 'UBthree', "UBfour", 'UBfive', 'UBsix', "UBseven", 'UBeight', 'UBnine', 'UBten',
+      "UBone", 'UBtwo', 'UBthree', "UBfour", 'UBfive', 'UBsix', "UBseven", 'UBeight', 'UBnine', 'UBten']
     },
     {
       id: 5,
@@ -37,6 +40,7 @@ const GroupSearchInterface = ({ toggleSetting }) => {
   ]);
   const [showCreate, setCreate] = useState(false);
   const [joinedGroups, setJoinedGroups] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState(null);
 
   function updateGroups(newGroup) {
     const newId = groups.length + 1;
@@ -45,6 +49,7 @@ const GroupSearchInterface = ({ toggleSetting }) => {
     setGroups(updates);
     handleJoin(newId);
     setCreate(false);
+    setSelectedGroup(null);
   }
 
   function handleJoin(groupId) {
@@ -62,6 +67,11 @@ const GroupSearchInterface = ({ toggleSetting }) => {
         )
       );
     }
+  }
+
+  function handleGroupSelect(groupId) {
+    const selected = groups.find((group) => group.id === groupId);
+    setSelectedGroup(selected);
   }
 
 
@@ -117,13 +127,22 @@ const GroupSearchInterface = ({ toggleSetting }) => {
                   </div>
                   <div className="bg-white">
                    <span className="float-left">{group.description}</span>
-                   <span className="float-right ml-10">{group.members.length} Members</span>
+                   <span className="float-right ml-10" onClick={() => handleGroupSelect(group.id)}>{group.members.length} Members</span>
                   </div>
               </div>
             </span>
           </div>
         ))}
       </div>
+      {/* Modal to display members of selected group */}
+      {selectedGroup && (
+        <div className="modal-overlay w-full h-full">
+            <MemberList
+                group={selectedGroup}
+                onClose={() => setSelectedGroup(null)}
+            />
+        </div>
+      )}
     </div>
   );
 };
