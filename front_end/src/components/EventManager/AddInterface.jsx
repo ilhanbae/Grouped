@@ -111,7 +111,7 @@ const AddInterface = ({
   const onSubmit = async (data) => {
     const event = {
       title: data.title,
-      group_id: data.groupId,
+      group_id: data.groupId !== 0 ? data.groupId : null,
       start: moment(data.start).format("YYYY-MM-DDTHH:mm"),
       end: moment(data.end).format("YYYY-MM-DDTHH:mm"),
       location: data.location,
