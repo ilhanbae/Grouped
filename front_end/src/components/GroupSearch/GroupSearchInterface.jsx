@@ -37,6 +37,11 @@ const GroupSearchInterface = ({ toggleSetting }) => {
   ]);
   const [showCreate, setCreate] = useState(false);
 
+  function handleCreateGroup(newGroup) {
+    setGroups((prevGroups) => [...prevGroups, newGroup]);
+    setCreate(false);
+  }
+
   return (
     <div className="modal-content w-auto h-96 flex flex-col justify-evenly space-y-3 bg-slate-200">
       <div>
@@ -57,7 +62,7 @@ const GroupSearchInterface = ({ toggleSetting }) => {
           </button>
           {showCreate && (
               <div className="modal-overlay w-full h-full">
-                <CreateGroup/>
+                <CreateGroup onClose={() => setCreate(false)} onSave={handleCreateGroup}/>
               </div>
           )}
       </div>
