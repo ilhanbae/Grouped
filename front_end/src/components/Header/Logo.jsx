@@ -1,12 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import logoImage from '../../assets/logo.png';
+import GroupedImage from '../../assets/grouped.png';
 
 const Logo = () => {
   return (
     <div className='h-fill w-28'>
       <Link to="/individualCalendar">
-      <img className='rounded-sm hover:shadow-md' src={logoImage} alt="Len[cs] Logo" />
+      <img className='rounded-sm hover:shadow-md' src={GroupedImage} alt="Grouped" />
       </Link>
     </div>
   )
