@@ -14,11 +14,11 @@ switch ($method) {
         // Get user_id or group_id
         if($_GET['user_id'] != null){
             $user_id = $_GET['user_id'];
-            $stmt = $mysqli->prepare("SELECT id,title, start_time, end_time, descrip FROM user_calander WHERE user_id = ?");
+            $stmt = $mysqli->prepare("SELECT user_id ,group_id, title, start_time, end_time, descrip FROM user_calander WHERE user_id = ?");
             $stmt->bind_param("s", $user_id);
         }else if($_GET['group_id'] != null){
-            $group_id = $_GET['group_id'];
-            $stmt = $mysqli->prepare("SELECT id,title, start_time, end_time, descrip FROM user_calander WHERE group_id = ?");
+            $group_id= $_GET['group_id'];
+            $stmt = $mysqli->prepare("SELECT user_id ,group_id, title, start_time, end_time, descrip FROM user_calander WHERE group_id = ?");
             $stmt->bind_param("s", $group_id);
         }else{
             echo "No IDs given";
