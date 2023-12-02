@@ -125,14 +125,6 @@ const Login = () => {
                 Don't have an Account?
               </Link>
             </span>
-            <span className="m-12">
-              <Link
-                className="text-blue-500 text-2xl font-bold flex"
-                to="ForgotPassword"
-              >
-                Forgot Password?
-              </Link>
-            </span>
           </div>
         </div>
       </div>
