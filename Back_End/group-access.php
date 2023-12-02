@@ -53,7 +53,33 @@ switch ($method) {
         }
 
     case "GET":
-        break;
+        if($_GET['user_id'] != null){
+            $user_id = $_GET['user_id'];
+            $stmt = $mysqli->prepare("SELECT group_token, group_title FROM group_access WHERE user_id = ?");
+            $stmt->bind_param("s", $user_id);
+        }else if($_GET['group_id'] != null){
+            $group_id= $_GET['group_id'];
+            $stmt = $mysqli->prepare("SELECT user_id, username FROM group_access WHERE group_token = ?");
+            $stmt->bind_param("s", $group_id);
+        }else{
+            echo "No ID given";
+            header("HTTP/1.1 400 BAD REQUEST");
+            break;
+        }
+
+        $result = $stmt->execute();
+        if ($result) {
+            $groupAccess = mysqli_fetch_all ($stmt->get_result(), MYSQLI_ASSOC);
+            header("HTTP/1.1 200 OK");
+            echo json_encode($groupAccess);
+            break;
+            
+        } else {
+            echo "failed";
+            header("HTTP/1.1 400 BAD REQUEST");
+            break;
+        }
+
     case "PUT":
         break;
     case "DELTE":
