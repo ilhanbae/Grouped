@@ -104,50 +104,25 @@ const IndividualCalendar = (props) => {
 
   const loadUserGroups = async () => {
     setIsLoaded(false);
-    // await axios
-    //   .get(`${process.env.REACT_APP_API_URL}/groups.php`, {
-    //     params: {
-    //       user_id: sessionStorage.getItem("id"),
-    //     },
-    //   })
-    //   .then((response) => {
-    //     setGroups(response);
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
-    setGroups([
-      {
-        id: 1,
-        title: "Bad Test",
-        description: "There should never be 0 members",
-        members: [],
-      },
-      {
-        id: 2,
-        title: "Library",
-        description: "Library description",
-        members: ["Libraryone", "Librarytwo"],
-      },
-      {
-        id: 3,
-        title: "CSE442",
-        description: "CSE442 description",
-        members: ["CSE442one"],
-      },
-      {
-        id: 4,
-        title: "UB",
-        description: "UB description",
-        members: ["UBone", "UBtwo", "UBthree"],
-      },
-      {
-        id: 5,
-        title: "End",
-        description: null,
-        members: ["Endone", "Endtwo", "Endthree"],
-      },
-    ]);
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/group-access.php`, {
+        params: {
+          user_id: sessionStorage.getItem("id"),
+        },
+      })
+      .then((response) => {
+        // console.log(response.data);
+        const formattedGroups = response.data.map((group) => ({
+          id: group.group_token,
+          isPrivate: group.invite_flag,
+          title: group.group_title,
+          description: group.group_desc,
+        }));
+        setGroups(formattedGroups);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
     setIsLoaded(true);
   };
 
