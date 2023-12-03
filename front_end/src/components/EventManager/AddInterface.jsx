@@ -198,7 +198,7 @@ const AddInterface = ({
                 </option>
                 {groups.map((group) => (
                   <option key={group.id} value={group.id} className="rounded">
-                    <span>{group.title}</span>
+                    {group.title}
                   </option>
                 ))}
               </select>

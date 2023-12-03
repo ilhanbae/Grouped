@@ -3,13 +3,14 @@ import axios from "axios";
 import CreateGroup from "../CreateGroup/CreateGroup";
 import MemberList from "../MemberList/MemberList";
 
-const GroupSearchInterface = ({ toggleSetting }) => {
-  // need to fetch groups
+const GroupSearchInterface = ({
+  toggleSetting,
+  joinedGroups,
+  setJoinedGroups,
+}) => {
   const [groups, setGroups] = useState([]);
-  const [groupsMembers, setGroupsMembers] = useState({});
   const [isLoaded, setIsLoaded] = useState(false);
   const [showCreate, setCreate] = useState(false);
-  const [joinedGroups, setJoinedGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [searchInput, setSearchInput] = useState("");
 
@@ -17,8 +18,8 @@ const GroupSearchInterface = ({ toggleSetting }) => {
     loadGroupsAndMembers();
   }, []);
 
-  // Fetch groups to get group info
-  // Then fetch group access using fetched group id
+  // Fetch all groups in our app, then fetch group members
+  // using fetched group_id of each group
   const loadGroupsAndMembers = async () => {
     setIsLoaded(false);
     try {
@@ -68,26 +69,60 @@ const GroupSearchInterface = ({ toggleSetting }) => {
     setSelectedGroup(null);
   }
 
-  function handleJoin(groupId) {
-    // Check if the group is already joined
-    if (!joinedGroups.includes(groupId)) {
-      // If not joined, update the state
-      setJoinedGroups((prevJoinedGroups) => [...prevJoinedGroups, groupId]);
+  // function handleJoin(groupId) {
+  // Check if the group is already joined
+  // if (!joinedGroups.includes(groupId)) {
+  //   // If not joined, update the state
+  //   setJoinedGroups((prevJoinedGroups) => [...prevJoinedGroups, groupId]);
+  //   // Update the groups array with the new member
+  //   setGroups((prevGroups) =>
+  //     prevGroups.map((group) =>
+  //       group.id === groupId
+  //         ? { ...group, members: [...group.members, ""] }
+  //         : group
+  //     )
+  //   );
+  // }
+  // }
+  const handleJoin = async (targetGroup) => {
+    const data = {
+      group_token: targetGroup.id,
+      group_title: targetGroup.title,
+      user_id: sessionStorage.getItem("id"),
+      username: sessionStorage.getItem("username"),
+    };
+    await axios
+      .post(`${process.env.REACT_APP_API_URL}/group-access.php`, data)
+      .then((response) => {
+        // console.log(response);
+        const joinedGroup = {
+          id: targetGroup.id,
+          title: targetGroup.title,
+        };
+        // Update joined groups prop
+        setJoinedGroups((prevJoinedGroups) => [
+          ...prevJoinedGroups,
+          joinedGroup,
+        ]);
+        // Update group members state
+        const joinedGroupIndex = groups.findIndex(
+          (group) => group.id === targetGroup.id
+        );
+        groups[joinedGroupIndex].members.push({
+          id: data.user_id,
+          username: data.username,
+        });
+        // loadGroupsAndMembers();
+      })
+      .catch((error) => console.error(error));
+  };
 
-      // Update the groups array with the new member
-      setGroups((prevGroups) =>
-        prevGroups.map((group) =>
-          group.id === groupId
-            ? { ...group, members: [...group.members, ""] }
-            : group
-        )
-      );
-    }
-  }
+  const isGroupJoined = (groupId) => {
+    return joinedGroups.map((group) => group.id).includes(groupId);
+  };
 
-  function handleGroupSelect(groupId) {
-    const selected = groups.find((group) => group.id === groupId);
-    setSelectedGroup(selected);
+  function handleGroupSelect(group) {
+    setSelectedGroup(group);
   }
 
   if (!isLoaded) {
@@ -143,18 +178,18 @@ const GroupSearchInterface = ({ toggleSetting }) => {
                   <div className="font-bold text-lg">
                     {group.title}
                     <button
-                      className="float-right w-1/2 rounded text-white font-normal bg-slate-400 hover:bg-slate-500"
-                      onClick={() => handleJoin(group.id)}
-                      disabled={joinedGroups.includes(group.id)}
+                      className="float-right w-1/2 rounded text-white font-normal bg-slate-400 hover:bg-slate-500 disabled:bg-slate-700"
+                      onClick={() => handleJoin(group)}
+                      disabled={isGroupJoined(group.id)}
                     >
-                      {joinedGroups.includes(group.id) ? "Joined" : "Join"}
+                      {isGroupJoined(group.id) ? "Joined" : "Join"}
                     </button>
                   </div>
                   <div className="bg-white">
                     <span className="float-left">{group.description}</span>
                     <span
                       className="float-right ml-10"
-                      onClick={() => handleGroupSelect(group.id)}
+                      onClick={() => handleGroupSelect(group)}
                     >
                       {group.members.length} Members
                     </span>

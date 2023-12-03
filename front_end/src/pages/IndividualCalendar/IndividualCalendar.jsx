@@ -13,53 +13,10 @@ import GroupSearchInterface from "../../components/GroupSearch/GroupSearchInterf
 moment.tz.setDefault("America/New_York");
 const localizer = momentLocalizer(moment);
 
-// const CustomToolbar = (props: ToolbarProps) => {
-//     const [viewState, setViewState] = useState('month');
-//
-//     const goToDayView = () => {
-//         props.onView('day');
-//         setViewState('day');
-//     };
-//     const goToWeekView = () => {
-//         props.onView('week');
-//         setViewState('week');
-//     };
-//     const goToMonthView = () => {
-//         props.onView('month');
-//         setViewState('month');
-//     };
-//
-//     const goToBack = () => {
-//         props.onNavigate(Navigate.PREVIOUS);
-//     };
-//
-//     const goToNext = () => {
-//         props.onNavigate(Navigate.NEXT);
-//     };
-//
-//     const goToToday = () => {
-//         props.onNavigate(Navigate.TODAY);
-//     };
-//
-//     return (
-//         <div className='rbc-toolbar'>
-//             <span className="rbc-btn-group">
-//               <button onClick={goToBack}>&#8249;</button>
-//               <label>{moment(props.date).format('DD/MM/YYYY')}</label>
-//               <button onClick={goToNext}>&#8250;</button>
-//               <button onClick={goToToday}>today</button>
-//               <button onClick={goToMonthView}>month</button>
-//               <button onClick={goToWeekView}>week</button>
-//               <button onClick={goToDayView}>day</button>
-//             </span>
-//         </div>
-//     );
-// };
-
 const IndividualCalendar = (props) => {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
-  const [groups, setGroups] = useState([]);
+  const [joinedGroups, setJoinedGroups] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showSetting, setShowSetting] = useState(false);
@@ -114,11 +71,11 @@ const IndividualCalendar = (props) => {
         // console.log(response.data);
         const formattedGroups = response.data.map((group) => ({
           id: group.group_token,
-          isPrivate: group.invite_flag,
+          // isPrivate: group.invite_flag,
           title: group.group_title,
-          description: group.group_desc,
+          // description: group.group_desc,
         }));
-        setGroups(formattedGroups);
+        setJoinedGroups(formattedGroups);
       })
       .catch((error) => {
         console.error(error);
@@ -178,7 +135,6 @@ const IndividualCalendar = (props) => {
 
     // reset selected event & load calander events
     setSelectedEvent(null);
-    loadCalendarEvents();
   };
 
   const handleDelete = async () => {
@@ -223,10 +179,10 @@ const IndividualCalendar = (props) => {
     }
   }, [displayOptions]);
 
-  // Update default display options when events are loaded
+  // Update default display options when events and joined groups are loaded
   useEffect(() => {
     setDefaultDisplayOptions(true);
-  }, [events]);
+  }, [events, joinedGroups]);
 
   const filterEvents = (options) => {
     const filteredEvents = events.filter(
@@ -240,7 +196,7 @@ const IndividualCalendar = (props) => {
     setIsOptionsLoaded(false);
     let options = {};
     options[0] = state; // self option
-    groups.forEach((group) => (options[group.id] = state)); // group options
+    joinedGroups.forEach((group) => (options[group.id] = state)); // group options
     setDisplayOptions(options);
     setIsOptionsLoaded(true);
   };
@@ -311,7 +267,7 @@ const IndividualCalendar = (props) => {
           <div className="modal-overlay w-full h-full">
             <AddInterface
               selectedEvent={selectedEvent}
-              groups={groups}
+              groups={joinedGroups}
               onSave={handleSave}
               onClose={handleClose}
               onDelete={handleDelete}
@@ -322,7 +278,7 @@ const IndividualCalendar = (props) => {
         {showSetting && (
           <div className="modal-overlay w-full h-full">
             <SettingInterface
-              groups={groups}
+              groups={joinedGroups}
               toggleSetting={toggleSetting}
               closeSetting={closeSetting}
               updateDisplayOptions={updateDisplayOptions}
@@ -335,6 +291,8 @@ const IndividualCalendar = (props) => {
             <GroupSearchInterface
               toggleSetting={toggleSetting}
               closeSetting={closeSetting}
+              joinedGroups={joinedGroups}
+              setJoinedGroups={setJoinedGroups}
             />
           </div>
         )}
@@ -350,3 +308,46 @@ const IndividualCalendar = (props) => {
 };
 
 export default IndividualCalendar;
+
+// const CustomToolbar = (props: ToolbarProps) => {
+//     const [viewState, setViewState] = useState('month');
+//
+//     const goToDayView = () => {
+//         props.onView('day');
+//         setViewState('day');
+//     };
+//     const goToWeekView = () => {
+//         props.onView('week');
+//         setViewState('week');
+//     };
+//     const goToMonthView = () => {
+//         props.onView('month');
+//         setViewState('month');
+//     };
+//
+//     const goToBack = () => {
+//         props.onNavigate(Navigate.PREVIOUS);
+//     };
+//
+//     const goToNext = () => {
+//         props.onNavigate(Navigate.NEXT);
+//     };
+//
+//     const goToToday = () => {
+//         props.onNavigate(Navigate.TODAY);
+//     };
+//
+//     return (
+//         <div className='rbc-toolbar'>
+//             <span className="rbc-btn-group">
+//               <button onClick={goToBack}>&#8249;</button>
+//               <label>{moment(props.date).format('DD/MM/YYYY')}</label>
+//               <button onClick={goToNext}>&#8250;</button>
+//               <button onClick={goToToday}>today</button>
+//               <button onClick={goToMonthView}>month</button>
+//               <button onClick={goToWeekView}>week</button>
+//               <button onClick={goToDayView}>day</button>
+//             </span>
+//         </div>
+//     );
+// };
