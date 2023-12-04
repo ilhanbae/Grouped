@@ -7,6 +7,10 @@
     font: bold small Germania One, "sans-serif", "fantasy";
 }
 
+.chatButton{
+    font-family: Germania One, "sans-serif", "fantasy";
+}
+
 .rbc-toolbar{
     background-color: rgba(86, 46, 33, 0.35);
     color: black;
