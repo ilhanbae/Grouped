@@ -135,6 +135,7 @@ const IndividualCalendar = (props) => {
 
     // reset selected event & load calander events
     setSelectedEvent(null);
+    loadCalendarEvents();
   };
 
   const handleDelete = async () => {
@@ -293,6 +294,7 @@ const IndividualCalendar = (props) => {
               closeSetting={closeSetting}
               joinedGroups={joinedGroups}
               setJoinedGroups={setJoinedGroups}
+              loadUserGroups={loadUserGroups}
             />
           </div>
         )}

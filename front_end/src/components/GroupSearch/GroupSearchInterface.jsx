@@ -7,10 +7,11 @@ const GroupSearchInterface = ({
   toggleSetting,
   joinedGroups,
   setJoinedGroups,
+  loadUserGroups,
 }) => {
   const [groups, setGroups] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [showCreate, setCreate] = useState(false);
+  const [showCreate, setShowCreate] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [searchInput, setSearchInput] = useState("");
 
@@ -59,15 +60,15 @@ const GroupSearchInterface = ({
     group.title.toLowerCase().includes(searchInput.toLowerCase())
   );
 
-  function updateGroups(newGroup) {
-    const newId = groups.length + 1;
-    newGroup["id"] = newId;
-    const updates = [...groups, newGroup];
-    setGroups(updates);
-    handleJoin(newId);
-    setCreate(false);
-    setSelectedGroup(null);
-  }
+  // function updateGroups(newGroup) {
+  //   const newId = groups.length + 1;
+  //   newGroup["id"] = newId;
+  //   const updates = [...groups, newGroup];
+  //   setGroups(updates);
+  //   handleJoin(newId);
+  //   setShowCreate(false);
+  //   setSelectedGroup(null);
+  // }
 
   // function handleJoin(groupId) {
   // Check if the group is already joined
@@ -84,6 +85,7 @@ const GroupSearchInterface = ({
   //   );
   // }
   // }
+
   const handleJoin = async (targetGroup) => {
     const data = {
       group_token: targetGroup.id,
@@ -146,16 +148,16 @@ const GroupSearchInterface = ({
           {/* Create Group */}
           <button
             className="float-right p-1 rounded text-white font-bold bg-slate-400 hover:bg-slate-500 display:inline"
-            onClick={() => setCreate(true)}
+            onClick={() => setShowCreate(true)}
           >
             Create Group
           </button>
           {showCreate && (
             <div className="modal-overlay w-full h-full">
               <CreateGroup
-                onClose={() => setCreate(false)}
-                onSave={updateGroups}
-                updateGroups={updateGroups}
+                onClose={() => setShowCreate(false)}
+                loadGroupsAndMembers={loadGroupsAndMembers}
+                loadUserGroups={loadUserGroups}
               />
             </div>
           )}
