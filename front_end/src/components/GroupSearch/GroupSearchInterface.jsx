@@ -92,7 +92,7 @@ const GroupSearchInterface = ({
     );
   } else {
     return (
-      <div className="modal-content w-auto h-96 flex flex-col justify-evenly space-y-3 bg-slate-200">
+      <div className="modal-content w-3/5 h-3/5 flex flex-col justify-start space-y-3 bg-slate-200">
         <div>
           {/* Back Button */}
           <button
@@ -129,7 +129,7 @@ const GroupSearchInterface = ({
         />
 
         {/* Groups Info */}
-        <div className="bg-slate-100 rounded-md w-full h-3/5 p-2 space-y-1 overflow-y-scroll">
+        <div className="bg-slate-100 rounded-md w-full h-full p-2 space-y-1 overflow-y-scroll">
           {filteredGroups.map((group) => (
             <div className="flex p-1 rounded-sm" key={group.id}>
               <span htmlFor={group.id} className="w-full rounded-sm px-1">
