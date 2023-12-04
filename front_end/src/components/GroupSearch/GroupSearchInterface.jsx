@@ -132,12 +132,12 @@ const GroupSearchInterface = ({
         <div className="bg-slate-100 rounded-md w-full h-3/5 p-2 space-y-1 overflow-y-scroll">
           {filteredGroups.map((group) => (
             <div className="flex p-1 rounded-sm" key={group.id}>
-              <span htmlFor={group.id} className="w-full rounded-sm px-1">
-                <div className="bg-white p-1">
+              <span htmlFor={group.id} className="w-full rounded-sm px-1 bg-white">
+                <div className="p-1">
                   <div className="font-bold text-lg">
                     {group.title}
                     <button
-                      className="float-right w-1/2 rounded text-white font-normal bg-slate-400 hover:bg-slate-500 disabled:bg-slate-700"
+                      className="float-right w-1/4 rounded text-white font-normal bg-slate-400 hover:bg-slate-500 disabled:bg-slate-700"
                       onClick={() => handleJoin(group)}
                       disabled={isGroupJoined(group.id)}
                     >
@@ -147,7 +147,7 @@ const GroupSearchInterface = ({
                   <div className="bg-white">
                     <span className="float-left">{group.description}</span>
                     <span
-                      className="float-right ml-10"
+                      className="float-right ml-10 text-sky-400 underline"
                       onClick={() => handleGroupSelect(group)}
                     >
                       {group.members.length} Members
