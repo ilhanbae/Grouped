@@ -1,21 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const CreateGroup = ({ onClose, loadGroupsAndMembers, loadUserGroups }) => {
+const CreateGroup = ({ onClose, loadGroupsAndMembers, reloadCalendar }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
 
-  // async function handleSave() {
-  //   try {
-  //     // Call the onSave function and update the groups
-  //     await onSave({ title, description, members: [""] });
-  //     onClose();
-  //   } catch (error) {
-  //     console.error("Error saving group:", error);
-  //   }
-  // }
-  const handleCreate = async (e) => {
+  const handleSave = async (e) => {
     e.preventDefault();
     const data = {
       user_id: sessionStorage.getItem("id"),
@@ -31,8 +22,8 @@ const CreateGroup = ({ onClose, loadGroupsAndMembers, loadUserGroups }) => {
         // Update all groups & joined members
         loadGroupsAndMembers();
 
-        // Update joined groups
-        loadUserGroups();
+        // Reload calendar
+        reloadCalendar();
       })
       .catch((error) => console.error(error));
     onClose();
@@ -73,7 +64,7 @@ const CreateGroup = ({ onClose, loadGroupsAndMembers, loadUserGroups }) => {
           <button
             className="float-right p-1 rounded text-white font-bold bg-slate-400 hover:bg-slate-500 display:inline"
             type="submit"
-            onClick={handleCreate}
+            onClick={handleSave}
           >
             Save
           </button>

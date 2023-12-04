@@ -7,7 +7,7 @@ const GroupSearchInterface = ({
   toggleSetting,
   joinedGroups,
   setJoinedGroups,
-  loadUserGroups,
+  reloadCalendar,
 }) => {
   const [groups, setGroups] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -60,32 +60,6 @@ const GroupSearchInterface = ({
     group.title.toLowerCase().includes(searchInput.toLowerCase())
   );
 
-  // function updateGroups(newGroup) {
-  //   const newId = groups.length + 1;
-  //   newGroup["id"] = newId;
-  //   const updates = [...groups, newGroup];
-  //   setGroups(updates);
-  //   handleJoin(newId);
-  //   setShowCreate(false);
-  //   setSelectedGroup(null);
-  // }
-
-  // function handleJoin(groupId) {
-  // Check if the group is already joined
-  // if (!joinedGroups.includes(groupId)) {
-  //   // If not joined, update the state
-  //   setJoinedGroups((prevJoinedGroups) => [...prevJoinedGroups, groupId]);
-  //   // Update the groups array with the new member
-  //   setGroups((prevGroups) =>
-  //     prevGroups.map((group) =>
-  //       group.id === groupId
-  //         ? { ...group, members: [...group.members, ""] }
-  //         : group
-  //     )
-  //   );
-  // }
-  // }
-
   const handleJoin = async (targetGroup) => {
     const data = {
       group_token: targetGroup.id,
@@ -96,25 +70,8 @@ const GroupSearchInterface = ({
     await axios
       .post(`${process.env.REACT_APP_API_URL}/group-access.php`, data)
       .then((response) => {
-        // console.log(response);
-        const joinedGroup = {
-          id: targetGroup.id,
-          title: targetGroup.title,
-        };
-        // Update joined groups prop
-        setJoinedGroups((prevJoinedGroups) => [
-          ...prevJoinedGroups,
-          joinedGroup,
-        ]);
-        // Update group members state
-        const joinedGroupIndex = groups.findIndex(
-          (group) => group.id === targetGroup.id
-        );
-        groups[joinedGroupIndex].members.push({
-          id: data.user_id,
-          username: data.username,
-        });
-        // loadGroupsAndMembers();
+        // Reload Calendar
+        reloadCalendar();
       })
       .catch((error) => console.error(error));
   };
@@ -157,7 +114,7 @@ const GroupSearchInterface = ({
               <CreateGroup
                 onClose={() => setShowCreate(false)}
                 loadGroupsAndMembers={loadGroupsAndMembers}
-                loadUserGroups={loadUserGroups}
+                reloadCalendar={reloadCalendar}
               />
             </div>
           )}

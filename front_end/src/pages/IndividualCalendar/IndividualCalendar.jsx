@@ -25,62 +25,98 @@ const IndividualCalendar = (props) => {
   const [isOptionsLoaded, setIsOptionsLoaded] = useState(false);
 
   useEffect(() => {
-    loadCalendarEvents();
-    loadUserGroups();
+    loadCalendar();
   }, []);
 
-  // Loaders
-  const loadCalendarEvents = async () => {
+  // Load user's joined group, group events, and self events
+  const loadCalendar = async () => {
     setIsLoaded(false);
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/get-calander-events.php`, {
-        params: {
-          user_id: sessionStorage.getItem("id"),
-        },
-      })
-      .then((response) => {
-        // console.log(response);
-        const formattedEvents = response.data.map((event) => ({
-          id: event.id,
-          user_id: event.user_id,
-          group_id: event.group_id,
-          title: event.title,
-          start: moment(event.start_time).toDate(),
-          end: moment(event.end_time).toDate(),
-          location: event?.location,
-          descrip: event?.descrip,
-        }));
-        setEvents(formattedEvents);
-        setFilteredEvents(formattedEvents);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    setIsLoaded(true);
-  };
+    try {
+      // Fetch User's Joined Groups
+      const userGroupsResponse = await axios.get(
+        `${process.env.REACT_APP_API_URL}/group-access.php`,
+        {
+          params: {
+            user_id: sessionStorage.getItem("id"),
+          },
+        }
+      );
 
-  const loadUserGroups = async () => {
-    setIsLoaded(false);
-    await axios
-      .get(`${process.env.REACT_APP_API_URL}/group-access.php`, {
-        params: {
-          user_id: sessionStorage.getItem("id"),
-        },
-      })
-      .then((response) => {
-        // console.log(response.data);
-        const formattedGroups = response.data.map((group) => ({
-          id: group.group_token,
-          // isPrivate: group.invite_flag,
-          title: group.group_title,
-          // description: group.group_desc,
-        }));
-        setJoinedGroups(formattedGroups);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-    setIsLoaded(true);
+      // Fetch Group Events
+      const groupEvents = await Promise.all(
+        userGroupsResponse.data.map(async (group) => {
+          // console.log(group);
+          const groupEventsResponse = await axios.get(
+            `${process.env.REACT_APP_API_URL}/get-calander-events.php`,
+            {
+              params: {
+                group_id: group.group_token,
+              },
+            }
+          );
+          return groupEventsResponse.data;
+        })
+      );
+
+      // Fetch Self Events
+      const selfEventResponse = await axios.get(
+        `${process.env.REACT_APP_API_URL}/get-calander-events.php`,
+        {
+          params: {
+            user_id: sessionStorage.getItem("id"),
+          },
+        }
+      );
+
+      // Combine self and group events
+      let selfEvents = selfEventResponse.data;
+      let combinedEvents = [
+        ...selfEvents,
+        ...groupEvents
+          .flat()
+          .filter(
+            (groupEvent) =>
+              !selfEvents.some(
+                (selfEvent) => selfEvent["id"] === groupEvent["id"]
+              )
+          ),
+      ];
+
+      // Format events
+      const formattedEvents = combinedEvents.map((event) => ({
+        id: event.id,
+        user_id: event.user_id,
+        group_id: event.group_id,
+        title: event.title,
+        start: moment(event.start_time).toDate(),
+        end: moment(event.end_time).toDate(),
+        location: event?.location,
+        descrip: event?.descrip,
+      }));
+
+      // Format groups
+      const formattedGroups = userGroupsResponse.data.map((group) => ({
+        id: group.group_token,
+        // isPrivate: group.invite_flag,
+        title: group.group_title,
+        // description: group.group_desc,
+      }));
+
+      // console.log(userGroupsResponse.data);
+      // console.log(groupEvents);
+      // console.log(selfEventResponse.data);
+      // console.log(combinedEvents);
+      // console.log(formattedEvents);
+
+      // Update states
+      setJoinedGroups(formattedGroups);
+      setEvents(formattedEvents);
+      setFilteredEvents(formattedEvents);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoaded(true);
+    }
   };
 
   // Event Manager
@@ -133,9 +169,9 @@ const IndividualCalendar = (props) => {
         });
     }
 
-    // reset selected event & load calander events
+    // reset selected event & reload calander
     setSelectedEvent(null);
-    loadCalendarEvents();
+    loadCalendar();
   };
 
   const handleDelete = async () => {
@@ -153,8 +189,9 @@ const IndividualCalendar = (props) => {
         console.error(error);
       });
 
+    // reset selected event & reload calander
     setSelectedEvent(null);
-    loadCalendarEvents();
+    loadCalendar();
   };
 
   const handleClose = () => {
@@ -173,17 +210,17 @@ const IndividualCalendar = (props) => {
   };
 
   // Display Option Filter Methods
+  // Update default display options anytime events or joined groups have changed
+  useEffect(() => {
+    setDefaultDisplayOptions(true);
+  }, [events, joinedGroups]);
+
   // Update display option on option select
   useEffect(() => {
     if (isOptionsLoaded) {
       filterEvents(displayOptions);
     }
   }, [displayOptions]);
-
-  // Update default display options when events and joined groups are loaded
-  useEffect(() => {
-    setDefaultDisplayOptions(true);
-  }, [events, joinedGroups]);
 
   const filterEvents = (options) => {
     const filteredEvents = events.filter(
@@ -193,6 +230,7 @@ const IndividualCalendar = (props) => {
     setFilteredEvents(filteredEvents);
   };
 
+  // Set display option for user's joined groups to state
   const setDefaultDisplayOptions = (state) => {
     setIsOptionsLoaded(false);
     let options = {};
@@ -203,7 +241,6 @@ const IndividualCalendar = (props) => {
   };
 
   const updateDisplayOptions = (option) => {
-    // console.log(option);
     setDisplayOptions({ ...displayOptions, [option]: !displayOptions[option] });
   };
 
@@ -294,7 +331,7 @@ const IndividualCalendar = (props) => {
               closeSetting={closeSetting}
               joinedGroups={joinedGroups}
               setJoinedGroups={setJoinedGroups}
-              loadUserGroups={loadUserGroups}
+              reloadCalendar={loadCalendar}
             />
           </div>
         )}
