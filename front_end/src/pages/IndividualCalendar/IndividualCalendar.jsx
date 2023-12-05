@@ -9,6 +9,8 @@ import axios from "axios";
 import { getSelfEventProp, getGroupEventProp } from "../../utils/getEventProp";
 import SettingInterface from "../../components/DisplaySetting/SettingInterface";
 import GroupSearchInterface from "../../components/GroupSearch/GroupSearchInterface";
+import { ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/24/solid";
+import Chat from "../../components/Chat/Chat";
 
 moment.tz.setDefault("America/New_York");
 const localizer = momentLocalizer(moment);
@@ -23,6 +25,8 @@ const IndividualCalendar = (props) => {
   const [showSearch, setShowSearch] = useState(false);
   const [displayOptions, setDisplayOptions] = useState({});
   const [isOptionsLoaded, setIsOptionsLoaded] = useState(false);
+  const [hasNewUpdates, setHasNewUpdates] = useState(false); //for when chat icon has red dot
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   useEffect(() => {
     loadCalendar();
@@ -282,6 +286,14 @@ const IndividualCalendar = (props) => {
     return eventProp;
   };
 
+  const toggleNewUpdates = () => {
+    setHasNewUpdates(!hasNewUpdates);
+  };
+
+  const toggleChat = () => {
+      setIsChatOpen(!isChatOpen);
+    };
+
   if (!isLoaded) {
     return <div className="flex items-center justify-center">Loading...</div>;
   } else {
@@ -295,7 +307,7 @@ const IndividualCalendar = (props) => {
           events={filteredEvents}
           startAccessor="start"
           endAccessor="end"
-          style={{ height: "85%", padding: "10px 10px" }}
+          style={{ height: "90%", padding: "10px 10px" }}
           onSelectEvent={handleEventSelect}
           onSelectSlot={onSelectSlot}
           eventPropGetter={eventPropGetter}
@@ -335,12 +347,31 @@ const IndividualCalendar = (props) => {
             />
           </div>
         )}
-        <button
-          onClick={() => setShowSetting(true)}
-          className="displayButton ml-4 p-2"
-        >
-          Display Setting
-        </button>
+        <div className="flex items-center">
+            <button
+              onClick={() => setShowSetting(true)}
+              className="displayButton rounded-full ml-4 p-2"
+            >
+              Display Setting
+            </button>
+            <div className="flex items-center ml-4">
+                  <button onClick={toggleChat} className="chatButton relative ml-4">
+                    <div className="rounded-full bg-blue-800 p-1 flex items-center">
+                      <span className="ml-2 text-white">Chat </span>
+                      <ChatBubbleOvalLeftEllipsisIcon className="ml-2 mr-1 h-6 w-6 text-white" />
+                    </div>
+                    {hasNewUpdates && (
+                      <div className="indicator absolute top-0 right-0 bg-red-500 rounded-full w-3 h-3"></div>
+                    )}
+                  </button>
+            </div>
+        </div>
+        {/* Conditionally render the Chat component */}
+        {isChatOpen && (
+          <div className="modal-overlay w-full h-full">
+            <Chat onClose={toggleChat} />
+          </div>
+        )}
       </div>
     );
   }
