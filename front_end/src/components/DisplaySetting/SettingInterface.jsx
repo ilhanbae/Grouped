@@ -10,7 +10,7 @@ const SettingInterface = ({
   return (
     <div className="modal-content w-72 h-72 flex flex-col items-center justify-evenly space-y-3 bg-slate-200">
       {/* Display Options */}
-      <h1 className="font-bold self-start">Select Group to Display</h1>
+      <h1 className="font-bold self-start">Select Group(s) to Display</h1>
       <div className="bg-slate-100 rounded-md w-full h-full p-1 space-y-1 overflow-y-scroll">
         {/* Self Option */}
         <div className="flex p-1 rounded-sm">

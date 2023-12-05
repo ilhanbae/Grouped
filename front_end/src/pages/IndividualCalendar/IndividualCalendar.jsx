@@ -355,7 +355,7 @@ const IndividualCalendar = (props) => {
               }`}
               onClick={() => toggleSetting()}
             >
-              Display Group
+              Display Filter
             </button>
             <button
               className={`p-2 bg-white border border-gray-300 rounded-e-md ${
