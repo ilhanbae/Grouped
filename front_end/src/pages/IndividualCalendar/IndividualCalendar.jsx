@@ -203,13 +203,20 @@ const IndividualCalendar = (props) => {
   // Display Components
   const toggleSetting = () => {
     setShowSetting(!showSetting);
-    setShowSearch(!showSearch);
   };
 
-  const closeSetting = () => {
-    setShowSetting(false);
-    setShowSearch(false);
+  const toggleSearch = () => {
+    setShowSearch(!showSearch);
   };
+  // const toggleSetting = () => {
+  //   setShowSetting(!showSetting);
+  //   setShowSearch(!showSearch);
+  // };
+
+  // const closeSetting = () => {
+  //   setShowSetting(false);
+  //   setShowSearch(false);
+  // };
 
   // Display Option Filter Methods
   // Update default display options anytime events or joined groups have changed
@@ -323,8 +330,7 @@ const IndividualCalendar = (props) => {
           <div className="modal-overlay w-full h-full">
             <SettingInterface
               groups={joinedGroups}
-              toggleSetting={toggleSetting}
-              closeSetting={closeSetting}
+              closeSetting={toggleSetting}
               updateDisplayOptions={updateDisplayOptions}
               displayOptions={displayOptions}
             />
@@ -333,32 +339,45 @@ const IndividualCalendar = (props) => {
         {showSearch && (
           <div className="modal-overlay w-full h-full">
             <GroupSearchInterface
-              toggleSetting={toggleSetting}
-              closeSetting={closeSetting}
+              closeSearch={toggleSearch}
               joinedGroups={joinedGroups}
               setJoinedGroups={setJoinedGroups}
               reloadCalendar={loadCalendar}
             />
           </div>
         )}
-        <div className="flex items-center">
+        <div className="flex justify-between px-[10px]">
+          {/* Groups */}
+          <div className="displayButton inline-flex" role="group">
             <button
-              onClick={() => setShowSetting(true)}
-              className="displayButton rounded-full ml-4 p-2"
+              className={`p-2 bg-white border border-gray-300 rounded-s-md ${
+                showSetting ? "z-10 ring-blue-400 ring-2" : "z-0 ring-0"
+              }`}
+              onClick={() => toggleSetting()}
             >
-              Display Setting
+              Display Group
             </button>
-            <div className="flex items-center ml-4">
-                  <button onClick={toggleNewUpdates} className="chatButton relative ml-4">
-                    <div className="rounded-full bg-blue-800 p-1 flex items-center">
-                      <span className="ml-2 text-white">Chat </span>
-                      <ChatBubbleOvalLeftEllipsisIcon className="ml-2 mr-1 h-6 w-6 text-white" />
-                    </div>
-                    {hasNewUpdates && (
-                      <div className="indicator absolute top-0 right-0 bg-red-500 rounded-full w-3 h-3"></div>
-                    )}
-                  </button>
-            </div>
+            <button
+              className={`p-2 bg-white border border-gray-300 rounded-e-md ${
+                showSearch ? "z-10 ring-blue-400 ring-2" : "z-0 ring-0"
+              }`}
+              onClick={() => toggleSearch()}
+            >
+              Find Group
+            </button>
+          </div>
+          {/* Chat */}
+          <div className="flex items-center">
+            <button onClick={toggleNewUpdates} className="chatButton relative">
+              <div className="rounded-full bg-blue-800 p-1 flex items-center">
+                <span className="ml-2 text-white">Chat </span>
+                <ChatBubbleOvalLeftEllipsisIcon className="ml-2 mr-1 h-6 w-6 text-white" />
+              </div>
+              {hasNewUpdates && (
+                <div className="indicator absolute top-0 right-0 bg-red-500 rounded-full w-3 h-3"></div>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     );

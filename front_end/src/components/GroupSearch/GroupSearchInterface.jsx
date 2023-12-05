@@ -4,7 +4,7 @@ import CreateGroup from "../CreateGroup/CreateGroup";
 import MemberList from "../MemberList/MemberList";
 
 const GroupSearchInterface = ({
-  toggleSetting,
+  closeSearch,
   joinedGroups,
   setJoinedGroups,
   reloadCalendar,
@@ -98,7 +98,7 @@ const GroupSearchInterface = ({
           <button
             className="float-left p-1 rounded text-white font-bold bg-slate-400 hover:bg-slate-500 display:inline"
             type="button"
-            onClick={() => toggleSetting()}
+            onClick={() => closeSearch()}
           >
             Back
           </button>
@@ -132,7 +132,10 @@ const GroupSearchInterface = ({
         <div className="bg-slate-100 rounded-md w-full h-full p-2 space-y-1 overflow-y-scroll">
           {filteredGroups.map((group) => (
             <div className="flex p-1 rounded-sm" key={group.id}>
-              <span htmlFor={group.id} className="w-full rounded-sm px-1 bg-white">
+              <span
+                htmlFor={group.id}
+                className="w-full rounded-sm px-1 bg-white"
+              >
                 <div className="p-1">
                   <div className="font-bold text-lg">
                     {group.title}

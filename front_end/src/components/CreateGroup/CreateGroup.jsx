@@ -138,12 +138,12 @@ const CreateGroup = ({ onClose, loadGroupsAndMembers, reloadCalendar }) => {
           >
             Cancel
           </button>
-          {/* Save Button*/}
+          {/* Confirm Button*/}
           <button
             className="float-right h-12 px-6 rounded text-white font-bold bg-slate-400 hover:bg-slate-500 display:inline"
             type="submit"
           >
-            Save
+            Confirm
           </button>
         </div>
       </form>
