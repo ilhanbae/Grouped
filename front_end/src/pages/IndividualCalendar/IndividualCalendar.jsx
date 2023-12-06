@@ -9,6 +9,9 @@ import axios from "axios";
 import { getSelfEventProp, getGroupEventProp } from "../../utils/getEventProp";
 import SettingInterface from "../../components/DisplaySetting/SettingInterface";
 import GroupSearchInterface from "../../components/GroupSearch/GroupSearchInterface";
+import { ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/24/solid";
+import Chat from "../../components/Chat/Chat";
+import GroupListModal from '../../components/GroupListChat/GroupListChat';
 
 moment.tz.setDefault("America/New_York");
 const localizer = momentLocalizer(moment);
@@ -23,6 +26,10 @@ const IndividualCalendar = (props) => {
   const [showSearch, setShowSearch] = useState(false);
   const [displayOptions, setDisplayOptions] = useState({});
   const [isOptionsLoaded, setIsOptionsLoaded] = useState(false);
+  const [hasNewUpdates, setHasNewUpdates] = useState(false); //for when chat icon has red dot
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [showGroupListModal, setShowGroupListModal] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState(null);
 
   useEffect(() => {
     loadCalendar();
@@ -201,13 +208,20 @@ const IndividualCalendar = (props) => {
   // Display Components
   const toggleSetting = () => {
     setShowSetting(!showSetting);
-    setShowSearch(!showSearch);
   };
 
-  const closeSetting = () => {
-    setShowSetting(false);
-    setShowSearch(false);
+  const toggleSearch = () => {
+    setShowSearch(!showSearch);
   };
+  // const toggleSetting = () => {
+  //   setShowSetting(!showSetting);
+  //   setShowSearch(!showSearch);
+  // };
+
+  // const closeSetting = () => {
+  //   setShowSetting(false);
+  //   setShowSearch(false);
+  // };
 
   // Display Option Filter Methods
   // Update default display options anytime events or joined groups have changed
@@ -282,6 +296,28 @@ const IndividualCalendar = (props) => {
     return eventProp;
   };
 
+  const toggleNewUpdates = () => {
+    setHasNewUpdates(!hasNewUpdates);
+  };
+
+  const toggleChat = () => {
+      setIsChatOpen(!isChatOpen);
+    };
+
+  const handleChatButtonClick = () => {
+    setShowGroupListModal(true);
+  };
+
+  const handleGroupSelect = (group) => {
+    setShowGroupListModal(false);
+    setSelectedGroup(group);
+  };
+
+  const handleBackToGroupList = () => {
+    setShowGroupListModal(true);
+    setSelectedGroup(null);
+  };
+
   if (!isLoaded) {
     return <div className="flex items-center justify-center">Loading...</div>;
   } else {
@@ -295,7 +331,7 @@ const IndividualCalendar = (props) => {
           events={filteredEvents}
           startAccessor="start"
           endAccessor="end"
-          style={{ height: "85%", padding: "10px 10px" }}
+          style={{ height: "90%", padding: "10px 10px" }}
           onSelectEvent={handleEventSelect}
           onSelectSlot={onSelectSlot}
           eventPropGetter={eventPropGetter}
@@ -317,8 +353,7 @@ const IndividualCalendar = (props) => {
           <div className="modal-overlay w-full h-full">
             <SettingInterface
               groups={joinedGroups}
-              toggleSetting={toggleSetting}
-              closeSetting={closeSetting}
+              closeSetting={toggleSetting}
               updateDisplayOptions={updateDisplayOptions}
               displayOptions={displayOptions}
             />
@@ -327,20 +362,63 @@ const IndividualCalendar = (props) => {
         {showSearch && (
           <div className="modal-overlay w-full h-full">
             <GroupSearchInterface
-              toggleSetting={toggleSetting}
-              closeSetting={closeSetting}
+              closeSearch={toggleSearch}
               joinedGroups={joinedGroups}
               setJoinedGroups={setJoinedGroups}
               reloadCalendar={loadCalendar}
             />
           </div>
         )}
-        <button
-          onClick={() => setShowSetting(true)}
-          className="displayButton ml-4 p-2"
-        >
-          Display Setting
-        </button>
+        <div className="flex justify-between px-[10px]">
+          {/* Groups */}
+          <div className="displayButton inline-flex" role="group">
+            <button
+              className={`p-2 bg-white border border-gray-300 rounded-s-md ${
+                showSetting ? "z-10 ring-blue-400 ring-2" : "z-0 ring-0"
+              }`}
+              onClick={() => toggleSetting()}
+            >
+              Display Filter
+            </button>
+            <button
+              className={`p-2 bg-white border border-gray-300 rounded-e-md ${
+                showSearch ? "z-10 ring-blue-400 ring-2" : "z-0 ring-0"
+              }`}
+              onClick={() => toggleSearch()}
+            >
+              Find Group
+            </button>
+          </div>
+          {/* Chat */}
+          <div className="flex items-center">
+            <button onClick={handleChatButtonClick} className="chatButton relative">
+              <div className="rounded-full bg-blue-800 p-1 flex items-center">
+                <span className="ml-2 text-white">Chat </span>
+                <ChatBubbleOvalLeftEllipsisIcon className="ml-2 mr-1 h-6 w-6 text-white" />
+              </div>
+              {hasNewUpdates && (
+                <div className="indicator absolute top-0 right-0 bg-red-500 rounded-full w-3 h-3"></div>
+              )}
+            </button>
+          </div>
+        </div>
+        {/* Conditionally render the Group List Modal */}
+          {showGroupListModal && (
+            <GroupListModal
+              groups={joinedGroups}
+              onSelectGroup={handleGroupSelect}
+              onClose={() => setShowGroupListModal(false)}
+            />
+          )}
+        {/* Conditionally render the Chat component based on the selected group */}
+          {selectedGroup && (
+            <div className="modal-overlay w-full h-full">
+              {/* Pass the selected group to the Chat component */}
+              <Chat onClose={() =>
+                setSelectedGroup(null)} selectedGroup={selectedGroup}
+                goBack={handleBackToGroupList}/>
+            </div>
+          )}
       </div>
     );
   }

@@ -1,72 +1,149 @@
 import React, { useState } from "react";
 import axios from "axios";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const CreateGroup = ({ onClose, loadGroupsAndMembers, reloadCalendar }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
 
-  const handleSave = async (e) => {
-    e.preventDefault();
-    const data = {
+  // Yup Schema
+  const createGroupSchema = yup.object().shape({
+    title: yup
+      .string()
+      .max(48, "Title too long.")
+      .required("Title is required."),
+    type: yup.string().required("Type is required"),
+    description: yup
+      .string()
+      .nullable()
+      .transform((c, o) => (c === "" ? null : o))
+      .min(0)
+      .max(255, "Description too long."),
+  });
+
+  // React UseForm hook
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(createGroupSchema),
+    defaultValues: {
+      title: "",
+      type: "public",
+      description: "",
+    },
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
+  });
+
+  const onSubmit = async (data) => {
+    const newData = {
       user_id: sessionStorage.getItem("id"),
       username: sessionStorage.getItem("username"),
-      invite_flag: isPrivate,
-      group_title: title,
-      group_desc: description,
+      invite_flag: data.type === "private",
+      group_title: data.title,
+      group_desc: data.description,
     };
+
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/group.php`, data)
+      .post(`${process.env.REACT_APP_API_URL}/group.php`, newData)
       .then((response) => {
         console.log(response.data);
         // Update all groups & joined members
         loadGroupsAndMembers();
-
         // Reload calendar
         reloadCalendar();
       })
       .catch((error) => console.error(error));
+
+    // Close create group interface
     onClose();
   };
 
+  // Conditional render variables
+  const isPrivateSelected = watch("type") === "private";
+  const isPublicSelected = watch("type") === "public";
+
+  const toggleGroupType = (type) => {
+    setValue("type", type);
+  };
+
   return (
-    <div className="modal-content w-full h-auto flex flex-col justify-evenly space-y-3 bg-slate-200">
-      <form>
+    <div className="modal-content w-4/5 h-auto bg-slate-200">
+      <form
+        className="flex flex-col justify-evenly space-y-2"
+        autoComplete="off"
+        noValidate
+        onSubmit={handleSubmit(onSubmit)}
+      >
         {/* Title Field */}
         <input
           id="Title"
-          className="p-1 w-full mt-5 text-lg text-[#660033] text-center bg-white rounded border placeholder-slate-300 focus:[#ffcccc] focus:[#ebbcbc] resize-none"
+          className="p-1 w-full mt-5 text-lg text-[#660033] bg-white rounded border placeholder-slate-300 focus:[#ffcccc] focus:[#ebbcbc] resize-none"
           placeholder="Title"
           type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          {...register("title")}
         />
+        <span className="block text-red-700">{errors.title?.message}</span>
+        {/* Type Field */}
+        <div className="flex space-x-1 justify-start">
+          {/* Public */}
+          <button
+            type="button"
+            className={`h-12 px-6 text-lg rounded-md focus:shadow-outline ${
+              isPublicSelected ? "bg-blue-400 text-black" : " text-black"
+            }`}
+            onClick={() => toggleGroupType("public")}
+          >
+            Public
+          </button>
+
+          {/* Private */}
+          <button
+            type="button"
+            className={`h-12 px-6 text-lg rounded-md focus:shadow-outline ${
+              isPrivateSelected ? "bg-blue-400 text-black" : " text-black"
+            }`}
+            onClick={() => toggleGroupType("private")}
+          >
+            Private
+          </button>
+          <span className="block text-red-700">{errors.type?.message}</span>
+        </div>
+
         {/* Description Field */}
         <textarea
           id="Description"
           rows="3"
-          className="p-1 w-full text-lg mt-5 text-[#660033] text-center bg-white rounded border placeholder-slate-300 focus:[#ffcccc] focus:[#ebbcbc] resize-none"
+          className="p-1 w-full text-lg text-[#660033] bg-white rounded border placeholder-slate-300 focus:[#ffcccc] focus:[#ebbcbc] resize-none"
           placeholder="Description"
           type="text"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          {...register("description")}
         />
-        <div className="m-2">
+
+        {/* Buttons */}
+        <div className="">
           {/* Cancel Button*/}
           <button
-            className="float-left p-1 rounded text-white font-bold bg-slate-400 hover:bg-slate-500 display:inline"
+            className="float-left h-12 px-6 rounded text-white font-bold bg-slate-400 hover:bg-slate-500 display:inline"
             type="button"
             onClick={onClose}
           >
             Cancel
           </button>
-          {/* Save Button*/}
+          {/* Confirm Button*/}
           <button
-            className="float-right p-1 rounded text-white font-bold bg-slate-400 hover:bg-slate-500 display:inline"
+            className="float-right h-12 px-6 rounded text-white font-bold bg-slate-400 hover:bg-slate-500 display:inline"
             type="submit"
-            onClick={handleSave}
           >
-            Save
+            Confirm
           </button>
         </div>
       </form>

@@ -4,7 +4,7 @@ import CreateGroup from "../CreateGroup/CreateGroup";
 import MemberList from "../MemberList/MemberList";
 
 const GroupSearchInterface = ({
-  toggleSetting,
+  closeSearch,
   joinedGroups,
   setJoinedGroups,
   reloadCalendar,
@@ -92,13 +92,13 @@ const GroupSearchInterface = ({
     );
   } else {
     return (
-      <div className="modal-content w-auto h-96 flex flex-col justify-evenly space-y-3 bg-slate-200">
+      <div className="modal-content w-3/5 h-3/5 flex flex-col justify-start space-y-3 bg-slate-200">
         <div>
           {/* Back Button */}
           <button
             className="float-left p-1 rounded text-white font-bold bg-slate-400 hover:bg-slate-500 display:inline"
             type="button"
-            onClick={() => toggleSetting()}
+            onClick={() => closeSearch()}
           >
             Back
           </button>
@@ -129,15 +129,18 @@ const GroupSearchInterface = ({
         />
 
         {/* Groups Info */}
-        <div className="bg-slate-100 rounded-md w-full h-3/5 p-2 space-y-1 overflow-y-scroll">
+        <div className="bg-slate-100 rounded-md w-full h-full p-2 space-y-1 overflow-y-scroll">
           {filteredGroups.map((group) => (
             <div className="flex p-1 rounded-sm" key={group.id}>
-              <span htmlFor={group.id} className="w-full rounded-sm px-1">
-                <div className="bg-white p-1">
+              <span
+                htmlFor={group.id}
+                className="w-full rounded-sm px-1 bg-white"
+              >
+                <div className="p-1">
                   <div className="font-bold text-lg">
                     {group.title}
                     <button
-                      className="float-right w-1/2 rounded text-white font-normal bg-slate-400 hover:bg-slate-500 disabled:bg-slate-700"
+                      className="float-right w-1/4 rounded text-white font-normal bg-slate-400 hover:bg-slate-500 disabled:bg-slate-700"
                       onClick={() => handleJoin(group)}
                       disabled={isGroupJoined(group.id)}
                     >
@@ -147,7 +150,7 @@ const GroupSearchInterface = ({
                   <div className="bg-white">
                     <span className="float-left">{group.description}</span>
                     <span
-                      className="float-right ml-10"
+                      className="float-right ml-10 text-sky-400 underline"
                       onClick={() => handleGroupSelect(group)}
                     >
                       {group.members.length} Members

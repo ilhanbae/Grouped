@@ -3,24 +3,15 @@ import { getColorById } from "../../utils/getEventProp";
 
 const SettingInterface = ({
   groups,
-  toggleSetting,
   closeSetting,
   updateDisplayOptions,
   displayOptions,
 }) => {
   return (
     <div className="modal-content w-72 h-72 flex flex-col items-center justify-evenly space-y-3 bg-slate-200">
-      {/* Join Button */}
-      <button
-        className="w-full p-1 rounded text-white font-bold bg-slate-400 hover:bg-slate-500"
-        type="button"
-        onClick={() => toggleSetting()}
-      >
-        Join Group
-      </button>
       {/* Display Options */}
-      <h1 className="font-bold self-start">Choose Display Option</h1>
-      <div className="bg-slate-100 rounded-md w-full h-3/5 p-1 space-y-1 overflow-y-scroll">
+      <h1 className="font-bold self-start">Select Group(s) to Display</h1>
+      <div className="bg-slate-100 rounded-md w-full h-full p-1 space-y-1 overflow-y-scroll">
         {/* Self Option */}
         <div className="flex p-1 rounded-sm">
           <input

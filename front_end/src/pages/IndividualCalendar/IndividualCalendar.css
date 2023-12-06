@@ -3,8 +3,11 @@
 }
 
 .displayButton{
-    background-color: white;
     font: bold small Germania One, "sans-serif", "fantasy";
+}
+
+.chatButton{
+    font-family: Germania One, "sans-serif", "fantasy";
 }
 
 .rbc-toolbar{
