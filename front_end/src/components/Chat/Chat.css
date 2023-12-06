@@ -39,13 +39,7 @@
 }
 
 .chat-message {
-    margin: 8px;
-    padding: 12px;
-    border-radius: 8px;
-    word-wrap: break-word;
-    white-space: pre-line;
-    max-width: 80%;
-    min-width: 50px;
+    padding: 5px;
 }
 
 .close-button {
@@ -60,23 +54,34 @@
     color: #f87171;
 }
 
+.message-text-sent,
+.message-text-received {
+    border-radius: 10px;
+    white-space: pre-line;
+    padding: 8px;
+    align-items: center;
+    display: flex;
+    word-wrap: break-word;
+    word-break: break-word;
+    max-width: 80%;
+    min-width: 50px;
+}
+
 .message-text-sent {
     background-color: #3490dc;
     color: #ffffff;
     margin-left: auto;
-    border-radius: 10px;
-    padding: 8px;
-    display: flex;
-    align-items: center;
 }
 
 .message-text-received {
     background-color: #ffffff;
     color: #000000;
-    border-radius: 10px;
-    padding: 8px;
-    display: flex;
-    align-items: center;
+}
+
+.message-sent:not(.user-info),
+.message-received:not(.user-info) {
+    padding: 0px;
+    margin-bottom: 0px;
 }
 
 .user-id {
