@@ -10,6 +10,8 @@ import { getSelfEventProp, getGroupEventProp } from "../../utils/getEventProp";
 import SettingInterface from "../../components/DisplaySetting/SettingInterface";
 import GroupSearchInterface from "../../components/GroupSearch/GroupSearchInterface";
 import { ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/24/solid";
+import Chat from "../../components/Chat/Chat";
+import GroupListModal from '../../components/GroupListChat/GroupListChat';
 
 moment.tz.setDefault("America/New_York");
 const localizer = momentLocalizer(moment);
@@ -25,6 +27,9 @@ const IndividualCalendar = (props) => {
   const [displayOptions, setDisplayOptions] = useState({});
   const [isOptionsLoaded, setIsOptionsLoaded] = useState(false);
   const [hasNewUpdates, setHasNewUpdates] = useState(false); //for when chat icon has red dot
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [showGroupListModal, setShowGroupListModal] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState(null);
 
   useEffect(() => {
     loadCalendar();
@@ -295,6 +300,24 @@ const IndividualCalendar = (props) => {
     setHasNewUpdates(!hasNewUpdates);
   };
 
+  const toggleChat = () => {
+      setIsChatOpen(!isChatOpen);
+    };
+
+  const handleChatButtonClick = () => {
+    setShowGroupListModal(true);
+  };
+
+  const handleGroupSelect = (group) => {
+    setShowGroupListModal(false);
+    setSelectedGroup(group);
+  };
+
+  const handleBackToGroupList = () => {
+    setShowGroupListModal(true);
+    setSelectedGroup(null);
+  };
+
   if (!isLoaded) {
     return <div className="flex items-center justify-center">Loading...</div>;
   } else {
@@ -368,7 +391,7 @@ const IndividualCalendar = (props) => {
           </div>
           {/* Chat */}
           <div className="flex items-center">
-            <button onClick={toggleNewUpdates} className="chatButton relative">
+            <button onClick={handleChatButtonClick} className="chatButton relative">
               <div className="rounded-full bg-blue-800 p-1 flex items-center">
                 <span className="ml-2 text-white">Chat </span>
                 <ChatBubbleOvalLeftEllipsisIcon className="ml-2 mr-1 h-6 w-6 text-white" />
@@ -379,6 +402,23 @@ const IndividualCalendar = (props) => {
             </button>
           </div>
         </div>
+        {/* Conditionally render the Group List Modal */}
+          {showGroupListModal && (
+            <GroupListModal
+              groups={joinedGroups}
+              onSelectGroup={handleGroupSelect}
+              onClose={() => setShowGroupListModal(false)}
+            />
+          )}
+        {/* Conditionally render the Chat component based on the selected group */}
+          {selectedGroup && (
+            <div className="modal-overlay w-full h-full">
+              {/* Pass the selected group to the Chat component */}
+              <Chat onClose={() =>
+                setSelectedGroup(null)} selectedGroup={selectedGroup}
+                goBack={handleBackToGroupList}/>
+            </div>
+          )}
       </div>
     );
   }
