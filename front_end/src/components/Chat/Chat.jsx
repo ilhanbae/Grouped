@@ -91,6 +91,16 @@ const Chat = ({ onClose, goBack }) => {
           </div>
         ))}
       </div>
+      <div className="chat-input">
+        <input
+          type="text"
+          placeholder="Type your message..."
+          value={inputText}
+          onChange={handleInputChange}
+          onKeyDown={handleEnterKey}
+        />
+        <button onClick={handleSendMessage}>Send</button>
+      </div>
     </div>
   );
 };
