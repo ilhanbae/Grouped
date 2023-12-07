@@ -21,14 +21,14 @@ switch ($method) {
         // Check if there's no auth header
         if (!$authHeader) {
             echo "No auth header";
-            header("HTTP/1.1 400 BAD REQUEST");
+            header("HTTP/1.1 401 Unauthorized");
             exit;
         }
 
         // Check if auth header is not a bearer token
         if (!preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
             echo "Not bearer";
-            header("HTTP/1.1 400 BAD REQUEST");
+            header("HTTP/1.1 401 Unauthorized");
             exit;
         }
 
@@ -37,7 +37,7 @@ switch ($method) {
         $isTokenValid = validateToken($token);
         if (!$isTokenValid) {
             echo "Invalid token";
-            header("HTTP/1.1 400 BAD REQUEST");
+            header("HTTP/1.1 401 Unauthorized");
             exit;
         }
 
