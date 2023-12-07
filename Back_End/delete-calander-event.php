@@ -12,14 +12,34 @@ $mysqli = require __DIR__ . "/database.php";
 $method = $_SERVER['REQUEST_METHOD'];
 switch ($method) {
     case "DELETE":
-        $id = $_GET['id'];
-        $token = isset($_GET['token']) ? $_GET['token'] : null;
+        // Get auth header  
+        $headers = getallheaders();
+        $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : null;
 
-        if(validateToken($token) == false){
+        // Check if there's no auth header
+        if (!$authHeader) {
+            echo "No auth header";
             header("HTTP/1.1 400 BAD REQUEST");
-            die("INVALID REQUEST");
-            break;
-          }
+            exit;
+        }
+
+        // Check if auth header is not a bearer token
+        if (!preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
+            echo "Not bearer";
+            header("HTTP/1.1 400 BAD REQUEST");
+            exit;
+        }
+
+        // Check if auth token is not valid
+        $token = $matches[1];
+        $isTokenValid = validateToken($token);
+        if (!$isTokenValid) {
+            echo "Invalid token";
+            header("HTTP/1.1 400 BAD REQUEST");
+            exit;
+        }
+
+        $id = $_GET['id'];
       
         $sql = sprintf("SELECT * FROM `user_calander`
         WHERE id = '%s'",

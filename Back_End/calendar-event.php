@@ -14,14 +14,37 @@ switch ($method) {
 
     //Create Calander Event
     case "POST":
+        // Get auth header  
+        $headers = getallheaders();
+        $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : null;
+
+        // Check if there's no auth header
+        if (!$authHeader) {
+            echo "No auth header";
+            header("HTTP/1.1 400 BAD REQUEST");
+            exit;
+        }
+
+        // Check if auth header is not a bearer token
+        if (!preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
+            echo "Not bearer";
+            header("HTTP/1.1 400 BAD REQUEST");
+            exit;
+        }
+
+        // Check if auth token is not valid
+        $token = $matches[1];
+        $isTokenValid = validateToken($token);
+        if (!$isTokenValid) {
+            echo "Invalid token";
+            header("HTTP/1.1 400 BAD REQUEST");
+            exit;
+        }
+
         // Get body of the request
         $user = json_decode(file_get_contents('php://input'));
 
-        if(validateToken($user->token) == false){
-            header("HTTP/1.1 400 BAD REQUEST");
-            die("INVALID REQUEST");
-            break;
-        }
+        
 
         // Prepare and bind db params
         $stmt = $mysqli->prepare("INSERT INTO user_calander (user_id, group_id, title, location, start_time, end_time, descrip) VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -72,8 +95,6 @@ switch ($method) {
         break;
     case "PUT":
         break;
-
-    //Delete Calander Event
     case "DELTE":
         break;
 }

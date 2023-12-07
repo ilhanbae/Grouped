@@ -14,10 +14,31 @@ switch ($method) {
     case "POST":
         $user = json_decode(file_get_contents('php://input'));
 
-        if(validateToken($user->token) == false){
+        // Get auth header  
+        $headers = getallheaders();
+        $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : null;
+
+        // Check if there's no auth header
+        if (!$authHeader) {
+            echo "No auth header";
             header("HTTP/1.1 400 BAD REQUEST");
-            die("INVALID REQUEST");
-            break;
+            exit;
+        }
+
+        // Check if auth header is not a bearer token
+        if (!preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
+            echo "Not bearer";
+            header("HTTP/1.1 400 BAD REQUEST");
+            exit;
+        }
+
+        // Check if auth token is not valid
+        $token = $matches[1];
+        $isTokenValid = validateToken($token);
+        if (!$isTokenValid) {
+            echo "Invalid token";
+            header("HTTP/1.1 400 BAD REQUEST");
+            exit;
         }
 
         $stmt = $mysqli->prepare("INSERT INTO messages (user_id, username, group_id, message) VALUES (?,?,?,?)");
@@ -62,6 +83,34 @@ switch ($method) {
         }
 
     case "GET":
+
+        // Get auth header  
+        $headers = getallheaders();
+        $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : null;
+
+        // Check if there's no auth header
+        if (!$authHeader) {
+            echo "No auth header";
+            header("HTTP/1.1 400 BAD REQUEST");
+            exit;
+        }
+
+        // Check if auth header is not a bearer token
+        if (!preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
+            echo "Not bearer";
+            header("HTTP/1.1 400 BAD REQUEST");
+            exit;
+        }
+
+        // Check if auth token is not valid
+        $token = $matches[1];
+        $isTokenValid = validateToken($token);
+        if (!$isTokenValid) {
+            echo "Invalid token";
+            header("HTTP/1.1 400 BAD REQUEST");
+            exit;
+        }
+        
         $group_id = $_GET['group_id'];
         $stmt = $mysqli->prepare("SELECT * FROM messages WHERE group_id = ?");
         $stmt->bind_param("s", $group_id);
