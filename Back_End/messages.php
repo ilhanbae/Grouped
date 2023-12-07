@@ -55,6 +55,22 @@ switch ($method) {
         }
 
     case "GET":
+        $group_id = $_GET['group_id'];
+        $stmt = $mysqli->prepare("SELECT * FROM messages WHERE group_id = ?");
+        $stmt->bind_param("s", $group_id);
+
+        $result = $stmt->execute();
+        if ($result) {
+            $message = mysqli_fetch_all ($stmt->get_result(), MYSQLI_ASSOC);
+            header("HTTP/1.1 200 OK");
+            echo json_encode($message);
+            break;
+            
+        } else {
+            echo "failed";
+            header("HTTP/1.1 400 BAD REQUEST");
+            break;
+        }
 
     case "PUT":
         break;
