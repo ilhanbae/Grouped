@@ -26,6 +26,8 @@ switch ($method) {
                 header("HTTP/1.1 400 BAD REQUEST");
                 die("No Event Title Provided");
             }
+
+            $location = $user->location;
             if($user->start_time == null){
                 header("HTTP/1.1 400 BAD REQUEST");
                 die("No Event Start Time Provided");
@@ -41,8 +43,8 @@ switch ($method) {
            
             $descrip = $user->descrip;
 
-            $stmt = $mysqli->prepare("UPDATE `user_calander` SET title = ?, start_time = ?, end_time = ?, descrip = ? WHERE id = $user->id");
-            $stmt->bind_param("ssss", $title,$start_time,$end_time,$descrip);
+            $stmt = $mysqli->prepare("UPDATE `user_calander` SET title = ?, location = ? ,start_time = ?, end_time = ?, descrip = ? WHERE id = $user->id");
+            $stmt->bind_param("sssss", $title, $location, $start_time, $end_time, $descrip);
             if ($stmt->execute()) {
                 echo "All Fields Updated";
                 header("HTTP/1.1 200 OK");
