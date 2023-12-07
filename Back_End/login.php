@@ -5,6 +5,7 @@ header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Methods: *");
 header('Content-Type: application/json; charset=utf-8');
 
+require __DIR__ . '/tokens.php';
 // Get DB context
 $mysqli = require __DIR__ . "/database.php";
 
@@ -33,11 +34,30 @@ switch ($method) {
                     session_start();
                     session_regenerate_id();
                     $_SESSION["user_id"] = $matcheduser["id"];
+                    $token = generateToken($matcheduser["id"], $matcheduser["username"]);
+                    //echo("This is the generated Token: ");
+                    //echo($token);
+                    $_SESSION["token"] = $token;
+                    //echo("This is the stored Token: ");
+                    //echo($_SESSION["token"]);
+
+
+                    //Testing Token Validation
+
+                    $validation = validateToken($token);
+                    if ($validation == false){
+                        echo(false);
+                        die;
+                    }
+                    
     
                     header("HTTP/1.1 200 OK");
 
-                    //this is only to showcase in backend that login was successful, remove this line
+                    $matcheduser["token"] = $token;
+
+
                     echo json_encode($matcheduser);
+
                     exit;
     
                 }

@@ -17,8 +17,8 @@ switch ($method) {
         $user = json_decode(file_get_contents('php://input'));
 
         // Prepare and bind db params
-        $stmt = $mysqli->prepare("INSERT INTO user_calander (user_id, group_id, title, start_time, end_time, descrip) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("iissss", $user_id, $group_id, $title, $start_time, $end_time, $descrip);
+        $stmt = $mysqli->prepare("INSERT INTO user_calander (user_id, group_id, title, location, start_time, end_time, descrip) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("iisssss", $user_id, $group_id, $title, $location, $start_time, $end_time, $descrip);
 
         // Set accounts param from body of the request
         $user_id = $user->user_id;
@@ -35,6 +35,7 @@ switch ($method) {
             header("HTTP/1.1 400 BAD REQUEST");
             die("No Event Title Provided");
         }
+        $location = $user->location;
         if($user->start_time == null){
             header("HTTP/1.1 400 BAD REQUEST");
             die("No Event Start Time Provided");
