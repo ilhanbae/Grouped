@@ -4,6 +4,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Methods: *");
 
+require __DIR__ . '/tokens.php';
 // Get DB context
 $mysqli = require __DIR__ . "/database.php";
 
@@ -15,6 +16,12 @@ switch ($method) {
     case "POST":
         // Get body of the request
         $user = json_decode(file_get_contents('php://input'));
+
+        if(validateToken($user->token) == false){
+            header("HTTP/1.1 400 BAD REQUEST");
+            die("INVALID REQUEST");
+            break;
+        }
 
         // Prepare and bind db params
         $stmt = $mysqli->prepare("INSERT INTO user_calander (user_id, group_id, title, location, start_time, end_time, descrip) VALUES (?, ?, ?, ?, ?, ?, ?)");

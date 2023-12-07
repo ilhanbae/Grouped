@@ -4,6 +4,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Methods: *");
 
+require __DIR__ . '/tokens.php';
 // Get DB context
 $mysqli = require __DIR__ . "/database.php";
 
@@ -14,6 +15,13 @@ switch ($method) {
     // Get email and username from the query
     $email = isset($_GET['email']) ? $_GET['email'] : null;
     $username = isset($_GET['username']) ? $_GET['username'] : null;
+    $token = isset($_GET['token']) ? $_GET['token'] : null;
+
+    if(validateToken($token) == false){
+      header("HTTP/1.1 400 BAD REQUEST");
+      die("INVALID REQUEST");
+      break;
+    }
 
     // Prepare and bind db params
     $stmt = $mysqli->prepare("SELECT id,username,email,firstName,lastName,school,bio FROM accounts WHERE email = ? OR username = ?");

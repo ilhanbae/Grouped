@@ -5,6 +5,8 @@ header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Methods: *");
 header('Content-Type: application/json; charset=utf-8');
 
+
+require __DIR__ . '/tokens.php';
 // Get DB context
 $mysqli = require __DIR__ . "/database.php";
 
@@ -12,6 +14,12 @@ $method = $_SERVER['REQUEST_METHOD'];
 switch ($method) {
     case "POST":
         $user = json_decode(file_get_contents('php://input'));
+
+        if(validateToken($user->token) == false){
+            header("HTTP/1.1 400 BAD REQUEST");
+            die("INVALID REQUEST");
+            break;
+        }
 
         /*$sql = sprintf("SELECT * FROM `accounts`
         WHERE id = '%s'",

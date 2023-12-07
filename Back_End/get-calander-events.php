@@ -4,6 +4,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Methods: *");
 
+require __DIR__ . '/tokens.php';
 // Get DB context
 $mysqli = require __DIR__ . "/database.php";
 
@@ -11,6 +12,13 @@ $mysqli = require __DIR__ . "/database.php";
 $method = $_SERVER['REQUEST_METHOD'];
 switch ($method) {
     case "GET":
+        $token = isset($_GET['token']) ? $_GET['token'] : null;
+
+        if(validateToken($token) == false){
+            header("HTTP/1.1 400 BAD REQUEST");
+            die("INVALID REQUEST");
+            break;
+        }
         // Get user_id or group_id
         if($_GET['user_id'] != null){
             $user_id = $_GET['user_id'];

@@ -4,6 +4,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Methods: *");
 
+require __DIR__ . '/tokens.php';
 // Get DB context
 $mysqli = require __DIR__ . "/database.php";
 
@@ -12,6 +13,12 @@ $method = $_SERVER['REQUEST_METHOD'];
 switch ($method) {
     case "POST":
         $user = json_decode(file_get_contents('php://input'));
+
+        if(validateToken($user->token) == false){
+            header("HTTP/1.1 400 BAD REQUEST");
+            die("INVALID REQUEST");
+            break;
+        }
 
         $stmt = $mysqli->prepare("INSERT INTO messages (user_id, username, group_id, message) VALUES (?,?,?,?)");
         $stmt->bind_param("isis",  $user_id, $username,$group_id, $message);

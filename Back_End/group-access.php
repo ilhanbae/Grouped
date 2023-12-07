@@ -4,6 +4,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Methods: *");
 
+require __DIR__ . '/tokens.php';
 // Get DB context
 $mysqli = require __DIR__ . "/database.php";
 
@@ -12,6 +13,12 @@ $method = $_SERVER['REQUEST_METHOD'];
 switch ($method) {
     case "POST":
         $user = json_decode(file_get_contents('php://input'));
+        
+        if(validateToken($user->token) == false){
+            header("HTTP/1.1 400 BAD REQUEST");
+            die("INVALID REQUEST");
+            break;
+        }
 
         // Prepare and bind db params
         $stmt = $mysqli->prepare("INSERT INTO group_access (group_token, group_title ,user_id, username) VALUES (?,?,?,?)");
@@ -53,6 +60,13 @@ switch ($method) {
         }
 
     case "GET":
+        $token = isset($_GET['token']) ? $_GET['token'] : null;
+        if(validateToken($token) == false){
+            header("HTTP/1.1 400 BAD REQUEST");
+            die("INVALID REQUEST");
+            break;
+        }
+
         if($_GET['user_id'] != null){
             $user_id = $_GET['user_id'];
             $stmt = $mysqli->prepare("SELECT group_token, group_title FROM group_access WHERE user_id = ?");
