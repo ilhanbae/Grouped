@@ -1,61 +1,120 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Chat.css'; // Import a CSS file for styling
 import {ArrowLeftIcon} from '@heroicons/react/24/outline';
+import moment from "moment";
+import axios from "axios";
 
-const Chat = ({ onClose, goBack }) => {
-  const [inputText, setInputText] = useState('');
-  const [userId, setUserId] = useState('');
-  const [messages, setMessages] = useState([
-    { id: 1, user_id: 'Me', text: 'worst group ever', isSent: true, currentTime: new Date() },
-    { id: 2, user_id: 'Danny', text: 'what group!?', isSent: false, currentTime: new Date() },
-    { id: 3, user_id: 'Me', text: 'You know *******', isSent: true, currentTime: new Date() },
-    { id: 4, user_id: 'Danny', text: 'o shoot, them???', isSent: false, currentTime: new Date() },
-  ]);
+// moment(event.start_time).toDate()
+
+const Chat = ({ onClose, goBack, selectedGroup }) => {
+  const [inputText, setInputText] = useState("");
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [messages, setMessages] = useState([]);
   const chatContainerRef = useRef(null);
 
+  // Fetch chat every second
+  useEffect(() => {
+    loadChatMessages();
+    // Set up a polling mechanism to load chat every second
+    const intervalId = setInterval(() => {
+      loadChatMessages();
+      // console.log("reloading");
+    }, 1000);
+
+    // Clean up the interval
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   loadChatMessages();
+  // }, []);
+
+  const loadChatMessages = async () => {
+    // setIsLoaded(false);
+    await axios
+      .get(`http://localhost/cse442/chat/message.php`, {
+        // .get(`${process.env.REACT_APP_API_URL}/message.php`, {
+        params: {
+          group_id: selectedGroup.id,
+        },
+      })
+      .then((response) => {
+        const formattedMessages = response.data.map((message) => ({
+          ...message,
+          text: message.message,
+          timestamp: moment(message.timestamp).toDate(),
+        }));
+
+        setMessages(formattedMessages);
+      })
+      .catch((error) => console.error(error));
+    // setIsLoaded(true);
+  };
+
+  // Send message
+  const sendChatMessage = async () => {
+    if (inputText.trim() !== "") {
+      const data = {
+        user_id: sessionStorage.getItem("id"),
+        group_id: selectedGroup.id,
+        username: sessionStorage.getItem("username"),
+        message: inputText,
+      };
+
+      await axios
+        .post(
+          `http://localhost/cse442/chat/message.php`,
+          // `${process.env.REACT_APP_API_URL}/update-calander-event.php`,
+          data
+        )
+        .then((response) => {
+          // console.log(response);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
+      // Reset input text
+      setInputText("");
+    }
+  };
+
+  // If user is at the bottom of the chat & message updates,
+  // scroll down to latest chat message
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  };
+
+  // Send chat message on enter key
+  const handleEnterKey = (e) => {
+    if (e.key === "Enter") {
+      sendChatMessage();
+    }
+  };
+
+  // Update input text when chat input change
   const handleInputChange = (e) => {
     setInputText(e.target.value);
   };
 
-  const handleSendMessage = () => {
-    if (inputText.trim() !== '') {
-      const sendMessage = {
-        id: messages.length + 1,
-        user_id: "Me",
-        text: inputText,
-        isSent: true,
-        currentTime: new Date()
-      };
-      setMessages([...messages, sendMessage]);
-      setInputText('');
-      // Simulate a received message after a short delay
-//       setTimeout(() => {
-//         setMessages([...messages, sendMessage, { user_id: "Danny", text: 'Received: ' + inputText, isSent: false }]);
-//       }, 500);
-    }
-  };
-
-  useEffect(() => {
-      if (chatContainerRef.current) {
-        chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
-      }
-    }, [messages]);
-
-  const handleEnterKey = (e) => {
-    if (e.key === "Enter"){
-        handleSendMessage();
-    }
-  };
-
   // Function to calculate the approximate visual width of a text string
   const calculateTextWidth = (text) => {
-    const elem = document.createElement('span');
-    elem.style.visibility = 'hidden';
-    elem.style.position = 'absolute';
-    elem.style.whiteSpace = 'pre-wrap';
+    const elem = document.createElement("span");
+    elem.style.visibility = "hidden";
+    elem.style.position = "absolute";
+    elem.style.whiteSpace = "pre-wrap";
 
     // Replace spaces with a non-breaking space to preserve multiple spaces
-    elem.innerText = text.replace(/ /g, '\u00A0');
+    elem.innerText = text.replace(/ /g, "\u00A0");
 
     document.body.appendChild(elem);
     const width = elem.offsetWidth;
@@ -64,67 +123,86 @@ const Chat = ({ onClose, goBack }) => {
     return width;
   };
 
-
   const formatTimestamp = (timestamp) => {
-    const options = { hour: '2-digit', minute: '2-digit'};
-    return new Intl.DateTimeFormat('en-US', options).format(timestamp);
+    const options = { hour: "2-digit", minute: "2-digit" };
+    return new Intl.DateTimeFormat("en-US", options).format(timestamp);
   };
 
   const shouldDisplayUserInfo = (message, index) => {
     if (index === 0) {
       // Always display user info and timestamp for the first message
-      return { displayUserId: true, displayTimestamp: true };
+      return { displayUsername: true, displayTimestamp: true };
     }
 
     const prevMessage = messages[index - 1];
 
-    // Check if the user_id should be displayed
-    const shouldDisplayUserId = message.user_id !== prevMessage.user_id;
+    // Check if the username should be displayed
+    const shoulddisplayUsername = message.username !== prevMessage.username;
 
     // Check if the timestamp should be displayed (if the messages are from different senders)
     const shouldDisplayTimestamp =
-      shouldDisplayUserId || (message.currentTime - prevMessage.currentTime) > 180000;
+      shoulddisplayUsername ||
+      message.currentTime - prevMessage.currentTime > 180000;
 
     // If the timestamp difference is less than 3 minutes, don't display timestamp
     const displayTimestamp =
-      shouldDisplayTimestamp && (message.currentTime - prevMessage.currentTime) > 180000;
+      shouldDisplayTimestamp &&
+      message.currentTime - prevMessage.currentTime > 180000;
 
     return {
-      displayUserId: shouldDisplayUserId,
+      displayUsername: shoulddisplayUsername,
       displayTimestamp: displayTimestamp,
     };
   };
 
+  // Check if message is mine
+  const isMyMessage = (message) =>
+    message.user_id === parseInt(sessionStorage.getItem("id"));
   return (
     <div className="chat-container">
+      {/* Header */}
       <div className="chat-header">
-        <span className="flex alignItems-center" onClick={goBack}>
+        <span className="flex items-center" onClick={goBack}>
           <ArrowLeftIcon className="h-6 w-6" />
-          PM Rulers
+          {selectedGroup.title}
         </span>
         <button className="close-button" onClick={onClose}>
           &times;
         </button>
       </div>
+      {/* Chat messages */}
       <div className="chat-messages" ref={chatContainerRef}>
         {messages.map((message, index) => {
-          const { displayUserId, displayTimestamp } = shouldDisplayUserInfo(message, index);
+          const { displayUsername, displayTimestamp } = shouldDisplayUserInfo(
+            message,
+            index
+          );
+
           return (
             <div
               key={index}
-              className={`chat-message ${message.isSent ? 'sent' : 'received'}
-                ${(!shouldDisplayUserInfo(message, index)) ? 'compact-message' : ''}`
+              className={`chat-message ${
+                isMyMessage(message) ? "sent" : "received"
               }
+                ${
+                  !shouldDisplayUserInfo(message, index)
+                    ? "compact-message"
+                    : ""
+                }`}
             >
-              {message.isSent ? (
+              {isMyMessage(message) ? (
                 <div className="message-sent">
                   <span className="user-info">
                     <span className="user-id sender">
-                      {displayUserId && message.user_id}
+                      {displayUsername && message.username}
                     </span>
                   </span>
-                  <span className="message-text-sent"
-                    style={{ width: `${calculateTextWidth(message.text) + 20}px` }}>
+                  <span
+                    className="message-text-sent"
+                    style={{
+                      width: `${calculateTextWidth(message.text) + 20}px`,
+                    }}
+                  >
                     {message.text}
                   </span>
                   <span className="timestamp sender">
@@ -135,11 +213,15 @@ const Chat = ({ onClose, goBack }) => {
                 <div className="message-received">
                   <span className="user-info">
                     <span className="user-id">
-                      {displayUserId && message.user_id}
+                      {displayUsername && message.username}
                     </span>
                   </span>
-                  <span className="message-text-received"
-                    style={{ width: `${calculateTextWidth(message.text) + 20}px` }}>
+                  <span
+                    className="message-text-received"
+                    style={{
+                      width: `${calculateTextWidth(message.text) + 20}px`,
+                    }}
+                  >
                     {message.text}
                   </span>
                   <span className="timestamp">
@@ -151,6 +233,7 @@ const Chat = ({ onClose, goBack }) => {
           );
         })}
       </div>
+      {/* Chat input */}
       <div className="chat-input">
         <input
           type="text"
@@ -159,7 +242,7 @@ const Chat = ({ onClose, goBack }) => {
           onChange={handleInputChange}
           onKeyDown={handleEnterKey}
         />
-        <button onClick={handleSendMessage}>Send</button>
+        <button onClick={sendChatMessage}>Send</button>
       </div>
     </div>
   );
