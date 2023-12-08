@@ -9,6 +9,7 @@ const Chat = ({ onClose, goBack, selectedGroup }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [messages, setMessages] = useState([]);
   const chatContainerRef = useRef(null);
+  const [charCount, setCharCount] = useState(255);
 
   // Fetch chat every second
   useEffect(() => {
@@ -93,12 +94,17 @@ const Chat = ({ onClose, goBack, selectedGroup }) => {
   const handleEnterKey = (e) => {
     if (e.key === "Enter") {
       sendChatMessage();
+      setCharCount(255);
     }
   };
 
   // Update input text when chat input change
   const handleInputChange = (e) => {
-    setInputText(e.target.value);
+    const newText = e.target.value;
+    if (newText.length <= 255) {
+        setInputText(e.target.value);
+        setCharCount(255-newText.length);
+    }
   };
 
   // Function to calculate the approximate visual width of a text string
@@ -238,6 +244,7 @@ const Chat = ({ onClose, goBack, selectedGroup }) => {
           onChange={handleInputChange}
           onKeyDown={handleEnterKey}
         />
+        <div className="char-count mr-1">{charCount} chars </div>
         <button onClick={sendChatMessage}>Send</button>
       </div>
     </div>

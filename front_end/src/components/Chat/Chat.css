@@ -107,6 +107,7 @@
     border: 1px solid #e5e7eb;
     border-radius: 4px;
     margin-right: 8px;
+    width: 80%;
 }
 
 .chat-input button {
