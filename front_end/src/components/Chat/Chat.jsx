@@ -125,7 +125,15 @@ const Chat = ({ onClose, goBack, selectedGroup }) => {
   };
 
   const formatTimestamp = (timestamp) => {
-    const options = { hour: "2-digit", minute: "2-digit" };
+    const options = {
+        weekday:'short',
+        month: "short",
+        day: "numeric",
+        year: 'numeric',
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+    };
     return new Intl.DateTimeFormat("en-US", options).format(timestamp);
   };
 
