@@ -10,9 +10,20 @@ import { yupResolver } from "@hookform/resolvers/yup";
 const Login = () => {
   const navigate = useNavigate();
 
-  // Detect manual session storage change and fall back to login page
+  // Detect manual session storage change and fall back to login page.
+  // Also detect session storage delete and fall back to login page.
   window.addEventListener("storage", (event) => {
     if (event.oldValue) {
+      sessionStorage.clear();
+      navigate("/login");
+    }
+
+    if (
+      !sessionStorage.getItem("id") ||
+      !sessionStorage.getItem("username") ||
+      !sessionStorage.getItem("email") ||
+      !sessionStorage.getItem("token")
+    ) {
       sessionStorage.clear();
       navigate("/login");
     }
