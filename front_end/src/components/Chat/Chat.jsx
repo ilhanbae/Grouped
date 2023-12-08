@@ -4,6 +4,9 @@ import {ArrowLeftIcon} from '@heroicons/react/24/outline';
 import moment from "moment";
 import axios from "axios";
 
+axios.defaults.headers.common["Authorization"] =
+  "Bearer " + sessionStorage.getItem("token");
+
 // moment(event.start_time).toDate()
 
 const Chat = ({ onClose, goBack, selectedGroup }) => {
@@ -34,8 +37,7 @@ const Chat = ({ onClose, goBack, selectedGroup }) => {
   const loadChatMessages = async () => {
     // setIsLoaded(false);
     await axios
-      .get(`http://localhost/cse442/chat/message.php`, {
-        // .get(`${process.env.REACT_APP_API_URL}/message.php`, {
+      .get(`${process.env.REACT_APP_API_URL}/messages.php`, {
         params: {
           group_id: selectedGroup.id,
         },
@@ -64,11 +66,7 @@ const Chat = ({ onClose, goBack, selectedGroup }) => {
       };
 
       await axios
-        .post(
-          `http://localhost/cse442/chat/message.php`,
-          // `${process.env.REACT_APP_API_URL}/update-calander-event.php`,
-          data
-        )
+        .post(`${process.env.REACT_APP_API_URL}/messages.php`, data)
         .then((response) => {
           // console.log(response);
         })
@@ -81,18 +79,13 @@ const Chat = ({ onClose, goBack, selectedGroup }) => {
     }
   };
 
-  // If user is at the bottom of the chat & message updates,
-  // scroll down to latest chat message
+  // Scroll down to latest chat message if message updates
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const scrollToBottom = () => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
     }
-  };
+  }, [messages.length]);
 
   // Send chat message on enter key
   const handleEnterKey = (e) => {
@@ -137,27 +130,28 @@ const Chat = ({ onClose, goBack, selectedGroup }) => {
     const prevMessage = messages[index - 1];
 
     // Check if the username should be displayed
-    const shoulddisplayUsername = message.username !== prevMessage.username;
+    const shouldDisplayUsername = message.username !== prevMessage.username;
 
     // Check if the timestamp should be displayed (if the messages are from different senders)
     const shouldDisplayTimestamp =
-      shoulddisplayUsername ||
-      message.currentTime - prevMessage.currentTime > 180000;
+      // shouldDisplayUsername ||
+      message.timestamp - prevMessage.timestamp > 180000;
 
     // If the timestamp difference is less than 3 minutes, don't display timestamp
     const displayTimestamp =
-      shouldDisplayTimestamp &&
-      message.currentTime - prevMessage.currentTime > 180000;
+      // shouldDisplayTimestamp &&
+      message.timestamp - prevMessage.timestamp > 180000;
 
     return {
-      displayUsername: shoulddisplayUsername,
-      displayTimestamp: displayTimestamp,
+      displayUsername: shouldDisplayUsername,
+      displayTimestamp: shouldDisplayTimestamp,
     };
   };
 
   // Check if message is mine
   const isMyMessage = (message) =>
     message.user_id === parseInt(sessionStorage.getItem("id"));
+
   return (
     <div className="chat-container">
       {/* Header */}
@@ -206,7 +200,7 @@ const Chat = ({ onClose, goBack, selectedGroup }) => {
                     {message.text}
                   </span>
                   <span className="timestamp sender">
-                    {displayTimestamp && formatTimestamp(message.currentTime)}
+                    {displayTimestamp && formatTimestamp(message.timestamp)}
                   </span>
                 </div>
               ) : (
@@ -225,7 +219,7 @@ const Chat = ({ onClose, goBack, selectedGroup }) => {
                     {message.text}
                   </span>
                   <span className="timestamp">
-                    {displayTimestamp && formatTimestamp(message.currentTime)}
+                    {displayTimestamp && formatTimestamp(message.timestamp)}
                   </span>
                 </div>
               )}
