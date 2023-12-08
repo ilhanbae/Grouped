@@ -1,5 +1,11 @@
 import React from "react";
-import { Route, Routes, useLocation, Navigate } from "react-router-dom";
+import {
+  Route,
+  Routes,
+  useLocation,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 import Profile from "./pages/Profile/Profile";
 import EditProfile from "./pages/EditProfile/EditProfile";
 import Login from "./pages/Login/Login";
@@ -17,6 +23,27 @@ export default function App() {
   const noHeaderPaths = ["/", "/login", "/signup"];
   const isHeaderVisible = !noHeaderPaths.includes(loc.pathname);
   const isIndividualCalendar = loc.pathname === "/individualCalendar";
+
+  const navigate = useNavigate();
+
+  // Detect manual session storage change and fall back to login page.
+  // Also detect session storage delete and fall back to login page.
+  window.addEventListener("storage", (event) => {
+    if (event.oldValue) {
+      sessionStorage.clear();
+      navigate("/login");
+    }
+
+    if (
+      !sessionStorage.getItem("id") ||
+      !sessionStorage.getItem("username") ||
+      !sessionStorage.getItem("email") ||
+      !sessionStorage.getItem("token")
+    ) {
+      sessionStorage.clear();
+      navigate("/login");
+    }
+  });
 
   return (
     <div className="flex flex-col h-screen bg-slate-300">
