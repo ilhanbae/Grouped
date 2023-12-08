@@ -137,7 +137,8 @@ const IndividualCalendar = (props) => {
 
   // Event Manager
   const handleSave = async (event) => {
-    if (selectedEvent && selectedEvent.id != null) {
+    console.log(event);
+    if (selectedEvent && selectedEvent.id) {
       // If it's an existing event, send update calendar event request
       const data = {
         id: selectedEvent.id,
@@ -153,7 +154,12 @@ const IndividualCalendar = (props) => {
       await axios
         .post(
           `${process.env.REACT_APP_API_URL}/update-calander-event.php`,
-          data
+          data,
+          {
+            headers: {
+              Authorization: "Bearer " + sessionStorage.getItem("token"),
+            },
+          }
         )
         .then((response) => {
           // console.log(response);
@@ -175,7 +181,11 @@ const IndividualCalendar = (props) => {
       };
 
       await axios
-        .post(`${process.env.REACT_APP_API_URL}/calendar-event.php`, data)
+        .post(`${process.env.REACT_APP_API_URL}/calendar-event.php`, data, {
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("token"),
+          },
+        })
         .then((response) => {
           // console.log(response);
           console.log("Added new event:", data);
@@ -195,6 +205,9 @@ const IndividualCalendar = (props) => {
       .delete(`${process.env.REACT_APP_API_URL}/delete-calander-event.php`, {
         params: {
           id: selectedEvent.id,
+        },
+        headers: {
+          Authorization: "Bearer " + sessionStorage.getItem("token"),
         },
       })
       .then((response) => {

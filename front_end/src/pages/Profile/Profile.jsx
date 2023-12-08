@@ -23,9 +23,6 @@ const Profile = () => {
         params: {
           email: sessionStorage.getItem("email"),
         },
-        headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
-        },
       })
       .then((response) => {
         // console.log(response.data);
