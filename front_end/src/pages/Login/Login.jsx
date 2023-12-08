@@ -10,6 +10,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 const Login = () => {
   const navigate = useNavigate();
 
+  // Detect manual session storage change and fall back to login page
+  window.addEventListener("storage", (event) => {
+    if (event.oldValue) {
+      sessionStorage.clear();
+      navigate("/login");
+    }
+  });
+
   // Yup Schema
   const loginSchema = yup.object().shape({
     email: yup
@@ -122,7 +130,10 @@ const Login = () => {
           </div>
           <div className="p-8" style={{ marginTop: "20px" }}>
             <span>
-              <Link className="text-blue-500 text-2xl font-bold flex" to="/signup">
+              <Link
+                className="text-blue-500 text-2xl font-bold flex"
+                to="/signup"
+              >
                 Don't have an Account?
               </Link>
             </span>

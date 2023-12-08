@@ -9,7 +9,6 @@ import Header from "./components/Header/Header";
 import Land from "./pages/Land/Land";
 import IndividualCalendar from "./pages/IndividualCalendar/IndividualCalendar";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
-import CalendarHeader from "./components/Header/CalendarHeader";
 import PrivateRoutes from "./components/PrivateRoutes/PrivateRoutes";
 import "./index.css";
 
@@ -22,9 +21,7 @@ export default function App() {
   return (
     <div className="flex flex-col h-screen bg-slate-300">
       {/* Conditionally render a Header component */}
-{/*       {isHeaderVisible && */}
-{/*         (isIndividualCalendar ? <CalendarHeader /> : <Header />)} */}
-      {isHeaderVisible && <Header/>}
+      {isHeaderVisible && <Header />}
       {/* Main Content */}
       <div className="h-full [&>div]:min-h-full bg-slate-300">
         <Routes>
