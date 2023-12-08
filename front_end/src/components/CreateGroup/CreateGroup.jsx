@@ -47,7 +47,7 @@ const CreateGroup = ({ onClose, loadGroupsAndMembers, reloadCalendar }) => {
     const newData = {
       user_id: sessionStorage.getItem("id"),
       username: sessionStorage.getItem("username"),
-      invite_flag: data.type === "private",
+      invite_flag: 0,
       group_title: data.title,
       group_desc: data.description,
     };
@@ -97,9 +97,9 @@ const CreateGroup = ({ onClose, loadGroupsAndMembers, reloadCalendar }) => {
         />
         <span className="block text-red-700">{errors.title?.message}</span>
         {/* Type Field */}
-        <div className="flex space-x-1 justify-start">
-          {/* Public */}
-          <button
+        {/* <div className="flex space-x-1 justify-start"> */}
+        {/* Public */}
+        {/* <button
             type="button"
             className={`h-12 px-6 text-lg rounded-md focus:shadow-outline ${
               isPublicSelected ? "bg-blue-400 text-black" : " text-black"
@@ -107,10 +107,10 @@ const CreateGroup = ({ onClose, loadGroupsAndMembers, reloadCalendar }) => {
             onClick={() => toggleGroupType("public")}
           >
             Public
-          </button>
+          </button> */}
 
-          {/* Private */}
-          <button
+        {/* Private */}
+        {/* <button
             type="button"
             className={`h-12 px-6 text-lg rounded-md focus:shadow-outline ${
               isPrivateSelected ? "bg-blue-400 text-black" : " text-black"
@@ -119,8 +119,8 @@ const CreateGroup = ({ onClose, loadGroupsAndMembers, reloadCalendar }) => {
           >
             Private
           </button>
-          <span className="block text-red-700">{errors.type?.message}</span>
-        </div>
+          <span className="block text-red-700">{errors.type?.message}</span> */}
+        {/* </div> */}
 
         {/* Description Field */}
         <textarea
