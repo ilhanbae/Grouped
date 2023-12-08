@@ -26,6 +26,9 @@ const MemberList = ({ group, onClose }) => {
             bio: member.bio,
             email: member.email,
           },
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("token"),
+          },
         }
       );
       setUserInfo({

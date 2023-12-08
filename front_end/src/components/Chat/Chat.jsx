@@ -4,11 +4,6 @@ import {ArrowLeftIcon} from '@heroicons/react/24/outline';
 import moment from "moment";
 import axios from "axios";
 
-axios.defaults.headers.common["Authorization"] =
-  "Bearer " + sessionStorage.getItem("token");
-
-// moment(event.start_time).toDate()
-
 const Chat = ({ onClose, goBack, selectedGroup }) => {
   const [inputText, setInputText] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
@@ -41,6 +36,9 @@ const Chat = ({ onClose, goBack, selectedGroup }) => {
         params: {
           group_id: selectedGroup.id,
         },
+        headers: {
+          Authorization: "Bearer " + sessionStorage.getItem("token"),
+        },
       })
       .then((response) => {
         const formattedMessages = response.data.map((message) => ({
@@ -66,7 +64,11 @@ const Chat = ({ onClose, goBack, selectedGroup }) => {
       };
 
       await axios
-        .post(`${process.env.REACT_APP_API_URL}/messages.php`, data)
+        .post(`${process.env.REACT_APP_API_URL}/messages.php`, data, {
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("token"),
+          },
+        })
         .then((response) => {
           // console.log(response);
         })

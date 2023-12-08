@@ -53,7 +53,11 @@ const CreateGroup = ({ onClose, loadGroupsAndMembers, reloadCalendar }) => {
     };
 
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/group.php`, newData)
+      .post(`${process.env.REACT_APP_API_URL}/group.php`, newData, {
+        headers: {
+          Authorization: "Bearer " + sessionStorage.getItem("token"),
+        },
+      })
       .then((response) => {
         console.log(response.data);
         // Update all groups & joined members

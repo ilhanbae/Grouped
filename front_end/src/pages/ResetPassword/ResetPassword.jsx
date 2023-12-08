@@ -48,7 +48,12 @@ const ResetPassword = () => {
     await axios
       .post(
         `${process.env.REACT_APP_API_URL}/passwordreset.php`,
-        resetPasswordData
+        resetPasswordData,
+        {
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("token"),
+          },
+        }
       )
       .then((response) => {
         console.log(response);

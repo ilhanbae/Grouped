@@ -68,7 +68,11 @@ const GroupSearchInterface = ({
       username: sessionStorage.getItem("username"),
     };
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/group-access.php`, data)
+      .post(`${process.env.REACT_APP_API_URL}/group-access.php`, data, {
+        headers: {
+          Authorization: "Bearer " + sessionStorage.getItem("token"),
+        },
+      })
       .then((response) => {
         // Reload Calendar
         reloadCalendar();

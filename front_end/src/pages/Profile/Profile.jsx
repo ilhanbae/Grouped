@@ -23,9 +23,12 @@ const Profile = () => {
         params: {
           email: sessionStorage.getItem("email"),
         },
+        headers: {
+          Authorization: "Bearer " + sessionStorage.getItem("token"),
+        },
       })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setUserInfo({
           username: response.data.username ? response.data.username : "",
           firstname: response.data.firstName ? response.data.firstName : "",

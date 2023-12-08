@@ -46,6 +46,9 @@ const IndividualCalendar = (props) => {
           params: {
             user_id: sessionStorage.getItem("id"),
           },
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("token"),
+          },
         }
       );
 
@@ -59,6 +62,9 @@ const IndividualCalendar = (props) => {
               params: {
                 group_id: group.group_token,
               },
+              headers: {
+                Authorization: "Bearer " + sessionStorage.getItem("token"),
+              },
             }
           );
           return groupEventsResponse.data;
@@ -71,6 +77,9 @@ const IndividualCalendar = (props) => {
         {
           params: {
             user_id: sessionStorage.getItem("id"),
+          },
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("token"),
           },
         }
       );

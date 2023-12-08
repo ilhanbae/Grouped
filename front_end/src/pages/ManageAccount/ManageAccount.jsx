@@ -10,6 +10,7 @@ const ManageAccount = () => {
     sessionStorage.removeItem("id"); // user's id
     sessionStorage.removeItem("username"); // user's username
     sessionStorage.removeItem("email"); // user's email
+    sessionStorage.removeItem("token"); // user's token
     navigate("/");
   };
 
