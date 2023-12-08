@@ -25,7 +25,12 @@ const GroupSearchInterface = ({
     setIsLoaded(false);
     try {
       const groupResponse = await axios.get(
-        `${process.env.REACT_APP_API_URL}/group.php`
+        `${process.env.REACT_APP_API_URL}/group.php`,
+        {
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("token"),
+          },
+        }
       );
       const formattedGroups = await Promise.all(
         groupResponse.data.map(async (group) => {
@@ -34,6 +39,9 @@ const GroupSearchInterface = ({
             {
               params: {
                 group_id: group.group_token,
+              },
+              headers: {
+                Authorization: "Bearer " + sessionStorage.getItem("token"),
               },
             }
           );
