@@ -10,7 +10,7 @@ const GroupListChat = ({ groups, onSelectGroup, onClose }) => {
           &times;
         </button>
       </div>
-      <ul className="items-center m-4">
+      <ul className="overflow-y-auto m-4">
         {groups.length === 0 ? (
           <div className="">
             <p>You have not joined any groups yet. </p>
