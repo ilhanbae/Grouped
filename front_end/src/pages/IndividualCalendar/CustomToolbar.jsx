@@ -65,7 +65,7 @@ const CustomToolbar = (props) => {
           Today
         </button>
         <button type="button" onClick={() => updateDate("PREV")}>
-          Prev
+          Back
         </button>
         <button type="button" onClick={() => updateDate("NEXT")}>
           Next
