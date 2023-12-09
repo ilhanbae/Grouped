@@ -344,6 +344,8 @@ const IndividualCalendar = (props) => {
           localizer={localizer}
           components={{ toolbar: CustomToolbar }}
           events={filteredEvents}
+          defaultDate={new Date()}
+          defaultView="week"
           startAccessor="start"
           endAccessor="end"
           style={{ height: "90%", padding: "10px 10px" }}
