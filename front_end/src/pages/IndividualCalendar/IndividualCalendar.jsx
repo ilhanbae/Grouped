@@ -1,4 +1,4 @@
-import { Calendar, momentLocalizer, ToolbarProps, Navigate, Toolbar } from "react-big-calendar";
+import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./IndividualCalendar.css";
@@ -11,7 +11,8 @@ import SettingInterface from "../../components/DisplaySetting/SettingInterface";
 import GroupSearchInterface from "../../components/GroupSearch/GroupSearchInterface";
 import { ChatBubbleOvalLeftEllipsisIcon } from "@heroicons/react/24/solid";
 import Chat from "../../components/Chat/Chat";
-import GroupListModal from '../../components/GroupListChat/GroupListChat';
+import GroupListModal from "../../components/GroupListChat/GroupListChat";
+import CustomToolbar from "./CustomToolbar";
 
 moment.tz.setDefault("America/New_York");
 const localizer = momentLocalizer(moment);
@@ -117,12 +118,6 @@ const IndividualCalendar = (props) => {
         title: group.group_title,
         // description: group.group_desc,
       }));
-
-      // console.log(userGroupsResponse.data);
-      // console.log(groupEvents);
-      // console.log(selfEventResponse.data);
-      // console.log(combinedEvents);
-      // console.log(formattedEvents);
 
       // Update states
       setJoinedGroups(formattedGroups);
@@ -323,8 +318,8 @@ const IndividualCalendar = (props) => {
   };
 
   const toggleChat = () => {
-      setIsChatOpen(!isChatOpen);
-    };
+    setIsChatOpen(!isChatOpen);
+  };
 
   const handleChatButtonClick = () => {
     setShowGroupListModal(true);
@@ -347,9 +342,7 @@ const IndividualCalendar = (props) => {
       <div className="calendarApp h-full max-h-0 bg-slate-300">
         <Calendar
           localizer={localizer}
-          defaultDate={new Date()}
-          defaultView="week"
-          //           components={{toolbar: CustomToolbar}}
+          components={{ toolbar: CustomToolbar }}
           events={filteredEvents}
           startAccessor="start"
           endAccessor="end"
@@ -413,7 +406,10 @@ const IndividualCalendar = (props) => {
           </div>
           {/* Chat */}
           <div className="flex items-center">
-            <button onClick={handleChatButtonClick} className="chatButton relative">
+            <button
+              onClick={handleChatButtonClick}
+              className="chatButton relative"
+            >
               <div className="rounded-full bg-blue-800 p-1 flex items-center">
                 <span className="ml-2 text-white">Chat </span>
                 <ChatBubbleOvalLeftEllipsisIcon className="ml-2 mr-1 h-6 w-6 text-white" />
@@ -425,68 +421,27 @@ const IndividualCalendar = (props) => {
           </div>
         </div>
         {/* Conditionally render the Group List Modal */}
-          {showGroupListModal && (
-            <GroupListModal
-              groups={joinedGroups}
-              onSelectGroup={handleGroupSelect}
-              onClose={() => setShowGroupListModal(false)}
-            />
-          )}
+        {showGroupListModal && (
+          <GroupListModal
+            groups={joinedGroups}
+            onSelectGroup={handleGroupSelect}
+            onClose={() => setShowGroupListModal(false)}
+          />
+        )}
         {/* Conditionally render the Chat component based on the selected group */}
-          {selectedGroup && (
-            <div className="modal-overlay w-full h-full">
-              {/* Pass the selected group to the Chat component */}
-              <Chat onClose={() =>
-                setSelectedGroup(null)} selectedGroup={selectedGroup}
-                goBack={handleBackToGroupList}/>
-            </div>
-          )}
+        {selectedGroup && (
+          <div className="modal-overlay w-full h-full">
+            {/* Pass the selected group to the Chat component */}
+            <Chat
+              onClose={() => setSelectedGroup(null)}
+              selectedGroup={selectedGroup}
+              goBack={handleBackToGroupList}
+            />
+          </div>
+        )}
       </div>
     );
   }
 };
 
 export default IndividualCalendar;
-
-// const CustomToolbar = (props: ToolbarProps) => {
-//     const [viewState, setViewState] = useState('month');
-//
-//     const goToDayView = () => {
-//         props.onView('day');
-//         setViewState('day');
-//     };
-//     const goToWeekView = () => {
-//         props.onView('week');
-//         setViewState('week');
-//     };
-//     const goToMonthView = () => {
-//         props.onView('month');
-//         setViewState('month');
-//     };
-//
-//     const goToBack = () => {
-//         props.onNavigate(Navigate.PREVIOUS);
-//     };
-//
-//     const goToNext = () => {
-//         props.onNavigate(Navigate.NEXT);
-//     };
-//
-//     const goToToday = () => {
-//         props.onNavigate(Navigate.TODAY);
-//     };
-//
-//     return (
-//         <div className='rbc-toolbar'>
-//             <span className="rbc-btn-group">
-//               <button onClick={goToBack}>&#8249;</button>
-//               <label>{moment(props.date).format('DD/MM/YYYY')}</label>
-//               <button onClick={goToNext}>&#8250;</button>
-//               <button onClick={goToToday}>today</button>
-//               <button onClick={goToMonthView}>month</button>
-//               <button onClick={goToWeekView}>week</button>
-//               <button onClick={goToDayView}>day</button>
-//             </span>
-//         </div>
-//     );
-// };
