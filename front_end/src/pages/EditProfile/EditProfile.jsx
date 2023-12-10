@@ -62,6 +62,9 @@ const EditProfile = () => {
         params: {
           email: sessionStorage.getItem("email"),
         },
+        headers: {
+          Authorization: "Bearer " + sessionStorage.getItem("token"),
+        },
       })
       .then((response) => {
         // console.log(response.data);
@@ -99,12 +102,16 @@ const EditProfile = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
     // Send POST request to update a user
     await axios
-      .post(`${process.env.REACT_APP_API_URL}/manageaccount.php`, data)
+      .post(`${process.env.REACT_APP_API_URL}/manageaccount.php`, data, {
+        headers: {
+          Authorization: "Bearer " + sessionStorage.getItem("token"),
+        },
+      })
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         if (location.state) {
           // When user came from sign up page
           navigate("/individualCalendar");

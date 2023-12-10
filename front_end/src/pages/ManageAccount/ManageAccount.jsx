@@ -5,11 +5,7 @@ import { useNavigate } from "react-router-dom";
 const ManageAccount = () => {
   const navigate = useNavigate();
   const handleLogout = () => {
-    // TODO: Should confirm if the user really want to logout
-    // Update session storage
-    sessionStorage.removeItem("id"); // user's id
-    sessionStorage.removeItem("username"); // user's username
-    sessionStorage.removeItem("email"); // user's email
+    sessionStorage.clear();
     navigate("/");
   };
 

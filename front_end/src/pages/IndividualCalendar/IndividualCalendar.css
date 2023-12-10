@@ -2,6 +2,14 @@
     background-color: white;
 }
 
+.displayButton{
+    font: bold small Germania One, "sans-serif", "fantasy";
+}
+
+.chatButton{
+    font-family: Germania One, "sans-serif", "fantasy";
+}
+
 .rbc-toolbar{
     background-color: rgba(86, 46, 33, 0.35);
     color: black;
@@ -39,12 +47,18 @@
 
 .modal-overlay {
     position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000; /* Adjust z-index as needed */
+    background-color: rgba(0,0,0,0.3);
+}
+
+.modal-content {
+    padding: 0.5rem;
+    position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: white;
-    z-index: 1000; /* Adjust z-index as needed */
-    border: 1px solid #ccc;
-    padding: 20px;
+    border: 3px solid #111;
     border-radius: 8px;
 }

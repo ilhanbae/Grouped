@@ -41,6 +41,7 @@ const Login = () => {
         sessionStorage.setItem("id", response.data.id); // user's id
         sessionStorage.setItem("username", response.data.username); // user's username
         sessionStorage.setItem("email", response.data.email); // user's email
+        sessionStorage.setItem("token", response.data.token); // user's token
         navigate("/individualCalendar");
       })
       .catch((error) => {
@@ -121,16 +122,11 @@ const Login = () => {
           </div>
           <div className="p-8" style={{ marginTop: "20px" }}>
             <span>
-              <Link className="text-blue-500 text-2xl font-bold flex" to="/signup">
-                Don't have an Account?
-              </Link>
-            </span>
-            <span className="m-12">
               <Link
                 className="text-blue-500 text-2xl font-bold flex"
-                to="ForgotPassword"
+                to="/signup"
               >
-                Forgot Password?
+                Don't have an Account?
               </Link>
             </span>
           </div>

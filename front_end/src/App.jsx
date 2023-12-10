@@ -1,5 +1,11 @@
 import React from "react";
-import { Route, Routes, useLocation, Navigate } from "react-router-dom";
+import {
+  Route,
+  Routes,
+  useLocation,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 import Profile from "./pages/Profile/Profile";
 import EditProfile from "./pages/EditProfile/EditProfile";
 import Login from "./pages/Login/Login";
@@ -9,7 +15,6 @@ import Header from "./components/Header/Header";
 import Land from "./pages/Land/Land";
 import IndividualCalendar from "./pages/IndividualCalendar/IndividualCalendar";
 import ResetPassword from "./pages/ResetPassword/ResetPassword";
-import CalendarHeader from "./components/Header/CalendarHeader";
 import PrivateRoutes from "./components/PrivateRoutes/PrivateRoutes";
 import "./index.css";
 
@@ -19,12 +24,31 @@ export default function App() {
   const isHeaderVisible = !noHeaderPaths.includes(loc.pathname);
   const isIndividualCalendar = loc.pathname === "/individualCalendar";
 
+  const navigate = useNavigate();
+
+  // Detect manual session storage change and fall back to login page.
+  // Also detect session storage delete and fall back to login page.
+  window.addEventListener("storage", (event) => {
+    if (event.oldValue) {
+      sessionStorage.clear();
+      navigate("/login");
+    }
+
+    if (
+      !sessionStorage.getItem("id") ||
+      !sessionStorage.getItem("username") ||
+      !sessionStorage.getItem("email") ||
+      !sessionStorage.getItem("token")
+    ) {
+      sessionStorage.clear();
+      navigate("/login");
+    }
+  });
+
   return (
     <div className="flex flex-col h-screen bg-slate-300">
       {/* Conditionally render a Header component */}
-{/*       {isHeaderVisible && */}
-{/*         (isIndividualCalendar ? <CalendarHeader /> : <Header />)} */}
-      {isHeaderVisible && <Header/>}
+      {isHeaderVisible && <Header />}
       {/* Main Content */}
       <div className="h-full [&>div]:min-h-full bg-slate-300">
         <Routes>

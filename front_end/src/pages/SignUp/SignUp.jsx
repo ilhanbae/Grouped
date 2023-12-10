@@ -106,6 +106,7 @@ const SignUp = () => {
         sessionStorage.setItem("id", response.data.id); // user's id
         sessionStorage.setItem("username", response.data.username); // user's username
         sessionStorage.setItem("email", response.data.email); // user's email
+        sessionStorage.setItem("token", response.data.token); // user's token
         navigate("/editprofile", { state: response.data.email });
       })
       .catch((error) => {
