@@ -68,13 +68,17 @@ switch ($method) {
                 if ($stmt->execute()) {
                     echo "success";
                     header("HTTP/1.1 200 OK");
+			break;
                 } else {
                     echo "failed";
                     header("HTTP/1.1 400 BAD REQUEST");
+			break;
                 }
 
             }
+		echo "Incorrect Password";
             header("HTTP/1.1 400 BAD REQUEST");
+		break;
         }else{
             die("No Such User");
         }
