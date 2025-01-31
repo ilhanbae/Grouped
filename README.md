@@ -1,2 +1,19 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/L3I96ePi)
-[![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-7f7980b617ed060a017424585567c406b6ee15c891e84e1186181d67ecf80aa0.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=11753938)
+# Grouped
+
+A scheduling platform built for college students. Grouped simplifies the coordination of study sessions, club meetings, and group activities by understanding how students actually work and collaborate.
+
+![alt text](docs/demo.gif)
+
+## Key Features
+
+- **Dynamic Calendar Views**: You can switch between monthly, weekly, and daily views, making it super easy to find a time that works for everyone.
+- **Task Management**: Create, assign, and track tasks right within the calendar, so everything stays organized.
+- **Real-Time Chat**: Chat with your group in real-time, no need to jump to another app.
+
+
+## Tech Stack
+
+- **Frontend**: React and TailwindCSS 
+- **Backend**: PHP
+- **Database**: SQL
+
