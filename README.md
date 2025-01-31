@@ -16,6 +16,6 @@ A scheduling platform built for college students. Grouped simplifies the coordin
 - **Database**: SQL
 
 
-## Demo
+## Preview
 
 ![alt text](docs/demo.gif)
