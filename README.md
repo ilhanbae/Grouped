@@ -2,8 +2,6 @@
 
 A scheduling platform built for college students. Grouped simplifies the coordination of study sessions, club meetings, and group activities by understanding how students actually work and collaborate.
 
-![alt text](docs/demo.gif)
-
 ## Key Features
 
 - **Dynamic Calendar Views**: You can switch between monthly, weekly, and daily views, making it super easy to find a time that works for everyone.
@@ -17,3 +15,7 @@ A scheduling platform built for college students. Grouped simplifies the coordin
 - **Backend**: PHP
 - **Database**: SQL
 
+
+## Demo
+
+![alt text](docs/demo.gif)
